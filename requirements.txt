@@ -1,0 +1,11 @@
+strands-agents
+strands-agents-tools
+ccxt>=4.0.0
+pandas>=2.0.0
+numpy>=1.24.0
+python-dotenv>=1.0.0
+requests>=2.31.0
+boto3>=1.28.0
+devduck
+# Additional dependencies for autonomous agent
+python-dotenv>=1.0.0

@@ -1,0 +1,56 @@
+# Environment & Secrets
+.env
+*.key
+*.pem
+
+# State Files
+trading_state.json
+*.log
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+venv/
+env/
+.venv
+ENV/
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Freqtrade
+user_data/data/
+user_data/backtest_results/
+user_data/hyperopt_results/
+user_data/models/
+
+# Temporary
+*.tmp
+*.bak
+temp/
