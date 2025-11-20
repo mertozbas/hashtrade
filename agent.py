@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
 🦆 Hashtrade Agent - Aggressive Autonomous Trading
-Uses DevDuck with integrated Telegram notifications
+Uses DevDuck
 """
 import sys
 import time
@@ -19,7 +19,6 @@ import os
 load_dotenv()
 
 class HashtradeAgent:
-    """Aggressive autonomous trading agent using DevDuck with Telegram"""
     
     def __init__(self):
         print("🦆 Initializing AGGRESSIVE Hashtrade Agent...")
@@ -27,120 +26,44 @@ class HashtradeAgent:
         # Use DevDuck agent directly
         self.agent = devduck.devduck
         
-        # Verify Telegram is available
-        if 'telegram' not in self.agent.agent.tool_names:
-            print("⚠️ Warning: Telegram tool not loaded")
-        
+      
         self.trade_count = 0
         self.session_start = datetime.now()
-        self.telegram_chat_id = os.getenv('TELEGRAM_CHAT_ID')
         
         print(f"✅ DevDuck agent initialized with model: {self.agent.model}")
         print(f"🔧 Available tools: {len(self.agent.tools)}")
         print(f"⚡ Mode: AGGRESSIVE - High frequency, risk-taking")
         
-        # Send startup notification
-        self.send_telegram_notification(
-            "🚀 *Hashtrade Agent Started*\n\n"
-            f"Model: {self.agent.model}\n"
-            f"Tools: {len(self.agent.tools)}\n"
-            f"Mode: AGGRESSIVE\n"
-            f"Started: {self.session_start.strftime('%H:%M:%S')}"
-        )
         
-    def send_telegram_notification(self, message: str):
-        """Send Telegram notification using DevDuck's telegram tool"""
-        if not self.telegram_chat_id:
-            return
-        
-        try:
-            self.agent.agent.tool.telegram(
-                action="send_message",
-                chat_id=self.telegram_chat_id,
-                text=message,
-                parse_mode="Markdown"
-            )
-        except Exception as e:
-            print(f"⚠️ Telegram notification failed: {e}")
-    
+  
     def run_cycle(self):
         """Run one aggressive trading cycle"""
         self.trade_count += 1
         cycle_start = datetime.now()
         
         print(f"\n{'='*60}")
-        print(f"⚡ AGGRESSIVE Trading Cycle #{self.trade_count} - {cycle_start.strftime('%Y-%m-%d %H:%M:%S')}")
+        print(f"⚡ Trading Cycle #{self.trade_count} - {cycle_start.strftime('%Y-%m-%d %H:%M:%S')}")
         print(f"{'='*60}\n")
         
-        # Send cycle start notification
-        self.send_telegram_notification(
-            f"⚡ *Cycle #{self.trade_count}*\n"
-            f"Time: {cycle_start.strftime('%H:%M:%S')}"
-        )
+       
         
         # Aggressive trading workflow
         workflow = """
-        Execute AGGRESSIVE autonomous trading workflow:
+        Execute the following autonomous trading workflow:
+        AGGRESSIVE 
+        1. Check and update current balance (use balance tool)
+        2. Analyze market conditions for BTC/USDT:USDT, ETH/USDT:USDT, SOL/USDT:USDT, and others.
+           - Fetch recent tickers using ccxt_generic
+           - Check price changes and volumes
+        3. List current open orders and positions (use order tool)
+        4. Make trading decisions based on:
+           - Current balance
+           - Market trends
+           - Risk management (3-5% per trade, 10-20x leverage)
+        5. If conditions are favorable, consider opening positions
+        6. Log all activities to journal
         
-        🎯 OBJECTIVE: Maximize profits through active trading
-        
-        1. **Balance Check** (use balance tool)
-           - Get current USDT balance
-           - Calculate available capital for new trades
-        
-        2. **Open Positions Review** (use order tool with action="list")
-           - Check all open positions
-           - Evaluate P&L for each
-           - Close positions that:
-             * Hit +3-5% profit (take profit)
-             * Hit -2% loss (stop loss)
-             * Been open >30 minutes without movement
-        
-        3. **Market Signal Generation** (use generate_all_signals)
-           - Scan ALL 15 coins simultaneously
-           - Look for STRONG breakout signals (>60% confidence)
-           - Prioritize volume spikes (>1.5x average)
-        
-        4. **Signal Scoring & Ranking** (use score_signal and rank_signals)
-           - Score each signal 0-100
-           - Filter: Only signals >70 score
-           - Rank by: confidence × volume × momentum
-        
-        5. **Order Flow Analysis** (use analyze_order_flow)
-           - Check buy/sell pressure
-           - Confirm breakout direction
-           - Look for institutional activity
-        
-        6. **AGGRESSIVE Position Opening** (use order tool with action="open")
-           - Risk per trade: 3-5% of balance (HIGHER than conservative 2%)
-           - Leverage: 10-20x (based on confidence)
-             * 80%+ confidence → 20x leverage
-             * 70-80% confidence → 15x leverage
-             * 60-70% confidence → 10x leverage
-           - Max positions: 2-3 simultaneous trades
-           - Entry: Market orders for SPEED
-           - IMPORTANT: Open AT LEAST 1 position per cycle if signals exist
-        
-        7. **Telegram Notification** (send trade summary)
-           - Report balance changes
-           - List new positions opened
-           - Show closed positions with P&L
-           - Alert if significant profit/loss
-        
-        ⚡ AGGRESSIVE RULES:
-        - Don't wait for "perfect" setups - ACT on good signals
-        - Speed > Precision - Market orders preferred
-        - High frequency - More trades = More opportunities
-        - Risk management - Use stop losses religiously
-        - Momentum trading - Ride trends quickly
-        
-        🎯 SUCCESS METRICS:
-        - Open 1-3 trades per cycle
-        - Win rate target: >60%
-        - Average trade duration: 15-30 minutes
-        - Daily compound growth target: 5-10%
-        
-        Use all available tools effectively. Be decisive and aggressive.
+        Be autonomous. Start trading.
         """
         
         try:
@@ -152,22 +75,13 @@ class HashtradeAgent:
             
             print(f"\n✅ Cycle completed in {cycle_duration:.1f}s")
             
-            # Extract key info from result for Telegram
-            result_summary = str(result)[:500] if result else "No result"
+            result_summary = str(result) if result else "No result"
             
-            # Send cycle completion notification
-            self.send_telegram_notification(
-                f"✅ *Cycle #{self.trade_count} Complete*\n"
-                f"Duration: {cycle_duration:.1f}s\n"
-                f"Status: Success"
-            )
+            print(result_summary)
             
         except Exception as e:
             print(f"❌ Cycle error: {e}")
-            self.send_telegram_notification(
-                f"❌ *Cycle #{self.trade_count} Failed*\n"
-                f"Error: {str(e)[:200]}"
-            )
+            
     
     def show_stats(self):
         """Display session statistics"""
@@ -182,9 +96,7 @@ class HashtradeAgent:
         """Start aggressive autonomous trading loop"""
         print(f"\n🚀 Starting AGGRESSIVE autonomous trading agent...")
         print(f"⏰ Cycle interval: {interval_minutes} minutes (HIGH FREQUENCY)")
-        print(f"⚡ Risk profile: AGGRESSIVE (3-5% per trade, 10-20x leverage)")
         print(f"🎯 Goal: Maximize profits through active trading")
-        print(f"📱 Telegram notifications: {'Enabled' if self.telegram_chat_id else 'Disabled'}")
         print(f"🛑 Press Ctrl+C to stop\n")
         
         try:
@@ -202,12 +114,7 @@ class HashtradeAgent:
             
             # Send shutdown notification
             runtime = datetime.now() - self.session_start
-            self.send_telegram_notification(
-                "🛑 *Agent Stopped*\n\n"
-                f"Total cycles: {self.trade_count}\n"
-                f"Runtime: {runtime}\n"
-                f"Stopped: {datetime.now().strftime('%H:%M:%S')}"
-            )
+            
             
             print("✅ Agent stopped gracefully")
 
