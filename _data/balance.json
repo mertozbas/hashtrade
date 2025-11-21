@@ -1,0 +1,2382 @@
+{
+  "history": [
+    {
+      "timestamp": "2025-11-20T04:16:27.120409",
+      "exchange": "bybit",
+      "equity": 0.0,
+      "raw_data": "Balance: $76.44 USDT | Available: $76.44 USDT"
+    },
+    {
+      "timestamp": "2025-11-20T04:19:30.715982",
+      "exchange": "bybit",
+      "equity": 0.0,
+      "raw_data": "Balance: $76.44 USDT | Available: $76.44 USDT"
+    },
+    {
+      "timestamp": "2025-11-20T04:22:54.798554",
+      "exchange": "bybit",
+      "equity": 76.44,
+      "usdt_balance": 0.0,
+      "raw_data": "Balance: $76.44 USDT | Available: $76.44 USDT"
+    },
+    {
+      "timestamp": "2025-11-20T04:31:31.653019",
+      "exchange": "bybit",
+      "equity": 76.35,
+      "usdt_balance": 0.0,
+      "raw_data": "Balance: $76.35 USDT | Available: $76.35 USDT"
+    },
+    {
+      "timestamp": "2025-11-20T04:44:26.429627",
+      "exchange": "bybit",
+      "equity": 76.35,
+      "usdt_balance": 0.0,
+      "raw_data": "Balance: $76.35 USDT | Available: $76.35 USDT"
+    },
+    {
+      "timestamp": "2025-11-20T04:50:17.138193",
+      "exchange": "bybit",
+      "equity": 76.35,
+      "usdt_balance": 0.0,
+      "raw_data": "Balance: $76.35 USDT | Available: $76.35 USDT"
+    },
+    {
+      "timestamp": "2025-11-20T04:56:01.605236",
+      "exchange": "bybit",
+      "equity": 76.35,
+      "usdt_balance": 0.0,
+      "raw_data": "Balance: $76.35 USDT | Available: $76.35 USDT"
+    },
+    {
+      "timestamp": "2025-11-20T04:56:50.837208",
+      "exchange": "bybit",
+      "equity": 76.33,
+      "usdt_balance": 0.0,
+      "raw_data": "Balance: $76.33 USDT | Available: $76.33 USDT"
+    },
+    {
+      "timestamp": "2025-11-20T04:57:35.050289",
+      "exchange": "bybit",
+      "equity": 76.28,
+      "usdt_balance": 0.0,
+      "raw_data": "Balance: $76.28 USDT | Available: $76.28 USDT"
+    },
+    {
+      "timestamp": "2025-11-20T05:01:17.715511",
+      "exchange": "bybit",
+      "equity": 76.28,
+      "usdt_balance": 0.0,
+      "raw_data": "Balance: $76.28 USDT | Available: $76.28 USDT"
+    },
+    {
+      "timestamp": "2025-11-20T05:02:02.366916",
+      "exchange": "bybit",
+      "equity": 76.26,
+      "usdt_balance": 0.0,
+      "raw_data": "Balance: $76.26 USDT | Available: $76.26 USDT"
+    },
+    {
+      "timestamp": "2025-11-20T05:05:18.933423",
+      "exchange": "bybit",
+      "equity": 76.26,
+      "usdt_balance": 0.0,
+      "raw_data": "Balance: $76.26 USDT | Available: $76.26 USDT"
+    },
+    {
+      "timestamp": "2025-11-20T05:06:14.712432",
+      "exchange": "bybit",
+      "equity": 76.22,
+      "usdt_balance": 0.0,
+      "raw_data": "Balance: $76.22 USDT | Available: $76.22 USDT"
+    },
+    {
+      "timestamp": "2025-11-20T05:09:51.316510",
+      "exchange": "bybit",
+      "equity": 76.22,
+      "usdt_balance": 0.0,
+      "raw_data": "Balance: $76.22 USDT | Available: $76.22 USDT"
+    },
+    {
+      "timestamp": "2025-11-20T05:10:44.230518",
+      "exchange": "bybit",
+      "equity": 76.04,
+      "usdt_balance": 0.0,
+      "raw_data": "Balance: $76.04 USDT | Available: $76.04 USDT"
+    },
+    {
+      "timestamp": "2025-11-20T05:11:19.558081",
+      "exchange": "bybit",
+      "equity": 76.04,
+      "usdt_balance": 0.0,
+      "raw_data": "Balance: $76.04 USDT | Available: $76.04 USDT"
+    },
+    {
+      "timestamp": "2025-11-20T05:23:03.529145",
+      "exchange": "bybit",
+      "equity": 76.04,
+      "usdt_balance": 0.0,
+      "raw_data": "Balance: $76.04 USDT | Available: $76.04 USDT"
+    },
+    {
+      "timestamp": "2025-11-20T05:34:21.920930",
+      "exchange": "bybit",
+      "equity": 76.04,
+      "usdt_balance": 0.0,
+      "raw_data": "Balance: $76.04 USDT | Available: $76.04 USDT"
+    },
+    {
+      "timestamp": "2025-11-20T05:35:27.500189",
+      "exchange": "bybit",
+      "equity": 76.04,
+      "usdt_balance": 0.0,
+      "raw_data": "Balance: $76.04 USDT | Available: $76.04 USDT"
+    },
+    {
+      "timestamp": "2025-11-20T05:36:11.031017",
+      "exchange": "bybit",
+      "equity": 76.04,
+      "usdt_balance": 0.0,
+      "raw_data": "Balance: $76.04 USDT | Available: $76.04 USDT"
+    },
+    {
+      "timestamp": "2025-11-20T05:37:05.036002",
+      "exchange": "bybit",
+      "equity": 76.04,
+      "usdt_balance": 0.0,
+      "raw_data": "Balance: $76.04 USDT | Available: $76.04 USDT"
+    },
+    {
+      "timestamp": "2025-11-20T05:37:41.359559",
+      "exchange": "bybit",
+      "equity": 76.04,
+      "usdt_balance": 0.0,
+      "raw_data": "Balance: $76.04 USDT | Available: $76.04 USDT"
+    },
+    {
+      "timestamp": "2025-11-20T05:38:26.381273",
+      "exchange": "bybit",
+      "equity": 76.04,
+      "usdt_balance": 0.0,
+      "raw_data": "Balance: $76.04 USDT | Available: $76.04 USDT"
+    },
+    {
+      "timestamp": "2025-11-20T05:39:52.558386",
+      "exchange": "bybit",
+      "equity": 75.96,
+      "usdt_balance": 0.0,
+      "raw_data": "Balance: $75.96 USDT | Available: $75.96 USDT"
+    },
+    {
+      "timestamp": "2025-11-20T05:40:23.713177",
+      "exchange": "bybit",
+      "equity": 75.96,
+      "usdt_balance": 0.0,
+      "raw_data": "Balance: $75.96 USDT | Available: $75.96 USDT"
+    },
+    {
+      "timestamp": "2025-11-20T05:41:14.599611",
+      "exchange": "bybit",
+      "equity": 75.96,
+      "usdt_balance": 0.0,
+      "raw_data": "Balance: $75.96 USDT | Available: $75.96 USDT"
+    },
+    {
+      "timestamp": "2025-11-20T05:44:55.924409",
+      "exchange": "bybit",
+      "equity": 75.96,
+      "usdt_balance": 0.0,
+      "raw_data": "Balance: $75.96 USDT | Available: $75.96 USDT"
+    },
+    {
+      "timestamp": "2025-11-20T05:46:19.497091",
+      "exchange": "bybit",
+      "equity": 75.96,
+      "usdt_balance": 0.0,
+      "raw_data": "Balance: $75.96 USDT | Available: $75.96 USDT"
+    },
+    {
+      "timestamp": "2025-11-20T05:50:05.161713",
+      "exchange": "bybit",
+      "equity": 75.96,
+      "usdt_balance": 0.0,
+      "raw_data": "Balance: $75.96 USDT | Available: $75.96 USDT"
+    },
+    {
+      "timestamp": "2025-11-20T05:50:44.136211",
+      "exchange": "bybit",
+      "equity": 75.96,
+      "usdt_balance": 0.0,
+      "raw_data": "Balance: $75.96 USDT | Available: $75.96 USDT"
+    },
+    {
+      "timestamp": "2025-11-20T05:54:46.284357",
+      "exchange": "bybit",
+      "equity": 75.96,
+      "usdt_balance": 0.0,
+      "raw_data": "Balance: $75.96 USDT | Available: $75.96 USDT"
+    },
+    {
+      "timestamp": "2025-11-20T05:55:13.682673",
+      "exchange": "bybit",
+      "equity": 75.96,
+      "usdt_balance": 0.0,
+      "raw_data": "Balance: $75.96 USDT | Available: $75.96 USDT"
+    },
+    {
+      "timestamp": "2025-11-20T05:59:27.864081",
+      "exchange": "bybit",
+      "equity": 75.96,
+      "usdt_balance": 0.0,
+      "raw_data": "Balance: $75.96 USDT | Available: $75.96 USDT"
+    },
+    {
+      "timestamp": "2025-11-20T06:00:35.773473",
+      "exchange": "bybit",
+      "equity": 75.96,
+      "usdt_balance": 0.0,
+      "raw_data": "Balance: $75.96 USDT | Available: $75.96 USDT"
+    },
+    {
+      "timestamp": "2025-11-20T06:05:11.492216",
+      "exchange": "bybit",
+      "equity": 75.96,
+      "usdt_balance": 0.0,
+      "raw_data": "Balance: $75.96 USDT | Available: $75.96 USDT"
+    },
+    {
+      "timestamp": "2025-11-20T06:05:50.176722",
+      "exchange": "bybit",
+      "equity": 75.96,
+      "usdt_balance": 0.0,
+      "raw_data": "Balance: $75.96 USDT | Available: $75.96 USDT"
+    },
+    {
+      "timestamp": "2025-11-20T06:07:01.194247",
+      "exchange": "bybit",
+      "equity": 75.96,
+      "usdt_balance": 0.0,
+      "raw_data": "Balance: $75.96 USDT | Available: $75.96 USDT"
+    },
+    {
+      "timestamp": "2025-11-20T06:07:04.670922",
+      "exchange": "bybit",
+      "equity": 75.95,
+      "usdt_balance": 0.0,
+      "raw_data": "Balance: $75.95 USDT | Available: $75.95 USDT"
+    },
+    {
+      "timestamp": "2025-11-20T06:10:45.680276",
+      "exchange": "bybit",
+      "equity": 75.95,
+      "usdt_balance": 0.0,
+      "raw_data": "Balance: $75.95 USDT | Available: $75.95 USDT"
+    },
+    {
+      "timestamp": "2025-11-20T06:11:03.123661",
+      "exchange": "bybit",
+      "equity": 75.95,
+      "usdt_balance": 0.0,
+      "raw_data": "Balance: $75.95 USDT | Available: $75.95 USDT"
+    },
+    {
+      "timestamp": "2025-11-20T06:15:02.615188",
+      "exchange": "bybit",
+      "equity": 75.95,
+      "usdt_balance": 0.0,
+      "raw_data": "Balance: $75.95 USDT | Available: $75.95 USDT"
+    },
+    {
+      "timestamp": "2025-11-20T06:19:04.196857",
+      "exchange": "bybit",
+      "equity": 75.95,
+      "usdt_balance": 0.0,
+      "raw_data": "Balance: $75.95 USDT | Available: $75.95 USDT"
+    },
+    {
+      "timestamp": "2025-11-20T06:19:08.704980",
+      "exchange": "bybit",
+      "equity": 75.95,
+      "usdt_balance": 0.0,
+      "raw_data": "Balance: $75.95 USDT | Available: $75.95 USDT"
+    },
+    {
+      "timestamp": "2025-11-20T06:22:52.308987",
+      "exchange": "bybit",
+      "equity": 75.95,
+      "usdt_balance": 0.0,
+      "raw_data": "Balance: $75.95 USDT | Available: $75.95 USDT"
+    },
+    {
+      "timestamp": "2025-11-20T06:26:29.298950",
+      "exchange": "bybit",
+      "equity": 75.95,
+      "usdt_balance": 0.0,
+      "raw_data": "Balance: $75.95 USDT | Available: $75.95 USDT"
+    },
+    {
+      "timestamp": "2025-11-20T06:30:48.293853",
+      "exchange": "bybit",
+      "equity": 75.95,
+      "usdt_balance": 0.0,
+      "raw_data": "Balance: $75.95 USDT | Available: $75.95 USDT"
+    },
+    {
+      "timestamp": "2025-11-20T06:30:52.286951",
+      "exchange": "bybit",
+      "equity": 75.95,
+      "usdt_balance": 0.0,
+      "raw_data": "Balance: $75.95 USDT | Available: $75.95 USDT"
+    },
+    {
+      "timestamp": "2025-11-20T06:34:19.800927",
+      "exchange": "bybit",
+      "equity": 75.95,
+      "usdt_balance": 0.0,
+      "raw_data": "Balance: $75.95 USDT | Available: $75.95 USDT"
+    },
+    {
+      "timestamp": "2025-11-20T06:34:40.588034",
+      "exchange": "bybit",
+      "equity": 75.95,
+      "usdt_balance": 0.0,
+      "raw_data": "Balance: $75.95 USDT | Available: $75.95 USDT"
+    },
+    {
+      "timestamp": "2025-11-20T06:38:13.642338",
+      "exchange": "bybit",
+      "equity": 75.95,
+      "usdt_balance": 0.0,
+      "raw_data": "Balance: $75.95 USDT | Available: $75.95 USDT"
+    },
+    {
+      "timestamp": "2025-11-20T06:41:38.457909",
+      "exchange": "bybit",
+      "equity": 75.95,
+      "usdt_balance": 0.0,
+      "raw_data": "Balance: $75.95 USDT | Available: $75.95 USDT"
+    },
+    {
+      "timestamp": "2025-11-20T06:42:01.287325",
+      "exchange": "bybit",
+      "equity": 75.95,
+      "usdt_balance": 0.0,
+      "raw_data": "Balance: $75.95 USDT | Available: $75.95 USDT"
+    },
+    {
+      "timestamp": "2025-11-20T06:45:44.063847",
+      "exchange": "bybit",
+      "equity": 75.95,
+      "usdt_balance": 0.0,
+      "raw_data": "Balance: $75.95 USDT | Available: $75.95 USDT"
+    },
+    {
+      "timestamp": "2025-11-20T06:49:20.900141",
+      "exchange": "bybit",
+      "equity": 75.95,
+      "usdt_balance": 0.0,
+      "raw_data": "Balance: $75.95 USDT | Available: $75.95 USDT"
+    },
+    {
+      "timestamp": "2025-11-20T06:52:59.718699",
+      "exchange": "bybit",
+      "equity": 75.95,
+      "usdt_balance": 0.0,
+      "raw_data": "Balance: $75.95 USDT | Available: $75.95 USDT"
+    },
+    {
+      "timestamp": "2025-11-20T06:56:41.241565",
+      "exchange": "bybit",
+      "equity": 75.95,
+      "usdt_balance": 0.0,
+      "raw_data": "Balance: $75.95 USDT | Available: $75.95 USDT"
+    },
+    {
+      "timestamp": "2025-11-20T06:57:10.586465",
+      "exchange": "bybit",
+      "equity": 75.95,
+      "usdt_balance": 0.0,
+      "raw_data": "Balance: $75.95 USDT | Available: $75.95 USDT"
+    },
+    {
+      "timestamp": "2025-11-20T07:05:05.464615",
+      "exchange": "bybit",
+      "equity": 75.95,
+      "usdt_balance": 0.0,
+      "raw_data": "Balance: $75.95 USDT | Available: $75.95 USDT"
+    },
+    {
+      "timestamp": "2025-11-20T07:06:41.033244",
+      "exchange": "bybit",
+      "equity": 75.95,
+      "usdt_balance": 0.0,
+      "raw_data": "Balance: $75.95 USDT | Available: $75.95 USDT"
+    },
+    {
+      "timestamp": "2025-11-20T07:10:40.056765",
+      "exchange": "bybit",
+      "equity": 75.9,
+      "usdt_balance": 0.0,
+      "raw_data": "Balance: $75.90 USDT | Available: $75.90 USDT"
+    },
+    {
+      "timestamp": "2025-11-20T07:13:04.801199",
+      "exchange": "bybit",
+      "equity": 75.9,
+      "usdt_balance": 0.0,
+      "raw_data": "Balance: $75.90 USDT | Available: $75.90 USDT"
+    },
+    {
+      "timestamp": "2025-11-20T07:15:10.785643",
+      "exchange": "bybit",
+      "equity": 75.71,
+      "usdt_balance": 0.0,
+      "raw_data": "Balance: $75.71 USDT | Available: $75.71 USDT"
+    },
+    {
+      "timestamp": "2025-11-20T07:15:44.828141",
+      "exchange": "bybit",
+      "equity": 75.71,
+      "usdt_balance": 0.0,
+      "raw_data": "Balance: $75.71 USDT | Available: $75.71 USDT"
+    },
+    {
+      "timestamp": "2025-11-20T07:16:07.050987",
+      "exchange": "bybit",
+      "equity": 75.71,
+      "usdt_balance": 0.0,
+      "raw_data": "Balance: $75.71 USDT | Available: $75.71 USDT"
+    },
+    {
+      "timestamp": "2025-11-20T07:19:04.480514",
+      "exchange": "bybit",
+      "equity": 75.71,
+      "usdt_balance": 0.0,
+      "raw_data": "Balance: $75.71 USDT | Available: $75.71 USDT"
+    },
+    {
+      "timestamp": "2025-11-20T07:19:53.525809",
+      "exchange": "bybit",
+      "equity": 75.71,
+      "usdt_balance": 0.0,
+      "raw_data": "Balance: $75.71 USDT | Available: $75.71 USDT"
+    },
+    {
+      "timestamp": "2025-11-20T07:21:52.932671",
+      "exchange": "bybit",
+      "equity": 75.71,
+      "usdt_balance": 0.0,
+      "raw_data": "Balance: $75.71 USDT | Available: $75.71 USDT"
+    },
+    {
+      "timestamp": "2025-11-20T07:23:24.348097",
+      "exchange": "bybit",
+      "equity": 75.68,
+      "usdt_balance": 0.0,
+      "raw_data": "Balance: $75.68 USDT | Available: $75.68 USDT"
+    },
+    {
+      "timestamp": "2025-11-20T07:23:28.752873",
+      "exchange": "bybit",
+      "equity": 75.68,
+      "usdt_balance": 0.0,
+      "raw_data": "Balance: $75.68 USDT | Available: $75.68 USDT"
+    },
+    {
+      "timestamp": "2025-11-20T07:25:44.746314",
+      "exchange": "bybit",
+      "equity": 75.68,
+      "usdt_balance": 0.0,
+      "raw_data": "Balance: $75.68 USDT | Available: $75.68 USDT"
+    },
+    {
+      "timestamp": "2025-11-20T07:28:51.657491",
+      "exchange": "bybit",
+      "equity": 75.64,
+      "usdt_balance": 0.0,
+      "raw_data": "Balance: $75.64 USDT | Available: $75.64 USDT"
+    },
+    {
+      "timestamp": "2025-11-20T07:29:53.738667",
+      "exchange": "bybit",
+      "equity": 75.64,
+      "usdt_balance": 0.0,
+      "raw_data": "Balance: $75.64 USDT | Available: $75.64 USDT"
+    },
+    {
+      "timestamp": "2025-11-20T07:30:50.788812",
+      "exchange": "bybit",
+      "equity": 75.59,
+      "usdt_balance": 0.0,
+      "raw_data": "Balance: $75.59 USDT | Available: $75.59 USDT"
+    },
+    {
+      "timestamp": "2025-11-20T07:31:08.111158",
+      "exchange": "bybit",
+      "equity": 75.59,
+      "usdt_balance": 0.0,
+      "raw_data": "Balance: $75.59 USDT | Available: $75.59 USDT"
+    },
+    {
+      "timestamp": "2025-11-20T07:34:48.806731",
+      "exchange": "bybit",
+      "equity": 75.58,
+      "usdt_balance": 0.0,
+      "raw_data": "Balance: $75.58 USDT | Available: $75.58 USDT"
+    },
+    {
+      "timestamp": "2025-11-20T07:38:32.325227",
+      "exchange": "bybit",
+      "equity": 75.53,
+      "usdt_balance": 0.0,
+      "raw_data": "Balance: $75.53 USDT | Available: $75.53 USDT"
+    },
+    {
+      "timestamp": "2025-11-20T07:40:11.723058",
+      "exchange": "bybit",
+      "equity": 75.52,
+      "usdt_balance": 0.0,
+      "raw_data": "Balance: $75.52 USDT | Available: $75.52 USDT"
+    },
+    {
+      "timestamp": "2025-11-20T07:46:22.908781",
+      "exchange": "bybit",
+      "equity": 75.51,
+      "usdt_balance": 0.0,
+      "raw_data": "Balance: $75.51 USDT | Available: $75.51 USDT"
+    },
+    {
+      "timestamp": "2025-11-20T07:52:53.213366",
+      "exchange": "bybit",
+      "equity": 75.51,
+      "usdt_balance": 0.0,
+      "raw_data": "Balance: $75.51 USDT | Available: $75.51 USDT"
+    },
+    {
+      "timestamp": "2025-11-20T07:59:05.373073",
+      "exchange": "bybit",
+      "equity": 75.51,
+      "usdt_balance": 0.0,
+      "raw_data": "Balance: $75.51 USDT | Available: $75.51 USDT"
+    },
+    {
+      "timestamp": "2025-11-20T08:03:14.737988",
+      "exchange": "bybit",
+      "equity": 75.51,
+      "usdt_balance": 0.0,
+      "raw_data": "Balance: $75.51 USDT | Available: $75.51 USDT"
+    },
+    {
+      "timestamp": "2025-11-20T08:08:44.215368",
+      "exchange": "bybit",
+      "equity": 75.51,
+      "usdt_balance": 0.0,
+      "raw_data": "Balance: $75.51 USDT | Available: $75.51 USDT"
+    },
+    {
+      "timestamp": "2025-11-20T08:13:24.643080",
+      "exchange": "bybit",
+      "equity": 75.51,
+      "usdt_balance": 0.0,
+      "raw_data": "Balance: $75.51 USDT | Available: $75.51 USDT"
+    },
+    {
+      "timestamp": "2025-11-20T08:17:50.708078",
+      "exchange": "bybit",
+      "equity": 75.51,
+      "usdt_balance": 0.0,
+      "raw_data": "Balance: $75.51 USDT | Available: $75.51 USDT"
+    },
+    {
+      "timestamp": "2025-11-20T08:21:42.724227",
+      "exchange": "bybit",
+      "equity": 75.51,
+      "usdt_balance": 0.0,
+      "raw_data": "Balance: $75.51 USDT | Available: $75.51 USDT"
+    },
+    {
+      "timestamp": "2025-11-20T08:26:02.336582",
+      "exchange": "bybit",
+      "equity": 75.51,
+      "usdt_balance": 0.0,
+      "raw_data": "Balance: $75.51 USDT | Available: $75.51 USDT"
+    },
+    {
+      "timestamp": "2025-11-20T08:26:46.701594",
+      "exchange": "bybit",
+      "equity": 75.51,
+      "usdt_balance": 0.0,
+      "raw_data": "Balance: $75.51 USDT | Available: $75.51 USDT"
+    },
+    {
+      "timestamp": "2025-11-20T08:30:54.392168",
+      "exchange": "bybit",
+      "equity": 75.51,
+      "usdt_balance": 0.0,
+      "raw_data": "Balance: $75.51 USDT | Available: $75.51 USDT"
+    },
+    {
+      "timestamp": "2025-11-20T08:39:31.567960",
+      "exchange": "bybit",
+      "equity": 76.0,
+      "usdt_balance": 0.0,
+      "raw_data": "Balance: $76.00 USDT | Available: $76.00 USDT"
+    },
+    {
+      "timestamp": "2025-11-20T08:40:44.494324",
+      "exchange": "bybit",
+      "equity": 76.0,
+      "usdt_balance": 0.0,
+      "raw_data": "Balance: $76.00 USDT | Available: $76.00 USDT"
+    },
+    {
+      "timestamp": "2025-11-20T08:44:26.377508",
+      "exchange": "bybit",
+      "equity": 76.0,
+      "usdt_balance": 0.0,
+      "raw_data": "Balance: $76.00 USDT | Available: $76.00 USDT"
+    },
+    {
+      "timestamp": "2025-11-20T08:45:12.417745",
+      "exchange": "bybit",
+      "equity": 76.0,
+      "usdt_balance": 0.0,
+      "raw_data": "Balance: $76.00 USDT | Available: $76.00 USDT"
+    },
+    {
+      "timestamp": "2025-11-20T08:49:05.848374",
+      "exchange": "bybit",
+      "equity": 76.0,
+      "usdt_balance": 0.0,
+      "raw_data": "Balance: $76.00 USDT | Available: $76.00 USDT"
+    },
+    {
+      "timestamp": "2025-11-20T08:49:38.504580",
+      "exchange": "bybit",
+      "equity": 76.0,
+      "usdt_balance": 0.0,
+      "raw_data": "Balance: $76.00 USDT | Available: $76.00 USDT"
+    },
+    {
+      "timestamp": "2025-11-20T08:53:32.713056",
+      "exchange": "bybit",
+      "equity": 76.0,
+      "usdt_balance": 0.0,
+      "raw_data": "Balance: $76.00 USDT | Available: $76.00 USDT"
+    },
+    {
+      "timestamp": "2025-11-20T08:57:20.770684",
+      "exchange": "bybit",
+      "equity": 76.0,
+      "usdt_balance": 0.0,
+      "raw_data": "Balance: $76.00 USDT | Available: $76.00 USDT"
+    },
+    {
+      "timestamp": "2025-11-20T09:01:07.898543",
+      "exchange": "bybit",
+      "equity": 76.0,
+      "usdt_balance": 0.0,
+      "raw_data": "Balance: $76.00 USDT | Available: $76.00 USDT"
+    },
+    {
+      "timestamp": "2025-11-20T09:01:31.408601",
+      "exchange": "bybit",
+      "equity": 76.0,
+      "usdt_balance": 0.0,
+      "raw_data": "Balance: $76.00 USDT | Available: $76.00 USDT"
+    },
+    {
+      "timestamp": "2025-11-20T09:02:01.128950",
+      "exchange": "bybit",
+      "equity": 76.0,
+      "usdt_balance": 0.0,
+      "raw_data": "Balance: $76.00 USDT | Available: $76.00 USDT"
+    },
+    {
+      "timestamp": "2025-11-20T09:05:47.527106",
+      "exchange": "bybit",
+      "equity": 76.0,
+      "usdt_balance": 0.0,
+      "raw_data": "Balance: $76.00 USDT | Available: $76.00 USDT"
+    },
+    {
+      "timestamp": "2025-11-20T09:06:08.475773",
+      "exchange": "bybit",
+      "equity": 76.0,
+      "usdt_balance": 0.0,
+      "raw_data": "Balance: $76.00 USDT | Available: $76.00 USDT"
+    },
+    {
+      "timestamp": "2025-11-20T09:09:38.015543",
+      "exchange": "bybit",
+      "equity": 76.0,
+      "usdt_balance": 0.0,
+      "raw_data": "Balance: $76.00 USDT | Available: $76.00 USDT"
+    },
+    {
+      "timestamp": "2025-11-20T09:13:13.677023",
+      "exchange": "bybit",
+      "equity": 76.0,
+      "usdt_balance": 0.0,
+      "raw_data": "Balance: $76.00 USDT | Available: $76.00 USDT"
+    },
+    {
+      "timestamp": "2025-11-20T09:13:43.479830",
+      "exchange": "bybit",
+      "equity": 76.0,
+      "usdt_balance": 0.0,
+      "raw_data": "Balance: $76.00 USDT | Available: $76.00 USDT"
+    },
+    {
+      "timestamp": "2025-11-20T09:17:33.901641",
+      "exchange": "bybit",
+      "equity": 76.0,
+      "usdt_balance": 0.0,
+      "raw_data": "Balance: $76.00 USDT | Available: $76.00 USDT"
+    },
+    {
+      "timestamp": "2025-11-20T09:21:24.124726",
+      "exchange": "bybit",
+      "equity": 76.0,
+      "usdt_balance": 0.0,
+      "raw_data": "Balance: $76.00 USDT | Available: $76.00 USDT"
+    },
+    {
+      "timestamp": "2025-11-20T09:25:00.353940",
+      "exchange": "bybit",
+      "equity": 76.0,
+      "usdt_balance": 0.0,
+      "raw_data": "Balance: $76.00 USDT | Available: $76.00 USDT"
+    },
+    {
+      "timestamp": "2025-11-20T09:28:51.543674",
+      "exchange": "bybit",
+      "equity": 76.0,
+      "usdt_balance": 0.0,
+      "raw_data": "Balance: $76.00 USDT | Available: $76.00 USDT"
+    },
+    {
+      "timestamp": "2025-11-20T09:32:35.162744",
+      "exchange": "bybit",
+      "equity": 76.0,
+      "usdt_balance": 0.0,
+      "raw_data": "Balance: $76.00 USDT | Available: $76.00 USDT"
+    },
+    {
+      "timestamp": "2025-11-20T09:33:00.350445",
+      "exchange": "bybit",
+      "equity": 76.0,
+      "usdt_balance": 0.0,
+      "raw_data": "Balance: $76.00 USDT | Available: $76.00 USDT"
+    },
+    {
+      "timestamp": "2025-11-20T09:36:52.101232",
+      "exchange": "bybit",
+      "equity": 76.0,
+      "usdt_balance": 0.0,
+      "raw_data": "Balance: $76.00 USDT | Available: $76.00 USDT"
+    },
+    {
+      "timestamp": "2025-11-20T09:40:36.448443",
+      "exchange": "bybit",
+      "equity": 76.0,
+      "usdt_balance": 0.0,
+      "raw_data": "Balance: $76.00 USDT | Available: $76.00 USDT"
+    },
+    {
+      "timestamp": "2025-11-20T09:44:15.784291",
+      "exchange": "bybit",
+      "equity": 76.0,
+      "usdt_balance": 0.0,
+      "raw_data": "Balance: $76.00 USDT | Available: $76.00 USDT"
+    },
+    {
+      "timestamp": "2025-11-20T09:48:41.549045",
+      "exchange": "bybit",
+      "equity": 75.81,
+      "usdt_balance": 0.0,
+      "raw_data": "Balance: $75.81 USDT | Available: $75.81 USDT"
+    },
+    {
+      "timestamp": "2025-11-20T09:49:04.631795",
+      "exchange": "bybit",
+      "equity": 75.81,
+      "usdt_balance": 0.0,
+      "raw_data": "Balance: $75.81 USDT | Available: $75.81 USDT"
+    },
+    {
+      "timestamp": "2025-11-20T09:52:53.378680",
+      "exchange": "bybit",
+      "equity": 75.81,
+      "usdt_balance": 0.0,
+      "raw_data": "Balance: $75.81 USDT | Available: $75.81 USDT"
+    },
+    {
+      "timestamp": "2025-11-20T09:56:37.336245",
+      "exchange": "bybit",
+      "equity": 75.81,
+      "usdt_balance": 0.0,
+      "raw_data": "Balance: $75.81 USDT | Available: $75.81 USDT"
+    },
+    {
+      "timestamp": "2025-11-20T10:00:27.227667",
+      "exchange": "bybit",
+      "equity": 75.81,
+      "usdt_balance": 0.0,
+      "raw_data": "Balance: $75.81 USDT | Available: $75.81 USDT"
+    },
+    {
+      "timestamp": "2025-11-20T10:04:07.214473",
+      "exchange": "bybit",
+      "equity": 75.81,
+      "usdt_balance": 0.0,
+      "raw_data": "Balance: $75.81 USDT | Available: $75.81 USDT"
+    },
+    {
+      "timestamp": "2025-11-20T10:08:10.568390",
+      "exchange": "bybit",
+      "equity": 75.81,
+      "usdt_balance": 0.0,
+      "raw_data": "Balance: $75.81 USDT | Available: $75.81 USDT"
+    },
+    {
+      "timestamp": "2025-11-20T10:08:37.673084",
+      "exchange": "bybit",
+      "equity": 75.81,
+      "usdt_balance": 0.0,
+      "raw_data": "Balance: $75.81 USDT | Available: $75.81 USDT"
+    },
+    {
+      "timestamp": "2025-11-20T10:12:08.488246",
+      "exchange": "bybit",
+      "equity": 75.81,
+      "usdt_balance": 0.0,
+      "raw_data": "Balance: $75.81 USDT | Available: $75.81 USDT"
+    },
+    {
+      "timestamp": "2025-11-20T10:15:58.646093",
+      "exchange": "bybit",
+      "equity": 75.81,
+      "usdt_balance": 0.0,
+      "raw_data": "Balance: $75.81 USDT | Available: $75.81 USDT"
+    },
+    {
+      "timestamp": "2025-11-20T10:19:39.312752",
+      "exchange": "bybit",
+      "equity": 75.81,
+      "usdt_balance": 0.0,
+      "raw_data": "Balance: $75.81 USDT | Available: $75.81 USDT"
+    },
+    {
+      "timestamp": "2025-11-20T10:20:02.280570",
+      "exchange": "bybit",
+      "equity": 75.81,
+      "usdt_balance": 0.0,
+      "raw_data": "Balance: $75.81 USDT | Available: $75.81 USDT"
+    },
+    {
+      "timestamp": "2025-11-20T10:23:40.042624",
+      "exchange": "bybit",
+      "equity": 75.81,
+      "usdt_balance": 0.0,
+      "raw_data": "Balance: $75.81 USDT | Available: $75.81 USDT"
+    },
+    {
+      "timestamp": "2025-11-20T10:27:03.404124",
+      "exchange": "bybit",
+      "equity": 75.81,
+      "usdt_balance": 0.0,
+      "raw_data": "Balance: $75.81 USDT | Available: $75.81 USDT"
+    },
+    {
+      "timestamp": "2025-11-20T10:30:40.564549",
+      "exchange": "bybit",
+      "equity": 75.81,
+      "usdt_balance": 0.0,
+      "raw_data": "Balance: $75.81 USDT | Available: $75.81 USDT"
+    },
+    {
+      "timestamp": "2025-11-20T10:34:28.649039",
+      "exchange": "bybit",
+      "equity": 75.81,
+      "usdt_balance": 0.0,
+      "raw_data": "Balance: $75.81 USDT | Available: $75.81 USDT"
+    },
+    {
+      "timestamp": "2025-11-20T10:37:52.681212",
+      "exchange": "bybit",
+      "equity": 75.81,
+      "usdt_balance": 0.0,
+      "raw_data": "Balance: $75.81 USDT | Available: $75.81 USDT"
+    },
+    {
+      "timestamp": "2025-11-20T10:41:31.788061",
+      "exchange": "bybit",
+      "equity": 75.81,
+      "usdt_balance": 0.0,
+      "raw_data": "Balance: $75.81 USDT | Available: $75.81 USDT"
+    },
+    {
+      "timestamp": "2025-11-20T10:45:04.511556",
+      "exchange": "bybit",
+      "equity": 75.81,
+      "usdt_balance": 0.0,
+      "raw_data": "Balance: $75.81 USDT | Available: $75.81 USDT"
+    },
+    {
+      "timestamp": "2025-11-20T10:45:33.161238",
+      "exchange": "bybit",
+      "equity": 75.81,
+      "usdt_balance": 0.0,
+      "raw_data": "Balance: $75.81 USDT | Available: $75.81 USDT"
+    },
+    {
+      "timestamp": "2025-11-20T10:49:11.077382",
+      "exchange": "bybit",
+      "equity": 75.81,
+      "usdt_balance": 0.0,
+      "raw_data": "Balance: $75.81 USDT | Available: $75.81 USDT"
+    },
+    {
+      "timestamp": "2025-11-20T10:56:37.406208",
+      "exchange": "bybit",
+      "equity": 75.81,
+      "usdt_balance": 0.0,
+      "raw_data": "Balance: $75.81 USDT | Available: $75.81 USDT"
+    },
+    {
+      "timestamp": "2025-11-20T11:00:36.048297",
+      "exchange": "bybit",
+      "equity": 75.77,
+      "usdt_balance": 0.0,
+      "raw_data": "Balance: $75.77 USDT | Available: $75.77 USDT"
+    },
+    {
+      "timestamp": "2025-11-20T11:04:45.720770",
+      "exchange": "bybit",
+      "equity": 75.77,
+      "usdt_balance": 0.0,
+      "raw_data": "Balance: $75.77 USDT | Available: $75.77 USDT"
+    },
+    {
+      "timestamp": "2025-11-20T11:05:30.140902",
+      "exchange": "bybit",
+      "equity": 75.77,
+      "usdt_balance": 0.0,
+      "raw_data": "Balance: $75.77 USDT | Available: $75.77 USDT"
+    },
+    {
+      "timestamp": "2025-11-20T11:09:23.767385",
+      "exchange": "bybit",
+      "equity": 75.77,
+      "usdt_balance": 0.0,
+      "raw_data": "Balance: $75.77 USDT | Available: $75.77 USDT"
+    },
+    {
+      "timestamp": "2025-11-20T11:13:27.651081",
+      "exchange": "bybit",
+      "equity": 75.77,
+      "usdt_balance": 0.0,
+      "raw_data": "Balance: $75.77 USDT | Available: $75.77 USDT"
+    },
+    {
+      "timestamp": "2025-11-20T11:18:09.524011",
+      "exchange": "bybit",
+      "equity": 75.77,
+      "usdt_balance": 0.0,
+      "raw_data": "Balance: $75.77 USDT | Available: $75.77 USDT"
+    },
+    {
+      "timestamp": "2025-11-20T11:22:08.480803",
+      "exchange": "bybit",
+      "equity": 75.77,
+      "usdt_balance": 0.0,
+      "raw_data": "Balance: $75.77 USDT | Available: $75.77 USDT"
+    },
+    {
+      "timestamp": "2025-11-20T11:26:06.000809",
+      "exchange": "bybit",
+      "equity": 75.77,
+      "usdt_balance": 0.0,
+      "raw_data": "Balance: $75.77 USDT | Available: $75.77 USDT"
+    },
+    {
+      "timestamp": "2025-11-20T11:26:37.107528",
+      "exchange": "bybit",
+      "equity": 75.77,
+      "usdt_balance": 0.0,
+      "raw_data": "Balance: $75.77 USDT | Available: $75.77 USDT"
+    },
+    {
+      "timestamp": "2025-11-20T11:27:11.149201",
+      "exchange": "bybit",
+      "equity": 75.77,
+      "usdt_balance": 0.0,
+      "raw_data": "Balance: $75.77 USDT | Available: $75.77 USDT"
+    },
+    {
+      "timestamp": "2025-11-20T11:30:46.864092",
+      "exchange": "bybit",
+      "equity": 75.77,
+      "usdt_balance": 0.0,
+      "raw_data": "Balance: $75.77 USDT | Available: $75.77 USDT"
+    },
+    {
+      "timestamp": "2025-11-20T11:34:31.667233",
+      "exchange": "bybit",
+      "equity": 75.77,
+      "usdt_balance": 0.0,
+      "raw_data": "Balance: $75.77 USDT | Available: $75.77 USDT"
+    },
+    {
+      "timestamp": "2025-11-20T11:34:54.667316",
+      "exchange": "bybit",
+      "equity": 75.77,
+      "usdt_balance": 0.0,
+      "raw_data": "Balance: $75.77 USDT | Available: $75.77 USDT"
+    },
+    {
+      "timestamp": "2025-11-20T11:35:17.082114",
+      "exchange": "bybit",
+      "equity": 75.77,
+      "usdt_balance": 0.0,
+      "raw_data": "Balance: $75.77 USDT | Available: $75.77 USDT"
+    },
+    {
+      "timestamp": "2025-11-20T11:38:56.587207",
+      "exchange": "bybit",
+      "equity": 75.77,
+      "usdt_balance": 0.0,
+      "raw_data": "Balance: $75.77 USDT | Available: $75.77 USDT"
+    },
+    {
+      "timestamp": "2025-11-20T11:39:32.055762",
+      "exchange": "bybit",
+      "equity": 75.77,
+      "usdt_balance": 0.0,
+      "raw_data": "Balance: $75.77 USDT | Available: $75.77 USDT"
+    },
+    {
+      "timestamp": "2025-11-20T11:39:55.358627",
+      "exchange": "bybit",
+      "equity": 75.77,
+      "usdt_balance": 0.0,
+      "raw_data": "Balance: $75.77 USDT | Available: $75.77 USDT"
+    },
+    {
+      "timestamp": "2025-11-20T11:40:19.859057",
+      "exchange": "bybit",
+      "equity": 75.77,
+      "usdt_balance": 0.0,
+      "raw_data": "Balance: $75.77 USDT | Available: $75.77 USDT"
+    },
+    {
+      "timestamp": "2025-11-20T11:40:42.624107",
+      "exchange": "bybit",
+      "equity": 75.77,
+      "usdt_balance": 0.0,
+      "raw_data": "Balance: $75.77 USDT | Available: $75.77 USDT"
+    },
+    {
+      "timestamp": "2025-11-20T11:44:30.360210",
+      "exchange": "bybit",
+      "equity": 75.77,
+      "usdt_balance": 0.0,
+      "raw_data": "Balance: $75.77 USDT | Available: $75.77 USDT"
+    },
+    {
+      "timestamp": "2025-11-20T11:48:38.116503",
+      "exchange": "bybit",
+      "equity": 75.77,
+      "usdt_balance": 0.0,
+      "raw_data": "Balance: $75.77 USDT | Available: $75.77 USDT"
+    },
+    {
+      "timestamp": "2025-11-20T11:52:32.668355",
+      "exchange": "bybit",
+      "equity": 75.77,
+      "usdt_balance": 0.0,
+      "raw_data": "Balance: $75.77 USDT | Available: $75.77 USDT"
+    },
+    {
+      "timestamp": "2025-11-20T11:52:57.735373",
+      "exchange": "bybit",
+      "equity": 75.77,
+      "usdt_balance": 0.0,
+      "raw_data": "Balance: $75.77 USDT | Available: $75.77 USDT"
+    },
+    {
+      "timestamp": "2025-11-20T11:53:24.292240",
+      "exchange": "bybit",
+      "equity": 75.77,
+      "usdt_balance": 0.0,
+      "raw_data": "Balance: $75.77 USDT | Available: $75.77 USDT"
+    },
+    {
+      "timestamp": "2025-11-20T11:53:40.528637",
+      "exchange": "bybit",
+      "equity": 75.77,
+      "usdt_balance": 0.0,
+      "raw_data": "Balance: $75.77 USDT | Available: $75.77 USDT"
+    },
+    {
+      "timestamp": "2025-11-20T11:57:19.834864",
+      "exchange": "bybit",
+      "equity": 75.77,
+      "usdt_balance": 0.0,
+      "raw_data": "Balance: $75.77 USDT | Available: $75.77 USDT"
+    },
+    {
+      "timestamp": "2025-11-20T12:01:19.244404",
+      "exchange": "bybit",
+      "equity": 75.77,
+      "usdt_balance": 0.0,
+      "raw_data": "Balance: $75.77 USDT | Available: $75.77 USDT"
+    },
+    {
+      "timestamp": "2025-11-20T12:05:33.702991",
+      "exchange": "bybit",
+      "equity": 75.77,
+      "usdt_balance": 0.0,
+      "raw_data": "Balance: $75.77 USDT | Available: $75.77 USDT"
+    },
+    {
+      "timestamp": "2025-11-20T12:05:58.063680",
+      "exchange": "bybit",
+      "equity": 75.77,
+      "usdt_balance": 0.0,
+      "raw_data": "Balance: $75.77 USDT | Available: $75.77 USDT"
+    },
+    {
+      "timestamp": "2025-11-20T12:09:57.674117",
+      "exchange": "bybit",
+      "equity": 75.77,
+      "usdt_balance": 0.0,
+      "raw_data": "Balance: $75.77 USDT | Available: $75.77 USDT"
+    },
+    {
+      "timestamp": "2025-11-20T12:13:57.796510",
+      "exchange": "bybit",
+      "equity": 75.77,
+      "usdt_balance": 0.0,
+      "raw_data": "Balance: $75.77 USDT | Available: $75.77 USDT"
+    },
+    {
+      "timestamp": "2025-11-20T12:14:20.732552",
+      "exchange": "bybit",
+      "equity": 75.77,
+      "usdt_balance": 0.0,
+      "raw_data": "Balance: $75.77 USDT | Available: $75.77 USDT"
+    },
+    {
+      "timestamp": "2025-11-20T12:14:47.899663",
+      "exchange": "bybit",
+      "equity": 75.77,
+      "usdt_balance": 0.0,
+      "raw_data": "Balance: $75.77 USDT | Available: $75.77 USDT"
+    },
+    {
+      "timestamp": "2025-11-20T12:18:35.331856",
+      "exchange": "bybit",
+      "equity": 75.77,
+      "usdt_balance": 0.0,
+      "raw_data": "Balance: $75.77 USDT | Available: $75.77 USDT"
+    },
+    {
+      "timestamp": "2025-11-20T12:22:12.920087",
+      "exchange": "bybit",
+      "equity": 75.77,
+      "usdt_balance": 0.0,
+      "raw_data": "Balance: $75.77 USDT | Available: $75.77 USDT"
+    },
+    {
+      "timestamp": "2025-11-20T12:25:51.364925",
+      "exchange": "bybit",
+      "equity": 75.77,
+      "usdt_balance": 0.0,
+      "raw_data": "Balance: $75.77 USDT | Available: $75.77 USDT"
+    },
+    {
+      "timestamp": "2025-11-20T12:30:15.964092",
+      "exchange": "bybit",
+      "equity": 75.77,
+      "usdt_balance": 0.0,
+      "raw_data": "Balance: $75.77 USDT | Available: $75.77 USDT"
+    },
+    {
+      "timestamp": "2025-11-20T12:34:09.982564",
+      "exchange": "bybit",
+      "equity": 75.77,
+      "usdt_balance": 0.0,
+      "raw_data": "Balance: $75.77 USDT | Available: $75.77 USDT"
+    },
+    {
+      "timestamp": "2025-11-20T12:37:54.505872",
+      "exchange": "bybit",
+      "equity": 75.77,
+      "usdt_balance": 0.0,
+      "raw_data": "Balance: $75.77 USDT | Available: $75.77 USDT"
+    },
+    {
+      "timestamp": "2025-11-20T12:41:44.211335",
+      "exchange": "bybit",
+      "equity": 75.77,
+      "usdt_balance": 0.0,
+      "raw_data": "Balance: $75.77 USDT | Available: $75.77 USDT"
+    },
+    {
+      "timestamp": "2025-11-20T12:42:06.259994",
+      "exchange": "bybit",
+      "equity": 75.77,
+      "usdt_balance": 0.0,
+      "raw_data": "Balance: $75.77 USDT | Available: $75.77 USDT"
+    },
+    {
+      "timestamp": "2025-11-20T12:45:51.785238",
+      "exchange": "bybit",
+      "equity": 75.77,
+      "usdt_balance": 0.0,
+      "raw_data": "Balance: $75.77 USDT | Available: $75.77 USDT"
+    },
+    {
+      "timestamp": "2025-11-20T12:46:31.355730",
+      "exchange": "bybit",
+      "equity": 75.77,
+      "usdt_balance": 0.0,
+      "raw_data": "Balance: $75.77 USDT | Available: $75.77 USDT"
+    },
+    {
+      "timestamp": "2025-11-20T12:50:49.553590",
+      "exchange": "bybit",
+      "equity": 75.77,
+      "usdt_balance": 0.0,
+      "raw_data": "Balance: $75.77 USDT | Available: $75.77 USDT"
+    },
+    {
+      "timestamp": "2025-11-20T12:51:28.149393",
+      "exchange": "bybit",
+      "equity": 75.77,
+      "usdt_balance": 0.0,
+      "raw_data": "Balance: $75.77 USDT | Available: $75.77 USDT"
+    },
+    {
+      "timestamp": "2025-11-20T12:52:24.131645",
+      "exchange": "bybit",
+      "equity": 75.77,
+      "usdt_balance": 0.0,
+      "raw_data": "Balance: $75.77 USDT | Available: $75.77 USDT"
+    },
+    {
+      "timestamp": "2025-11-20T12:55:59.313683",
+      "exchange": "bybit",
+      "equity": 75.77,
+      "usdt_balance": 0.0,
+      "raw_data": "Balance: $75.77 USDT | Available: $75.77 USDT"
+    },
+    {
+      "timestamp": "2025-11-20T12:56:42.293621",
+      "exchange": "bybit",
+      "equity": 75.77,
+      "usdt_balance": 0.0,
+      "raw_data": "Balance: $75.77 USDT | Available: $75.77 USDT"
+    },
+    {
+      "timestamp": "2025-11-20T12:57:06.299390",
+      "exchange": "bybit",
+      "equity": 75.77,
+      "usdt_balance": 0.0,
+      "raw_data": "Balance: $75.77 USDT | Available: $75.77 USDT"
+    },
+    {
+      "timestamp": "2025-11-20T13:00:43.286780",
+      "exchange": "bybit",
+      "equity": 75.77,
+      "usdt_balance": 0.0,
+      "raw_data": "Balance: $75.77 USDT | Available: $75.77 USDT"
+    },
+    {
+      "timestamp": "2025-11-20T13:04:18.833576",
+      "exchange": "bybit",
+      "equity": 75.77,
+      "usdt_balance": 0.0,
+      "raw_data": "Balance: $75.77 USDT | Available: $75.77 USDT"
+    },
+    {
+      "timestamp": "2025-11-20T13:04:51.490422",
+      "exchange": "bybit",
+      "equity": 75.77,
+      "usdt_balance": 0.0,
+      "raw_data": "Balance: $75.77 USDT | Available: $75.77 USDT"
+    },
+    {
+      "timestamp": "2025-11-20T13:08:32.533393",
+      "exchange": "bybit",
+      "equity": 75.77,
+      "usdt_balance": 0.0,
+      "raw_data": "Balance: $75.77 USDT | Available: $75.77 USDT"
+    },
+    {
+      "timestamp": "2025-11-20T13:09:10.990275",
+      "exchange": "bybit",
+      "equity": 75.77,
+      "usdt_balance": 0.0,
+      "raw_data": "Balance: $75.77 USDT | Available: $75.77 USDT"
+    },
+    {
+      "timestamp": "2025-11-20T13:09:36.519638",
+      "exchange": "bybit",
+      "equity": 75.77,
+      "usdt_balance": 0.0,
+      "raw_data": "Balance: $75.77 USDT | Available: $75.77 USDT"
+    },
+    {
+      "timestamp": "2025-11-20T13:13:29.052597",
+      "exchange": "bybit",
+      "equity": 75.77,
+      "usdt_balance": 0.0,
+      "raw_data": "Balance: $75.77 USDT | Available: $75.77 USDT"
+    },
+    {
+      "timestamp": "2025-11-20T13:20:36.619416",
+      "exchange": "bybit",
+      "equity": 75.77,
+      "usdt_balance": 0.0,
+      "raw_data": "Balance: $75.77 USDT | Available: $75.77 USDT"
+    },
+    {
+      "timestamp": "2025-11-20T13:24:49.225059",
+      "exchange": "bybit",
+      "equity": 75.77,
+      "usdt_balance": 0.0,
+      "raw_data": "Balance: $75.77 USDT | Available: $75.77 USDT"
+    },
+    {
+      "timestamp": "2025-11-20T13:25:29.035916",
+      "exchange": "bybit",
+      "equity": 75.77,
+      "usdt_balance": 0.0,
+      "raw_data": "Balance: $75.77 USDT | Available: $75.77 USDT"
+    },
+    {
+      "timestamp": "2025-11-20T13:29:07.013955",
+      "exchange": "bybit",
+      "equity": 75.77,
+      "usdt_balance": 0.0,
+      "raw_data": "Balance: $75.77 USDT | Available: $75.77 USDT"
+    },
+    {
+      "timestamp": "2025-11-20T13:33:03.656674",
+      "exchange": "bybit",
+      "equity": 75.77,
+      "usdt_balance": 0.0,
+      "raw_data": "Balance: $75.77 USDT | Available: $75.77 USDT"
+    },
+    {
+      "timestamp": "2025-11-20T13:36:54.014883",
+      "exchange": "bybit",
+      "equity": 75.77,
+      "usdt_balance": 0.0,
+      "raw_data": "Balance: $75.77 USDT | Available: $75.77 USDT"
+    },
+    {
+      "timestamp": "2025-11-20T13:37:18.445827",
+      "exchange": "bybit",
+      "equity": 75.77,
+      "usdt_balance": 0.0,
+      "raw_data": "Balance: $75.77 USDT | Available: $75.77 USDT"
+    },
+    {
+      "timestamp": "2025-11-20T13:40:41.789464",
+      "exchange": "bybit",
+      "equity": 75.77,
+      "usdt_balance": 0.0,
+      "raw_data": "Balance: $75.77 USDT | Available: $75.77 USDT"
+    },
+    {
+      "timestamp": "2025-11-20T13:41:11.996148",
+      "exchange": "bybit",
+      "equity": 75.77,
+      "usdt_balance": 0.0,
+      "raw_data": "Balance: $75.77 USDT | Available: $75.77 USDT"
+    },
+    {
+      "timestamp": "2025-11-20T13:44:45.525619",
+      "exchange": "bybit",
+      "equity": 75.77,
+      "usdt_balance": 0.0,
+      "raw_data": "Balance: $75.77 USDT | Available: $75.77 USDT"
+    },
+    {
+      "timestamp": "2025-11-20T13:48:15.201348",
+      "exchange": "bybit",
+      "equity": 75.77,
+      "usdt_balance": 0.0,
+      "raw_data": "Balance: $75.77 USDT | Available: $75.77 USDT"
+    },
+    {
+      "timestamp": "2025-11-20T13:51:45.064466",
+      "exchange": "bybit",
+      "equity": 75.77,
+      "usdt_balance": 0.0,
+      "raw_data": "Balance: $75.77 USDT | Available: $75.77 USDT"
+    },
+    {
+      "timestamp": "2025-11-20T13:55:13.430271",
+      "exchange": "bybit",
+      "equity": 75.77,
+      "usdt_balance": 0.0,
+      "raw_data": "Balance: $75.77 USDT | Available: $75.77 USDT"
+    },
+    {
+      "timestamp": "2025-11-20T13:58:56.086713",
+      "exchange": "bybit",
+      "equity": 75.77,
+      "usdt_balance": 0.0,
+      "raw_data": "Balance: $75.77 USDT | Available: $75.77 USDT"
+    },
+    {
+      "timestamp": "2025-11-20T14:03:03.348032",
+      "exchange": "bybit",
+      "equity": 75.77,
+      "usdt_balance": 0.0,
+      "raw_data": "Balance: $75.77 USDT | Available: $75.77 USDT"
+    },
+    {
+      "timestamp": "2025-11-20T14:03:23.951546",
+      "exchange": "bybit",
+      "equity": 75.77,
+      "usdt_balance": 0.0,
+      "raw_data": "Balance: $75.77 USDT | Available: $75.77 USDT"
+    },
+    {
+      "timestamp": "2025-11-20T14:07:03.554356",
+      "exchange": "bybit",
+      "equity": 75.77,
+      "usdt_balance": 0.0,
+      "raw_data": "Balance: $75.77 USDT | Available: $75.77 USDT"
+    },
+    {
+      "timestamp": "2025-11-20T14:07:24.800159",
+      "exchange": "bybit",
+      "equity": 75.77,
+      "usdt_balance": 0.0,
+      "raw_data": "Balance: $75.77 USDT | Available: $75.77 USDT"
+    },
+    {
+      "timestamp": "2025-11-20T14:10:49.467326",
+      "exchange": "bybit",
+      "equity": 75.77,
+      "usdt_balance": 0.0,
+      "raw_data": "Balance: $75.77 USDT | Available: $75.77 USDT"
+    },
+    {
+      "timestamp": "2025-11-20T14:11:27.475825",
+      "exchange": "bybit",
+      "equity": 75.77,
+      "usdt_balance": 0.0,
+      "raw_data": "Balance: $75.77 USDT | Available: $75.77 USDT"
+    },
+    {
+      "timestamp": "2025-11-20T14:15:21.455404",
+      "exchange": "bybit",
+      "equity": 75.77,
+      "usdt_balance": 0.0,
+      "raw_data": "Balance: $75.77 USDT | Available: $75.77 USDT"
+    },
+    {
+      "timestamp": "2025-11-20T14:19:19.950940",
+      "exchange": "bybit",
+      "equity": 75.77,
+      "usdt_balance": 0.0,
+      "raw_data": "Balance: $75.77 USDT | Available: $75.77 USDT"
+    },
+    {
+      "timestamp": "2025-11-20T14:22:44.103439",
+      "exchange": "bybit",
+      "equity": 75.77,
+      "usdt_balance": 0.0,
+      "raw_data": "Balance: $75.77 USDT | Available: $75.77 USDT"
+    },
+    {
+      "timestamp": "2025-11-20T14:26:50.562715",
+      "exchange": "bybit",
+      "equity": 75.77,
+      "usdt_balance": 0.0,
+      "raw_data": "Balance: $75.77 USDT | Available: $75.77 USDT"
+    },
+    {
+      "timestamp": "2025-11-20T14:27:13.516637",
+      "exchange": "bybit",
+      "equity": 75.77,
+      "usdt_balance": 0.0,
+      "raw_data": "Balance: $75.77 USDT | Available: $75.77 USDT"
+    },
+    {
+      "timestamp": "2025-11-20T14:27:45.750894",
+      "exchange": "bybit",
+      "equity": 75.77,
+      "usdt_balance": 0.0,
+      "raw_data": "Balance: $75.77 USDT | Available: $75.77 USDT"
+    },
+    {
+      "timestamp": "2025-11-20T14:28:14.828157",
+      "exchange": "bybit",
+      "equity": 75.77,
+      "usdt_balance": 0.0,
+      "raw_data": "Balance: $75.77 USDT | Available: $75.77 USDT"
+    },
+    {
+      "timestamp": "2025-11-20T14:32:02.687789",
+      "exchange": "bybit",
+      "equity": 75.77,
+      "usdt_balance": 0.0,
+      "raw_data": "Balance: $75.77 USDT | Available: $75.77 USDT"
+    },
+    {
+      "timestamp": "2025-11-20T14:32:34.551919",
+      "exchange": "bybit",
+      "equity": 75.77,
+      "usdt_balance": 0.0,
+      "raw_data": "Balance: $75.77 USDT | Available: $75.77 USDT"
+    },
+    {
+      "timestamp": "2025-11-20T14:33:03.761759",
+      "exchange": "bybit",
+      "equity": 75.77,
+      "usdt_balance": 0.0,
+      "raw_data": "Balance: $75.77 USDT | Available: $75.77 USDT"
+    },
+    {
+      "timestamp": "2025-11-20T14:33:35.279013",
+      "exchange": "bybit",
+      "equity": 75.77,
+      "usdt_balance": 0.0,
+      "raw_data": "Balance: $75.77 USDT | Available: $75.77 USDT"
+    },
+    {
+      "timestamp": "2025-11-20T14:34:02.839438",
+      "exchange": "bybit",
+      "equity": 75.77,
+      "usdt_balance": 0.0,
+      "raw_data": "Balance: $75.77 USDT | Available: $75.77 USDT"
+    },
+    {
+      "timestamp": "2025-11-20T14:34:31.591536",
+      "exchange": "bybit",
+      "equity": 75.77,
+      "usdt_balance": 0.0,
+      "raw_data": "Balance: $75.77 USDT | Available: $75.77 USDT"
+    },
+    {
+      "timestamp": "2025-11-20T14:35:12.399876",
+      "exchange": "bybit",
+      "equity": 75.77,
+      "usdt_balance": 0.0,
+      "raw_data": "Balance: $75.77 USDT | Available: $75.77 USDT"
+    },
+    {
+      "timestamp": "2025-11-20T14:38:54.624717",
+      "exchange": "bybit",
+      "equity": 75.77,
+      "usdt_balance": 0.0,
+      "raw_data": "Balance: $75.77 USDT | Available: $75.77 USDT"
+    },
+    {
+      "timestamp": "2025-11-20T14:42:45.438044",
+      "exchange": "bybit",
+      "equity": 75.77,
+      "usdt_balance": 0.0,
+      "raw_data": "Balance: $75.77 USDT | Available: $75.77 USDT"
+    },
+    {
+      "timestamp": "2025-11-20T14:46:18.120530",
+      "exchange": "bybit",
+      "equity": 75.77,
+      "usdt_balance": 0.0,
+      "raw_data": "Balance: $75.77 USDT | Available: $75.77 USDT"
+    },
+    {
+      "timestamp": "2025-11-20T14:46:46.650083",
+      "exchange": "bybit",
+      "equity": 75.77,
+      "usdt_balance": 0.0,
+      "raw_data": "Balance: $75.77 USDT | Available: $75.77 USDT"
+    },
+    {
+      "timestamp": "2025-11-20T14:50:26.473859",
+      "exchange": "bybit",
+      "equity": 75.77,
+      "usdt_balance": 0.0,
+      "raw_data": "Balance: $75.77 USDT | Available: $75.77 USDT"
+    },
+    {
+      "timestamp": "2025-11-20T14:54:35.283260",
+      "exchange": "bybit",
+      "equity": 75.77,
+      "usdt_balance": 0.0,
+      "raw_data": "Balance: $75.77 USDT | Available: $75.77 USDT"
+    },
+    {
+      "timestamp": "2025-11-20T14:55:06.537172",
+      "exchange": "bybit",
+      "equity": 75.77,
+      "usdt_balance": 0.0,
+      "raw_data": "Balance: $75.77 USDT | Available: $75.77 USDT"
+    },
+    {
+      "timestamp": "2025-11-20T14:58:40.770386",
+      "exchange": "bybit",
+      "equity": 75.77,
+      "usdt_balance": 0.0,
+      "raw_data": "Balance: $75.77 USDT | Available: $75.77 USDT"
+    },
+    {
+      "timestamp": "2025-11-20T14:59:12.419726",
+      "exchange": "bybit",
+      "equity": 75.77,
+      "usdt_balance": 0.0,
+      "raw_data": "Balance: $75.77 USDT | Available: $75.77 USDT"
+    },
+    {
+      "timestamp": "2025-11-20T15:02:46.523028",
+      "exchange": "bybit",
+      "equity": 75.77,
+      "usdt_balance": 0.0,
+      "raw_data": "Balance: $75.77 USDT | Available: $75.77 USDT"
+    },
+    {
+      "timestamp": "2025-11-20T15:06:09.955705",
+      "exchange": "bybit",
+      "equity": 75.77,
+      "usdt_balance": 0.0,
+      "raw_data": "Balance: $75.77 USDT | Available: $75.77 USDT"
+    },
+    {
+      "timestamp": "2025-11-20T15:09:40.877015",
+      "exchange": "bybit",
+      "equity": 75.77,
+      "usdt_balance": 0.0,
+      "raw_data": "Balance: $75.77 USDT | Available: $75.77 USDT"
+    },
+    {
+      "timestamp": "2025-11-20T15:10:02.764445",
+      "exchange": "bybit",
+      "equity": 75.77,
+      "usdt_balance": 0.0,
+      "raw_data": "Balance: $75.77 USDT | Available: $75.77 USDT"
+    },
+    {
+      "timestamp": "2025-11-20T15:10:16.929548",
+      "exchange": "bybit",
+      "equity": 75.77,
+      "usdt_balance": 0.0,
+      "raw_data": "Balance: $75.77 USDT | Available: $75.77 USDT"
+    },
+    {
+      "timestamp": "2025-11-20T15:10:34.877899",
+      "exchange": "bybit",
+      "equity": 75.77,
+      "usdt_balance": 0.0,
+      "raw_data": "Balance: $75.77 USDT | Available: $75.77 USDT"
+    },
+    {
+      "timestamp": "2025-11-20T15:14:03.857467",
+      "exchange": "bybit",
+      "equity": 75.77,
+      "usdt_balance": 0.0,
+      "raw_data": "Balance: $75.77 USDT | Available: $75.77 USDT"
+    },
+    {
+      "timestamp": "2025-11-20T15:14:34.145716",
+      "exchange": "bybit",
+      "equity": 75.77,
+      "usdt_balance": 0.0,
+      "raw_data": "Balance: $75.77 USDT | Available: $75.77 USDT"
+    },
+    {
+      "timestamp": "2025-11-20T15:14:53.999609",
+      "exchange": "bybit",
+      "equity": 75.77,
+      "usdt_balance": 0.0,
+      "raw_data": "Balance: $75.77 USDT | Available: $75.77 USDT"
+    },
+    {
+      "timestamp": "2025-11-20T15:15:15.290937",
+      "exchange": "bybit",
+      "equity": 75.77,
+      "usdt_balance": 0.0,
+      "raw_data": "Balance: $75.77 USDT | Available: $75.77 USDT"
+    },
+    {
+      "timestamp": "2025-11-20T15:18:41.124469",
+      "exchange": "bybit",
+      "equity": 75.77,
+      "usdt_balance": 0.0,
+      "raw_data": "Balance: $75.77 USDT | Available: $75.77 USDT"
+    },
+    {
+      "timestamp": "2025-11-20T15:18:58.563958",
+      "exchange": "bybit",
+      "equity": 75.77,
+      "usdt_balance": 0.0,
+      "raw_data": "Balance: $75.77 USDT | Available: $75.77 USDT"
+    },
+    {
+      "timestamp": "2025-11-20T15:22:32.745355",
+      "exchange": "bybit",
+      "equity": 75.77,
+      "usdt_balance": 0.0,
+      "raw_data": "Balance: $75.77 USDT | Available: $75.77 USDT"
+    },
+    {
+      "timestamp": "2025-11-20T15:26:09.175575",
+      "exchange": "bybit",
+      "equity": 75.77,
+      "usdt_balance": 0.0,
+      "raw_data": "Balance: $75.77 USDT | Available: $75.77 USDT"
+    },
+    {
+      "timestamp": "2025-11-20T15:29:37.914577",
+      "exchange": "bybit",
+      "equity": 75.77,
+      "usdt_balance": 0.0,
+      "raw_data": "Balance: $75.77 USDT | Available: $75.77 USDT"
+    },
+    {
+      "timestamp": "2025-11-20T15:33:18.022762",
+      "exchange": "bybit",
+      "equity": 75.77,
+      "usdt_balance": 0.0,
+      "raw_data": "Balance: $75.77 USDT | Available: $75.77 USDT"
+    },
+    {
+      "timestamp": "2025-11-20T15:36:44.077926",
+      "exchange": "bybit",
+      "equity": 75.77,
+      "usdt_balance": 0.0,
+      "raw_data": "Balance: $75.77 USDT | Available: $75.77 USDT"
+    },
+    {
+      "timestamp": "2025-11-20T15:40:10.432708",
+      "exchange": "bybit",
+      "equity": 75.77,
+      "usdt_balance": 0.0,
+      "raw_data": "Balance: $75.77 USDT | Available: $75.77 USDT"
+    },
+    {
+      "timestamp": "2025-11-20T15:43:44.300685",
+      "exchange": "bybit",
+      "equity": 75.77,
+      "usdt_balance": 0.0,
+      "raw_data": "Balance: $75.77 USDT | Available: $75.77 USDT"
+    },
+    {
+      "timestamp": "2025-11-20T15:47:36.279131",
+      "exchange": "bybit",
+      "equity": 75.77,
+      "usdt_balance": 0.0,
+      "raw_data": "Balance: $75.77 USDT | Available: $75.77 USDT"
+    },
+    {
+      "timestamp": "2025-11-20T15:47:54.079824",
+      "exchange": "bybit",
+      "equity": 75.77,
+      "usdt_balance": 0.0,
+      "raw_data": "Balance: $75.77 USDT | Available: $75.77 USDT"
+    },
+    {
+      "timestamp": "2025-11-20T15:51:37.847574",
+      "exchange": "bybit",
+      "equity": 75.77,
+      "usdt_balance": 0.0,
+      "raw_data": "Balance: $75.77 USDT | Available: $75.77 USDT"
+    },
+    {
+      "timestamp": "2025-11-20T15:55:06.851037",
+      "exchange": "bybit",
+      "equity": 75.77,
+      "usdt_balance": 0.0,
+      "raw_data": "Balance: $75.77 USDT | Available: $75.77 USDT"
+    },
+    {
+      "timestamp": "2025-11-20T15:58:37.045834",
+      "exchange": "bybit",
+      "equity": 75.77,
+      "usdt_balance": 0.0,
+      "raw_data": "Balance: $75.77 USDT | Available: $75.77 USDT"
+    },
+    {
+      "timestamp": "2025-11-20T16:02:07.791758",
+      "exchange": "bybit",
+      "equity": 75.77,
+      "usdt_balance": 0.0,
+      "raw_data": "Balance: $75.77 USDT | Available: $75.77 USDT"
+    },
+    {
+      "timestamp": "2025-11-20T16:02:33.563877",
+      "exchange": "bybit",
+      "equity": 75.77,
+      "usdt_balance": 0.0,
+      "raw_data": "Balance: $75.77 USDT | Available: $75.77 USDT"
+    },
+    {
+      "timestamp": "2025-11-20T16:06:06.504010",
+      "exchange": "bybit",
+      "equity": 75.77,
+      "usdt_balance": 0.0,
+      "raw_data": "Balance: $75.77 USDT | Available: $75.77 USDT"
+    },
+    {
+      "timestamp": "2025-11-20T16:09:42.535562",
+      "exchange": "bybit",
+      "equity": 75.77,
+      "usdt_balance": 0.0,
+      "raw_data": "Balance: $75.77 USDT | Available: $75.77 USDT"
+    },
+    {
+      "timestamp": "2025-11-20T16:13:04.453090",
+      "exchange": "bybit",
+      "equity": 75.77,
+      "usdt_balance": 0.0,
+      "raw_data": "Balance: $75.77 USDT | Available: $75.77 USDT"
+    },
+    {
+      "timestamp": "2025-11-20T16:16:49.976747",
+      "exchange": "bybit",
+      "equity": 75.77,
+      "usdt_balance": 0.0,
+      "raw_data": "Balance: $75.77 USDT | Available: $75.77 USDT"
+    },
+    {
+      "timestamp": "2025-11-20T16:17:09.431622",
+      "exchange": "bybit",
+      "equity": 75.77,
+      "usdt_balance": 0.0,
+      "raw_data": "Balance: $75.77 USDT | Available: $75.77 USDT"
+    },
+    {
+      "timestamp": "2025-11-20T16:20:39.632078",
+      "exchange": "bybit",
+      "equity": 75.77,
+      "usdt_balance": 0.0,
+      "raw_data": "Balance: $75.77 USDT | Available: $75.77 USDT"
+    },
+    {
+      "timestamp": "2025-11-20T16:24:19.625799",
+      "exchange": "bybit",
+      "equity": 75.77,
+      "usdt_balance": 0.0,
+      "raw_data": "Balance: $75.77 USDT | Available: $75.77 USDT"
+    },
+    {
+      "timestamp": "2025-11-20T16:27:54.170386",
+      "exchange": "bybit",
+      "equity": 75.77,
+      "usdt_balance": 0.0,
+      "raw_data": "Balance: $75.77 USDT | Available: $75.77 USDT"
+    },
+    {
+      "timestamp": "2025-11-20T16:31:29.424940",
+      "exchange": "bybit",
+      "equity": 75.77,
+      "usdt_balance": 0.0,
+      "raw_data": "Balance: $75.77 USDT | Available: $75.77 USDT"
+    },
+    {
+      "timestamp": "2025-11-20T16:38:49.805251",
+      "exchange": "bybit",
+      "equity": 75.77,
+      "usdt_balance": 0.0,
+      "raw_data": "Balance: $75.77 USDT | Available: $75.77 USDT"
+    },
+    {
+      "timestamp": "2025-11-20T16:43:58.978390",
+      "exchange": "bybit",
+      "equity": 75.77,
+      "usdt_balance": 0.0,
+      "raw_data": "Balance: $75.77 USDT | Available: $75.77 USDT"
+    },
+    {
+      "timestamp": "2025-11-20T16:48:30.970758",
+      "exchange": "bybit",
+      "equity": 75.77,
+      "usdt_balance": 0.0,
+      "raw_data": "Balance: $75.77 USDT | Available: $75.77 USDT"
+    },
+    {
+      "timestamp": "2025-11-20T16:53:19.584010",
+      "exchange": "bybit",
+      "equity": 75.77,
+      "usdt_balance": 0.0,
+      "raw_data": "Balance: $75.77 USDT | Available: $75.77 USDT"
+    },
+    {
+      "timestamp": "2025-11-20T16:57:27.421302",
+      "exchange": "bybit",
+      "equity": 75.77,
+      "usdt_balance": 0.0,
+      "raw_data": "Balance: $75.77 USDT | Available: $75.77 USDT"
+    },
+    {
+      "timestamp": "2025-11-20T17:02:00.549851",
+      "exchange": "bybit",
+      "equity": 75.77,
+      "usdt_balance": 0.0,
+      "raw_data": "Balance: $75.77 USDT | Available: $75.77 USDT"
+    },
+    {
+      "timestamp": "2025-11-20T17:06:20.270524",
+      "exchange": "bybit",
+      "equity": 75.77,
+      "usdt_balance": 0.0,
+      "raw_data": "Balance: $75.77 USDT | Available: $75.77 USDT"
+    },
+    {
+      "timestamp": "2025-11-20T17:10:08.815391",
+      "exchange": "bybit",
+      "equity": 71.82,
+      "usdt_balance": 0.0,
+      "raw_data": "Balance: $71.82 USDT | Available: $71.82 USDT"
+    },
+    {
+      "timestamp": "2025-11-20T17:15:10.206074",
+      "exchange": "bybit",
+      "equity": 71.74,
+      "usdt_balance": 0.0,
+      "raw_data": "Balance: $71.74 USDT | Available: $71.74 USDT"
+    },
+    {
+      "timestamp": "2025-11-20T17:15:47.860207",
+      "exchange": "bybit",
+      "equity": 71.74,
+      "usdt_balance": 0.0,
+      "raw_data": "Balance: $71.74 USDT | Available: $71.74 USDT"
+    },
+    {
+      "timestamp": "2025-11-20T17:16:17.469297",
+      "exchange": "bybit",
+      "equity": 71.74,
+      "usdt_balance": 0.0,
+      "raw_data": "Balance: $71.74 USDT | Available: $71.74 USDT"
+    },
+    {
+      "timestamp": "2025-11-20T17:16:46.977340",
+      "exchange": "bybit",
+      "equity": 71.74,
+      "usdt_balance": 0.0,
+      "raw_data": "Balance: $71.74 USDT | Available: $71.74 USDT"
+    },
+    {
+      "timestamp": "2025-11-20T17:20:46.439969",
+      "exchange": "bybit",
+      "equity": 71.74,
+      "usdt_balance": 0.0,
+      "raw_data": "Balance: $71.74 USDT | Available: $71.74 USDT"
+    },
+    {
+      "timestamp": "2025-11-20T17:24:47.510419",
+      "exchange": "bybit",
+      "equity": 71.74,
+      "usdt_balance": 0.0,
+      "raw_data": "Balance: $71.74 USDT | Available: $71.74 USDT"
+    },
+    {
+      "timestamp": "2025-11-20T17:28:46.252071",
+      "exchange": "bybit",
+      "equity": 71.74,
+      "usdt_balance": 0.0,
+      "raw_data": "Balance: $71.74 USDT | Available: $71.74 USDT"
+    },
+    {
+      "timestamp": "2025-11-20T17:33:02.628346",
+      "exchange": "bybit",
+      "equity": 71.74,
+      "usdt_balance": 0.0,
+      "raw_data": "Balance: $71.74 USDT | Available: $71.74 USDT"
+    },
+    {
+      "timestamp": "2025-11-20T17:37:19.327451",
+      "exchange": "bybit",
+      "equity": 71.74,
+      "usdt_balance": 0.0,
+      "raw_data": "Balance: $71.74 USDT | Available: $71.74 USDT"
+    },
+    {
+      "timestamp": "2025-11-20T17:41:34.422497",
+      "exchange": "bybit",
+      "equity": 71.74,
+      "usdt_balance": 0.0,
+      "raw_data": "Balance: $71.74 USDT | Available: $71.74 USDT"
+    },
+    {
+      "timestamp": "2025-11-20T17:45:44.095230",
+      "exchange": "bybit",
+      "equity": 71.74,
+      "usdt_balance": 0.0,
+      "raw_data": "Balance: $71.74 USDT | Available: $71.74 USDT"
+    },
+    {
+      "timestamp": "2025-11-20T17:46:14.052388",
+      "exchange": "bybit",
+      "equity": 71.74,
+      "usdt_balance": 0.0,
+      "raw_data": "Balance: $71.74 USDT | Available: $71.74 USDT"
+    },
+    {
+      "timestamp": "2025-11-20T17:50:13.271699",
+      "exchange": "bybit",
+      "equity": 71.74,
+      "usdt_balance": 0.0,
+      "raw_data": "Balance: $71.74 USDT | Available: $71.74 USDT"
+    },
+    {
+      "timestamp": "2025-11-20T17:50:55.435443",
+      "exchange": "bybit",
+      "equity": 71.74,
+      "usdt_balance": 0.0,
+      "raw_data": "Balance: $71.74 USDT | Available: $71.74 USDT"
+    },
+    {
+      "timestamp": "2025-11-20T17:51:29.486489",
+      "exchange": "bybit",
+      "equity": 71.74,
+      "usdt_balance": 0.0,
+      "raw_data": "Balance: $71.74 USDT | Available: $71.74 USDT"
+    },
+    {
+      "timestamp": "2025-11-20T17:51:57.448198",
+      "exchange": "bybit",
+      "equity": 71.74,
+      "usdt_balance": 0.0,
+      "raw_data": "Balance: $71.74 USDT | Available: $71.74 USDT"
+    },
+    {
+      "timestamp": "2025-11-20T17:55:38.302420",
+      "exchange": "bybit",
+      "equity": 71.74,
+      "usdt_balance": 0.0,
+      "raw_data": "Balance: $71.74 USDT | Available: $71.74 USDT"
+    },
+    {
+      "timestamp": "2025-11-20T17:56:05.849461",
+      "exchange": "bybit",
+      "equity": 71.74,
+      "usdt_balance": 0.0,
+      "raw_data": "Balance: $71.74 USDT | Available: $71.74 USDT"
+    },
+    {
+      "timestamp": "2025-11-20T17:56:24.327758",
+      "exchange": "bybit",
+      "equity": 71.74,
+      "usdt_balance": 0.0,
+      "raw_data": "Balance: $71.74 USDT | Available: $71.74 USDT"
+    },
+    {
+      "timestamp": "2025-11-20T17:56:51.318366",
+      "exchange": "bybit",
+      "equity": 71.74,
+      "usdt_balance": 0.0,
+      "raw_data": "Balance: $71.74 USDT | Available: $71.74 USDT"
+    },
+    {
+      "timestamp": "2025-11-20T18:00:22.921505",
+      "exchange": "bybit",
+      "equity": 71.74,
+      "usdt_balance": 0.0,
+      "raw_data": "Balance: $71.74 USDT | Available: $71.74 USDT"
+    },
+    {
+      "timestamp": "2025-11-20T18:00:57.666690",
+      "exchange": "bybit",
+      "equity": 71.74,
+      "usdt_balance": 0.0,
+      "raw_data": "Balance: $71.74 USDT | Available: $71.74 USDT"
+    },
+    {
+      "timestamp": "2025-11-20T18:04:41.425214",
+      "exchange": "bybit",
+      "equity": 71.74,
+      "usdt_balance": 0.0,
+      "raw_data": "Balance: $71.74 USDT | Available: $71.74 USDT"
+    },
+    {
+      "timestamp": "2025-11-20T18:08:46.964106",
+      "exchange": "bybit",
+      "equity": 71.74,
+      "usdt_balance": 0.0,
+      "raw_data": "Balance: $71.74 USDT | Available: $71.74 USDT"
+    },
+    {
+      "timestamp": "2025-11-20T18:09:09.806368",
+      "exchange": "bybit",
+      "equity": 71.74,
+      "usdt_balance": 0.0,
+      "raw_data": "Balance: $71.74 USDT | Available: $71.74 USDT"
+    },
+    {
+      "timestamp": "2025-11-20T18:12:46.780639",
+      "exchange": "bybit",
+      "equity": 71.74,
+      "usdt_balance": 0.0,
+      "raw_data": "Balance: $71.74 USDT | Available: $71.74 USDT"
+    },
+    {
+      "timestamp": "2025-11-20T18:16:53.242672",
+      "exchange": "bybit",
+      "equity": 71.74,
+      "usdt_balance": 0.0,
+      "raw_data": "Balance: $71.74 USDT | Available: $71.74 USDT"
+    },
+    {
+      "timestamp": "2025-11-20T18:17:28.255924",
+      "exchange": "bybit",
+      "equity": 71.74,
+      "usdt_balance": 0.0,
+      "raw_data": "Balance: $71.74 USDT | Available: $71.74 USDT"
+    },
+    {
+      "timestamp": "2025-11-20T18:21:25.275315",
+      "exchange": "bybit",
+      "equity": 71.74,
+      "usdt_balance": 0.0,
+      "raw_data": "Balance: $71.74 USDT | Available: $71.74 USDT"
+    },
+    {
+      "timestamp": "2025-11-20T18:21:57.282623",
+      "exchange": "bybit",
+      "equity": 71.74,
+      "usdt_balance": 0.0,
+      "raw_data": "Balance: $71.74 USDT | Available: $71.74 USDT"
+    },
+    {
+      "timestamp": "2025-11-20T18:25:41.897691",
+      "exchange": "bybit",
+      "equity": 71.74,
+      "usdt_balance": 0.0,
+      "raw_data": "Balance: $71.74 USDT | Available: $71.74 USDT"
+    },
+    {
+      "timestamp": "2025-11-20T18:26:04.630298",
+      "exchange": "bybit",
+      "equity": 71.74,
+      "usdt_balance": 0.0,
+      "raw_data": "Balance: $71.74 USDT | Available: $71.74 USDT"
+    },
+    {
+      "timestamp": "2025-11-20T18:26:36.549019",
+      "exchange": "bybit",
+      "equity": 71.74,
+      "usdt_balance": 0.0,
+      "raw_data": "Balance: $71.74 USDT | Available: $71.74 USDT"
+    },
+    {
+      "timestamp": "2025-11-20T18:26:56.224731",
+      "exchange": "bybit",
+      "equity": 71.74,
+      "usdt_balance": 0.0,
+      "raw_data": "Balance: $71.74 USDT | Available: $71.74 USDT"
+    },
+    {
+      "timestamp": "2025-11-20T18:27:18.530943",
+      "exchange": "bybit",
+      "equity": 71.74,
+      "usdt_balance": 0.0,
+      "raw_data": "Balance: $71.74 USDT | Available: $71.74 USDT"
+    },
+    {
+      "timestamp": "2025-11-20T18:31:06.430720",
+      "exchange": "bybit",
+      "equity": 71.74,
+      "usdt_balance": 0.0,
+      "raw_data": "Balance: $71.74 USDT | Available: $71.74 USDT"
+    },
+    {
+      "timestamp": "2025-11-20T18:34:53.042149",
+      "exchange": "bybit",
+      "equity": 71.74,
+      "usdt_balance": 0.0,
+      "raw_data": "Balance: $71.74 USDT | Available: $71.74 USDT"
+    },
+    {
+      "timestamp": "2025-11-20T18:35:20.218491",
+      "exchange": "bybit",
+      "equity": 71.74,
+      "usdt_balance": 0.0,
+      "raw_data": "Balance: $71.74 USDT | Available: $71.74 USDT"
+    },
+    {
+      "timestamp": "2025-11-20T18:39:11.948322",
+      "exchange": "bybit",
+      "equity": 71.74,
+      "usdt_balance": 0.0,
+      "raw_data": "Balance: $71.74 USDT | Available: $71.74 USDT"
+    },
+    {
+      "timestamp": "2025-11-20T18:42:56.147374",
+      "exchange": "bybit",
+      "equity": 71.74,
+      "usdt_balance": 0.0,
+      "raw_data": "Balance: $71.74 USDT | Available: $71.74 USDT"
+    },
+    {
+      "timestamp": "2025-11-20T18:43:21.846450",
+      "exchange": "bybit",
+      "equity": 71.74,
+      "usdt_balance": 0.0,
+      "raw_data": "Balance: $71.74 USDT | Available: $71.74 USDT"
+    },
+    {
+      "timestamp": "2025-11-20T18:43:48.424046",
+      "exchange": "bybit",
+      "equity": 71.74,
+      "usdt_balance": 0.0,
+      "raw_data": "Balance: $71.74 USDT | Available: $71.74 USDT"
+    },
+    {
+      "timestamp": "2025-11-20T18:50:46.231929",
+      "exchange": "bybit",
+      "equity": 71.74,
+      "usdt_balance": 0.0,
+      "raw_data": "Balance: $71.74 USDT | Available: $71.74 USDT"
+    },
+    {
+      "timestamp": "2025-11-20T18:51:18.492350",
+      "exchange": "bybit",
+      "equity": 71.74,
+      "usdt_balance": 0.0,
+      "raw_data": "Balance: $71.74 USDT | Available: $71.74 USDT"
+    },
+    {
+      "timestamp": "2025-11-20T18:51:56.293490",
+      "exchange": "bybit",
+      "equity": 71.74,
+      "usdt_balance": 0.0,
+      "raw_data": "Balance: $71.74 USDT | Available: $71.74 USDT"
+    },
+    {
+      "timestamp": "2025-11-20T18:52:35.740592",
+      "exchange": "bybit",
+      "equity": 71.67,
+      "usdt_balance": 0.0,
+      "raw_data": "Balance: $71.67 USDT | Available: $71.67 USDT"
+    },
+    {
+      "timestamp": "2025-11-20T18:57:23.323130",
+      "exchange": "bybit",
+      "equity": 71.67,
+      "usdt_balance": 0.0,
+      "raw_data": "Balance: $71.67 USDT | Available: $71.67 USDT"
+    },
+    {
+      "timestamp": "2025-11-20T18:58:07.313479",
+      "exchange": "bybit",
+      "equity": 71.67,
+      "usdt_balance": 0.0,
+      "raw_data": "Balance: $71.67 USDT | Available: $71.67 USDT"
+    },
+    {
+      "timestamp": "2025-11-20T18:59:03.592281",
+      "exchange": "bybit",
+      "equity": 71.59,
+      "usdt_balance": 0.0,
+      "raw_data": "Balance: $71.59 USDT | Available: $71.59 USDT"
+    },
+    {
+      "timestamp": "2025-11-20T18:59:55.617703",
+      "exchange": "bybit",
+      "equity": 71.59,
+      "usdt_balance": 0.0,
+      "raw_data": "Balance: $71.59 USDT | Available: $71.59 USDT"
+    },
+    {
+      "timestamp": "2025-11-20T19:03:57.885233",
+      "exchange": "bybit",
+      "equity": 71.54,
+      "usdt_balance": 0.0,
+      "raw_data": "Balance: $71.54 USDT | Available: $71.54 USDT"
+    },
+    {
+      "timestamp": "2025-11-20T19:04:31.415379",
+      "exchange": "bybit",
+      "equity": 71.54,
+      "usdt_balance": 0.0,
+      "raw_data": "Balance: $71.54 USDT | Available: $71.54 USDT"
+    },
+    {
+      "timestamp": "2025-11-20T19:08:22.692572",
+      "exchange": "bybit",
+      "equity": 59.54,
+      "usdt_balance": 0.0,
+      "raw_data": "Balance: $59.54 USDT | Available: $59.54 USDT"
+    },
+    {
+      "timestamp": "2025-11-20T19:09:16.716131",
+      "exchange": "bybit",
+      "equity": 59.54,
+      "usdt_balance": 0.0,
+      "raw_data": "Balance: $59.54 USDT | Available: $59.54 USDT"
+    },
+    {
+      "timestamp": "2025-11-20T19:10:10.142896",
+      "exchange": "bybit",
+      "equity": 59.54,
+      "usdt_balance": 0.0,
+      "raw_data": "Balance: $59.54 USDT | Available: $59.54 USDT"
+    },
+    {
+      "timestamp": "2025-11-20T19:10:58.319986",
+      "exchange": "bybit",
+      "equity": 59.54,
+      "usdt_balance": 0.0,
+      "raw_data": "Balance: $59.54 USDT | Available: $59.54 USDT"
+    },
+    {
+      "timestamp": "2025-11-20T19:11:46.230179",
+      "exchange": "bybit",
+      "equity": 59.54,
+      "usdt_balance": 0.0,
+      "raw_data": "Balance: $59.54 USDT | Available: $59.54 USDT"
+    },
+    {
+      "timestamp": "2025-11-20T19:12:58.370195",
+      "exchange": "bybit",
+      "equity": 59.51,
+      "usdt_balance": 0.0,
+      "raw_data": "Balance: $59.51 USDT | Available: $59.51 USDT"
+    },
+    {
+      "timestamp": "2025-11-20T19:13:42.581220",
+      "exchange": "bybit",
+      "equity": 59.49,
+      "usdt_balance": 0.0,
+      "raw_data": "Balance: $59.49 USDT | Available: $59.49 USDT"
+    },
+    {
+      "timestamp": "2025-11-20T19:14:32.988523",
+      "exchange": "bybit",
+      "equity": 59.49,
+      "usdt_balance": 0.0,
+      "raw_data": "Balance: $59.49 USDT | Available: $59.49 USDT"
+    },
+    {
+      "timestamp": "2025-11-20T19:15:05.272906",
+      "exchange": "bybit",
+      "equity": 59.42,
+      "usdt_balance": 0.0,
+      "raw_data": "Balance: $59.42 USDT | Available: $59.42 USDT"
+    },
+    {
+      "timestamp": "2025-11-20T21:05:39.097510",
+      "exchange": "bybit",
+      "equity": 57.76,
+      "usdt_balance": 0.0,
+      "raw_data": "Balance: $57.76 USDT | Available: $57.76 USDT"
+    }
+  ],
+  "latest": {
+    "timestamp": "2025-11-20T21:05:39.097510",
+    "exchange": "bybit",
+    "equity": 57.76,
+    "usdt_balance": 0.0,
+    "raw_data": "Balance: $57.76 USDT | Available: $57.76 USDT"
+  }
+}
