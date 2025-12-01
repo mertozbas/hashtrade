@@ -1,64 +1,79 @@
 #!/usr/bin/env python3
 """
-Hashtrade Agent - Strategic Autonomous Trading
-Uses DevDuck with flexible model provider support
+Hashtrade Agent - Smart Money Scalping Strategy
+Uses DevDuck with Smart Money Concepts (AMD, ICT, SMC)
 """
 import sys
 import time
 import os
-from datetime import datetime, timedelta
+from datetime import datetime
 from pathlib import Path
 
-# Add current dir to path
 sys.path.insert(0, str(Path(__file__).parent))
 
 import devduck
 from dotenv import load_dotenv
 
-# Load environment variables
 load_dotenv()
+
+# Trading configuration
+TRADING_COINS = ["BTCUSDT", "ETHUSDT", "SOLUSDT", "XRPUSDT", "CRVUSDT"]
+RISK_PERCENT = 5.0  # Risk 5% of balance per trade
+LEVERAGE_RANGE = (10, 30)  # Min and max leverage
+MAX_POSITIONS = 1  # Only 1 position at a time
 
 
 class HashtradeAgent:
 
     def __init__(self):
-        print("Initializing Hashtrade Agent...")
+        print("Initializing Hashtrade Agent - Smart Money Strategy")
 
-        # Show model configuration
         model_provider = os.getenv('MODEL_PROVIDER', 'auto-detect')
         model_id = os.getenv('MODEL_ID', 'default')
         print(f"Model Provider: {model_provider}")
         print(f"Model ID: {model_id}")
 
-        # Use DevDuck agent directly
         self.agent = devduck.devduck
 
-        # Load local tools explicitly
+        # Load tools
         tools_dir = Path(__file__).parent / "tools"
         if tools_dir.exists():
             print(f"Loading tools from: {tools_dir}")
             try:
-                from tools import balance, bybit_v5, ccxt_generic, order
+                from tools import (
+                    balance, bybit_v5, ccxt_generic, order,
+                    analyze_market, check_entry_signal,
+                    calculate_position, select_leverage, manage_position
+                )
 
-                # Add to agent's tool registry
+                # Register all tools
                 self.agent.agent.tool_registry.register_tool(balance)
                 self.agent.agent.tool_registry.register_tool(bybit_v5)
                 self.agent.agent.tool_registry.register_tool(ccxt_generic)
                 self.agent.agent.tool_registry.register_tool(order)
+                self.agent.agent.tool_registry.register_tool(analyze_market)
+                self.agent.agent.tool_registry.register_tool(check_entry_signal)
+                self.agent.agent.tool_registry.register_tool(calculate_position)
+                self.agent.agent.tool_registry.register_tool(select_leverage)
+                self.agent.agent.tool_registry.register_tool(manage_position)
 
-                print(f"Loaded 4 local tools: balance, bybit_v5, ccxt_generic, order")
+                print(f"Loaded 9 tools successfully")
             except Exception as e:
-                print(f"Failed to load local tools: {e}")
+                print(f"Failed to load tools: {e}")
+                import traceback
+                traceback.print_exc()
 
         self.trade_count = 0
         self.session_start = datetime.now()
 
-        print(f"DevDuck agent initialized with model: {self.agent.model}")
-        print(f"Total tools: {len(self.agent.agent.tool_registry.registry)}")
-        print(f"Mode: STRATEGIC - Trade only on high-probability setups")
+        print(f"DevDuck agent initialized: {self.agent.model}")
+        print(f"Strategy: Smart Money Scalping (15m timeframe)")
+        print(f"Coins: {', '.join(TRADING_COINS)}")
+        print(f"Risk: {RISK_PERCENT}% per trade | Leverage: {LEVERAGE_RANGE[0]}-{LEVERAGE_RANGE[1]}x")
+        print(f"Max positions: {MAX_POSITIONS}")
 
     def get_last_journal_entry(self):
-        """Son journal girişini oku"""
+        """Read last journal entry for context"""
         try:
             today = datetime.now().strftime("%Y-%m-%d")
             journal_path = Path(__file__).parent / "journal" / f"{today}.md"
@@ -66,102 +81,136 @@ class HashtradeAgent:
             if journal_path.exists():
                 with open(journal_path, 'r', encoding='utf-8') as f:
                     content = f.read()
-                    # Son 2000 karakteri al (son birkaç cycle)
                     return content[-2000:] if len(content) > 2000 else content
-            return "No previous journal entries today."
+            return "No journal entries today."
         except Exception as e:
-            return f"Error reading journal: {e}"
+            return f"Journal error: {e}"
 
-    def get_current_context(self):
-        """Mevcut balance ve pozisyonları çek"""
+    def get_current_state(self):
+        """Get current balance and positions"""
         try:
-            # Balance bilgisi
             balance_result = self.agent.agent.tool.balance(action='get')
-            balance_text = balance_result.get('content', [{}])[0].get('text', 'No balance info')
+            balance_text = balance_result.get('content', [{}])[0].get('text', 'Balance unavailable')
 
-            # Açık pozisyonlar
-            positions_result = self.agent.agent.tool.order(action='list')
-            positions_text = positions_result.get('content', [{}])[0].get('text', 'No positions')
+            positions_result = self.agent.agent.tool.bybit_v5(action='get_positions')
+            positions_text = positions_result.get('content', [{}])[0].get('text', 'Positions unavailable')
+            open_positions = positions_result.get('open_positions', [])
 
-            return f"""
-CURRENT STATE:
-Balance: {balance_text}
-
-Positions: {positions_text}
-
-Last Journal:
-{self.get_last_journal_entry()}
-"""
+            return {
+                "balance_text": balance_text,
+                "positions_text": positions_text,
+                "open_positions": open_positions,
+                "position_count": len(open_positions)
+            }
         except Exception as e:
-            return f"Error getting context: {e}"
+            return {
+                "balance_text": f"Error: {e}",
+                "positions_text": "Error",
+                "open_positions": [],
+                "position_count": 0
+            }
 
     def run_cycle(self):
-        """Run one strategic trading cycle"""
+        """Run one trading cycle with Smart Money strategy"""
         self.trade_count += 1
         cycle_start = datetime.now()
 
         print(f"\n{'='*60}")
-        print(f"Trading Cycle #{self.trade_count} - {cycle_start.strftime('%Y-%m-%d %H:%M:%S')}")
+        print(f"Cycle #{self.trade_count} - {cycle_start.strftime('%Y-%m-%d %H:%M:%S')}")
         print(f"{'='*60}\n")
 
-        # Context injection
-        current_context = self.get_current_context()
-        print(current_context)
+        # Get current state
+        state = self.get_current_state()
+        journal = self.get_last_journal_entry()
 
-        # Strategic workflow - NOT obligated to trade
+        # Build context
+        context = f"""
+CURRENT STATE:
+{state['balance_text']}
+
+POSITIONS:
+{state['positions_text']}
+
+RECENT JOURNAL:
+{journal}
+"""
+        print(context)
+
+        # Strategy workflow
         workflow = f"""
-{current_context}
+{context}
 
-You are a strategic trading agent. Execute this cycle:
+You are a Smart Money trading agent using SMC/ICT concepts.
+Execute this trading cycle following the rules strictly.
 
-IMPORTANT RULES:
-- You are NOT obligated to open any position
-- "No trade" is a valid and often correct decision
-- Only trade when there's a clear, high-probability setup
-- Quality over quantity - fewer, better trades
+=== CONFIGURATION ===
+- Coins to scan: {', '.join(TRADING_COINS)}
+- Timeframe: 15m
+- Risk per trade: {RISK_PERCENT}% of balance
+- Leverage: {LEVERAGE_RANGE[0]}-{LEVERAGE_RANGE[1]}x (based on SL distance)
+- Max positions: {MAX_POSITIONS}
+- Current open positions: {state['position_count']}
 
-CYCLE STEPS:
+=== STRATEGY RULES ===
 
-1. ANALYZE MARKET CONDITIONS
-   - Use ccxt_generic to fetch tickers for BTC/USDT:USDT, ETH/USDT:USDT, SOL/USDT:USDT
-   - Check price action, 24h change, volume
-   - Identify trend direction (up/down/sideways)
+1. IF POSITION IS OPEN ({state['position_count']}/{MAX_POSITIONS}):
+   - Use manage_position(action="check_tp") to check P&L
+   - IF P&L >= +1%:
+     * Close 50% of position (partial take profit)
+     * Move stop-loss to breakeven (entry price)
+     * Log: "TP1 hit - closed 50%, SL to breakeven"
+   - IF structure breaks against position:
+     * Close remaining position
+     * Log: "Structure break - closed position"
+   - IF P&L < 1%: Hold and wait
+   - THEN STOP - do not scan for new entries when position is open
 
-2. MANAGE EXISTING POSITIONS (if any)
-   - Calculate P&L: (markPrice - avgPrice) / avgPrice * 100 * side
-   - Close if take-profit hit: +3% or higher
-   - Close if stop-loss hit: -2% or worse
-   - Consider closing stale positions (>1 hour, <+1% profit)
+2. IF NO POSITION OPEN:
+   - Scan each coin using analyze_market(symbol=COIN)
+   - For each coin, use check_entry_signal(symbol=COIN)
+   - Look for:
+     * Clear trend (uptrend or downtrend)
+     * Liquidity sweep (manipulation phase)
+     * Entry zone (Order Block or FVG)
+     * Confirmation (rejection candle, EMA alignment)
 
-3. EVALUATE NEW TRADE OPPORTUNITIES
-   Check if ANY of these criteria are met:
-   - Clear trend with momentum (not sideways/choppy)
-   - Volume above average (confirmation)
-   - Risk/reward ratio > 2:1
-   - Not already at max positions (3)
+3. IF ENTRY SIGNAL FOUND (score >= 5):
+   - Use calculate_position() to get proper size:
+     * entry_price from signal
+     * stop_loss from signal (below OB/FVG)
+     * risk_percent = {RISK_PERCENT}
+     * leverage = based on SL distance (use select_leverage)
+   - Execute trade using bybit_v5(action="place_order")
+   - Set TP/SL using bybit_v5(action="set_trading_stop")
+   - Log entry details to journal
 
-   If NO valid setup exists:
-   → Log "No setup found" and WAIT for next cycle
-   → This is the CORRECT decision when market is unclear
+4. IF NO SIGNAL:
+   - Log: "No setup found - waiting"
+   - This is the CORRECT decision when market is unclear
 
-4. EXECUTE TRADE (only if valid setup found)
-   - Risk: max 4% of balance per trade
-   - Leverage: 10-20x based on confidence
-   - Set TP/SL immediately after entry
+=== EXIT RULES ===
+- TP1: +1% -> Close 50%, move SL to breakeven
+- TP2: Structure break OR next liquidity target -> Close remaining
+- SL: Entry zone invalidation (below OB/FVG for longs)
 
-5. WRITE JOURNAL ENTRY (max 200 chars)
-   Format: "Cycle #{self.trade_count}: [ACTION] | [REASON] | Balance: $X | Positions: X/3"
+=== IMPORTANT ===
+- "No trade" is often the right decision
+- Quality over quantity - wait for A+ setups
+- Never risk more than {RISK_PERCENT}% per trade
+- Only 1 position at a time
 
-   Examples:
-   - "Cycle #5: NO TRADE | BTC sideways, low volume | Balance: $78 | Positions: 1/3"
-   - "Cycle #6: OPENED ETH LONG | Breakout + volume confirm | Balance: $78 | Positions: 2/3"
-   - "Cycle #7: CLOSED BTC +2.3% | TP hit | Balance: $82 | Positions: 1/3"
+=== JOURNAL FORMAT ===
+Write a short journal entry (max 200 chars):
+"Cycle #{self.trade_count}: [ACTION] | [COIN] | [REASON] | Balance: $X | Pos: {state['position_count']}/{MAX_POSITIONS}"
 
-Remember: Patience is profitable. Bad trades cost more than missed trades.
+Examples:
+- "Cycle #5: NO TRADE | Scanned all - no clear setup | Balance: $78 | Pos: 0/1"
+- "Cycle #6: ENTRY LONG | BTCUSDT | Liquidity sweep + OB retest | Balance: $78 | Pos: 1/1"
+- "Cycle #7: TP1 HIT | BTCUSDT | +1.2%, closed 50%, SL to BE | Balance: $82 | Pos: 1/1"
+- "Cycle #8: CLOSED | BTCUSDT | Structure break, +1.8% total | Balance: $85 | Pos: 0/1"
 """
 
         try:
-            # Execute workflow with DevDuck
             result = self.agent(workflow)
 
             cycle_end = datetime.now()
@@ -169,11 +218,14 @@ Remember: Patience is profitable. Bad trades cost more than missed trades.
 
             print(f"\nCycle completed in {cycle_duration:.1f}s")
 
-            result_summary = str(result) if result else "No result"
-            print(result_summary[:500] + "..." if len(result_summary) > 500 else result_summary)
+            if result:
+                result_str = str(result)
+                print(result_str[:800] + "..." if len(result_str) > 800 else result_str)
 
         except Exception as e:
             print(f"Cycle error: {e}")
+            import traceback
+            traceback.print_exc()
 
     def show_stats(self):
         """Display session statistics"""
@@ -182,17 +234,16 @@ Remember: Patience is profitable. Bad trades cost more than missed trades.
         print(f"\nSession Stats:")
         print(f"  Runtime: {runtime}")
         print(f"  Cycles: {self.trade_count}")
-        print(f"  Avg cycle time: {runtime.total_seconds() / max(1, self.trade_count):.1f}s")
+        if self.trade_count > 0:
+            print(f"  Avg cycle time: {runtime.total_seconds() / self.trade_count:.1f}s")
 
     def start(self, interval_minutes: int = None):
-        """Start strategic autonomous trading loop"""
-        # Use env variable or default
+        """Start autonomous trading loop"""
         if interval_minutes is None:
             interval_minutes = int(os.getenv('CYCLE_INTERVAL', 5))
 
-        print(f"\nStarting strategic autonomous trading agent...")
+        print(f"\nStarting Smart Money trading agent...")
         print(f"Cycle interval: {interval_minutes} minutes")
-        print(f"Strategy: Trade only on high-probability setups")
         print(f"Press Ctrl+C to stop\n")
 
         try:
@@ -212,9 +263,11 @@ Remember: Patience is profitable. Bad trades cost more than missed trades.
 if __name__ == "__main__":
     import argparse
 
-    parser = argparse.ArgumentParser(description="Hashtrade Strategic Trading Agent")
-    parser.add_argument("--interval", type=int, default=None, help="Cycle interval in minutes (default: from .env or 5)")
-    parser.add_argument("--once", action="store_true", help="Run one cycle and exit")
+    parser = argparse.ArgumentParser(description="Hashtrade Smart Money Trading Agent")
+    parser.add_argument("--interval", type=int, default=None,
+                        help="Cycle interval in minutes (default: from .env or 5)")
+    parser.add_argument("--once", action="store_true",
+                        help="Run one cycle and exit")
 
     args = parser.parse_args()
 
