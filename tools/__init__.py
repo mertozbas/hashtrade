@@ -6,10 +6,4 @@ from .ccxt_generic import ccxt_generic
 from .order import order
 from .bybit_v5 import bybit_v5
 
-# Try to import journal from strands_tools
-try:
-    from strands_tools import journal
-    __all__ = ["balance", "ccxt_generic", "order", "bybit_v5", "journal"]
-except ImportError:
-    __all__ = ["balance", "ccxt_generic", "order", "bybit_v5"]
-    print("⚠️ journal tool not available - install strands-tools")
+__all__ = ["balance", "ccxt_generic", "order", "bybit_v5"]
