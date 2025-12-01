@@ -456,28 +456,23 @@ def analyze_market(
             zone = entry_zones["zones"][0]
             summary_parts.append(f"Entry Zone: {zone['type']} @ ${zone['entry']:.2f} (SL: ${zone['stop']:.2f})")
 
+        # Compact response - only essential data
         return {
             "status": "success",
             "symbol": symbol,
-            "current_price": current_price,
-            "structure": structure,
-            "indicators": {
-                "ema_20": current_ema_20,
-                "ema_50": current_ema_50,
-                "ema_trend": ema_trend,
-                "rsi": current_rsi,
-                "atr": current_atr,
-                "atr_pct": (current_atr / current_price * 100) if current_atr else None,
-                "volume_ratio": volume_ratio
-            },
-            "order_blocks": order_blocks,
-            "fair_value_gaps": fvgs,
-            "liquidity_sweep": liquidity,
-            "entry_zones": entry_zones,
-            "swing_points": {
-                "recent_high": swings["swing_highs"][-1] if swings["swing_highs"] else None,
-                "recent_low": swings["swing_lows"][-1] if swings["swing_lows"] else None
-            },
+            "price": current_price,
+            "trend": structure["trend"],
+            "struct": structure["structure"],
+            "ema_trend": ema_trend,
+            "rsi": round(current_rsi, 1) if current_rsi else None,
+            "atr": current_atr,
+            "atr_pct": round((current_atr / current_price * 100), 2) if current_atr else None,
+            "vol_ratio": round(volume_ratio, 2),
+            "sweep": liquidity.get("type") if liquidity.get("detected") else None,
+            "ob_count": len(order_blocks),
+            "fvg_count": len(fvgs),
+            "has_zone": entry_zones["has_zone"],
+            "zone": entry_zones["zones"][0] if entry_zones["has_zone"] else None,
             "content": [{"text": "\n".join(summary_parts)}]
         }
 
@@ -514,18 +509,24 @@ def check_entry_signal(
         if data.get("status") == "error":
             return data
 
-        structure = data.get("structure", {})
-        indicators = data.get("indicators", {})
-        liquidity = data.get("liquidity_sweep", {})
-        entry_zones = data.get("entry_zones", {})
-        current_price = data.get("current_price", 0)
+        # Support both old and new compact format
+        trend = data.get("trend") or data.get("structure", {}).get("trend")
+        struct = data.get("struct") or data.get("structure", {}).get("structure", [])
+        ema_trend = data.get("ema_trend") or data.get("indicators", {}).get("ema_trend")
+        rsi = data.get("rsi") or data.get("indicators", {}).get("rsi")
+        atr = data.get("atr") or data.get("indicators", {}).get("atr")
+        atr_pct = data.get("atr_pct") or data.get("indicators", {}).get("atr_pct")
+        vol_ratio = data.get("vol_ratio") or data.get("indicators", {}).get("volume_ratio", 1)
+        sweep = data.get("sweep")
+        has_zone = data.get("has_zone") or data.get("entry_zones", {}).get("has_zone", False)
+        zone = data.get("zone") or (data.get("entry_zones", {}).get("zones", [None])[0] if has_zone else None)
+        current_price = data.get("price") or data.get("current_price", 0)
 
         # Check entry criteria
         signals = []
         score = 0
 
         # 1. Clear trend (required)
-        trend = structure.get("trend")
         if trend in ["uptrend", "downtrend"]:
             signals.append(f"Trend: {trend}")
             score += 2
@@ -538,14 +539,12 @@ def check_entry_signal(
             }
 
         # 2. EMA confirmation
-        ema_trend = indicators.get("ema_trend")
         if (trend == "uptrend" and ema_trend == "bullish") or \
            (trend == "downtrend" and ema_trend == "bearish"):
             signals.append("EMA confirms trend")
             score += 1
 
         # 3. RSI not extreme
-        rsi = indicators.get("rsi")
         if rsi:
             if trend == "uptrend" and rsi < 70:
                 signals.append(f"RSI OK ({rsi:.0f})")
@@ -555,28 +554,25 @@ def check_entry_signal(
                 score += 1
 
         # 4. Liquidity sweep (strong signal)
-        if liquidity.get("detected"):
-            sweep_type = liquidity.get("type")
-            if (trend == "uptrend" and sweep_type == "bullish_sweep") or \
-               (trend == "downtrend" and sweep_type == "bearish_sweep"):
+        if sweep:
+            if (trend == "uptrend" and sweep == "bullish_sweep") or \
+               (trend == "downtrend" and sweep == "bearish_sweep"):
                 signals.append("Liquidity sweep detected")
                 score += 3
 
         # 5. Entry zone available
-        if entry_zones.get("has_zone"):
-            zone = entry_zones["zones"][0]
+        if has_zone and zone:
             signals.append(f"Entry zone: {zone['type']} @ ${zone['entry']:.2f}")
             score += 2
 
             # Calculate SL distance
             sl_distance_pct = abs(zone["entry"] - zone["stop"]) / zone["entry"] * 100
         else:
-            sl_distance_pct = indicators.get("atr_pct", 1) * 1.5  # 1.5x ATR as default SL
+            sl_distance_pct = (atr_pct or 1) * 1.5  # 1.5x ATR as default SL
 
         # 6. Volume confirmation
-        volume_ratio = indicators.get("volume_ratio", 1)
-        if volume_ratio > 1.2:
-            signals.append(f"Volume above avg ({volume_ratio:.1f}x)")
+        if vol_ratio > 1.2:
+            signals.append(f"Volume above avg ({vol_ratio:.1f}x)")
             score += 1
 
         # Decision threshold
@@ -584,45 +580,34 @@ def check_entry_signal(
             direction = "LONG" if trend == "uptrend" else "SHORT"
 
             # Get entry and stop levels
-            if entry_zones.get("has_zone"):
-                zone = entry_zones["zones"][0]
+            if has_zone and zone:
                 entry_price = zone["entry"]
                 stop_loss = zone["stop"]
             else:
                 # Use current price and ATR-based stop
                 entry_price = current_price
-                atr = indicators.get("atr", current_price * 0.01)
+                atr_val = atr or (current_price * 0.01)
                 if direction == "LONG":
-                    stop_loss = entry_price - (atr * 1.5)
+                    stop_loss = entry_price - (atr_val * 1.5)
                 else:
-                    stop_loss = entry_price + (atr * 1.5)
+                    stop_loss = entry_price + (atr_val * 1.5)
 
             return {
                 "status": "success",
                 "signal": "ENTRY",
                 "direction": direction,
-                "entry_price": entry_price,
-                "stop_loss": stop_loss,
-                "sl_distance_pct": abs(entry_price - stop_loss) / entry_price * 100,
+                "entry": entry_price,
+                "sl": stop_loss,
+                "sl_pct": round(abs(entry_price - stop_loss) / entry_price * 100, 2),
                 "score": score,
-                "signals": signals,
-                "content": [{
-                    "text": f"ENTRY SIGNAL | {symbol} | {direction}\n"
-                            f"Entry: ${entry_price:.2f} | SL: ${stop_loss:.2f}\n"
-                            f"Score: {score}/10 | Signals: {', '.join(signals)}"
-                }]
+                "content": [{"text": f"ENTRY | {symbol} {direction} @ ${entry_price:.2f} | SL: ${stop_loss:.2f}"}]
             }
         else:
             return {
                 "status": "success",
                 "signal": "NO_TRADE",
-                "reason": f"Score too low ({score}/10). Need at least 5.",
                 "score": score,
-                "signals": signals,
-                "content": [{
-                    "text": f"NO TRADE | {symbol} | Score: {score}/10\n"
-                            f"Signals: {', '.join(signals) if signals else 'None'}"
-                }]
+                "content": [{"text": f"NO TRADE | {symbol} | Score: {score}/10"}]
             }
 
     except Exception as e:
