@@ -228,7 +228,7 @@ def bybit_v5(
         result = _make_request("GET", "/v5/position/list", params)
 
         if result.get("retCode") == 0:
-            # Parse and filter open positions
+            # Parse and filter open positions - minimal data
             all_positions = result["result"]["list"]
             open_positions = []
 
@@ -239,26 +239,22 @@ def bybit_v5(
                         "symbol": p["symbol"],
                         "side": p["side"],
                         "size": size,
-                        "entry_price": float(p["avgPrice"]),
-                        "current_price": float(p["markPrice"]),
-                        "unrealized_pnl": float(p["unrealisedPnl"]),
-                        "unrealized_pnl_pct": float(p.get("unrealisedPnl", 0)) / float(p.get("positionValue", 1)) * 100,
-                        "leverage": float(p["leverage"]),
-                        "position_value": float(p["positionValue"]),
-                        "liquidation_price": float(p.get("liqPrice", 0)),
-                        "stop_loss": float(p.get("stopLoss", 0)) if p.get("stopLoss") else None,
-                        "take_profit": float(p.get("takeProfit", 0)) if p.get("takeProfit") else None,
-                        "position_idx": int(p.get("positionIdx", 0))
+                        "entry": float(p["avgPrice"]),
+                        "pnl": float(p["unrealisedPnl"]),
+                        "lev": float(p["leverage"]),
+                        "sl": float(p.get("stopLoss", 0)) if p.get("stopLoss") else None,
+                        "tp": float(p.get("takeProfit", 0)) if p.get("takeProfit") else None
                     })
 
-            summary = f"Open Positions: {len(open_positions)}/3"
             if open_positions:
-                total_pnl = sum(p["unrealized_pnl"] for p in open_positions)
-                summary += f" | Total PnL: ${total_pnl:.2f}"
+                total_pnl = sum(p["pnl"] for p in open_positions)
+                summary = f"Positions: {len(open_positions)} | PnL: ${total_pnl:.2f}"
+            else:
+                summary = "No open positions"
 
             return {
                 "status": "success",
-                "open_positions": open_positions,
+                "positions": open_positions,
                 "count": len(open_positions),
                 "content": [{"text": summary}]
             }
@@ -303,24 +299,24 @@ def bybit_v5(
         if not symbol:
             return {"status": "error", "content": [{"text": "symbol required"}]}
 
+        limit = min(extra_params.get("limit", 100), 200)  # Cap at 200
         result = _make_request("GET", "/v5/market/kline", {
             "category": category,
             "symbol": symbol,
             "interval": extra_params.get("interval", "15"),
-            "limit": extra_params.get("limit", 200)
+            "limit": limit
         }, signed=False)
 
         if result.get("retCode") == 0:
             klines = result["result"]["list"]
+            # Return klines for analysis, minimal content
             return {
                 "status": "success",
                 "symbol": symbol,
                 "interval": extra_params.get("interval", "15"),
-                "klines_count": len(klines),
+                "count": len(klines),
                 "klines": klines,
-                "content": [{
-                    "text": f"Fetched {len(klines)} candles for {symbol}"
-                }]
+                "content": [{"text": f"{symbol} {len(klines)} candles"}]
             }
 
         return {
