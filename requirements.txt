@@ -1,12 +1,16 @@
-strands-agents
-strands-agents-tools
-strands-telegram
-strands-telegram-listener
-ccxt>=4.0.0
-pandas>=2.0.0
-numpy>=1.24.0
-python-dotenv>=1.0.0
-requests>=2.31.0
-boto3>=1.28.0
+# Core
 devduck
 python-dotenv>=1.0.0
+
+# Trading
+ccxt>=4.0.0
+requests>=2.31.0
+
+# Data Analysis (optional)
+pandas>=2.0.0
+numpy>=1.24.0
+
+# AWS Bedrock support (optional - only if using Bedrock provider)
+# boto3>=1.28.0
+# strands-agents
+# strands-agents-tools
