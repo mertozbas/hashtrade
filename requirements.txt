@@ -1,5 +1,6 @@
 # Core
 devduck
+strands-agents
 python-dotenv>=1.0.0
 
 # Trading
@@ -12,5 +13,3 @@ numpy>=1.24.0
 
 # AWS Bedrock support (optional - only if using Bedrock provider)
 # boto3>=1.28.0
-# strands-agents
-# strands-agents-tools
