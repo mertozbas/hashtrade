@@ -324,38 +324,55 @@ def analyze_market(
     Comprehensive market analysis using Smart Money Concepts.
 
     Args:
-        symbol: Trading pair (e.g., BTCUSDT)
-        klines: JSON string of kline data [[timestamp, open, high, low, close, volume], ...]
-                If not provided, will fetch from exchange
+        symbol: Trading pair (e.g., BTCUSDT, BTC/USDT:USDT, or BTC)
+        klines: JSON string of kline data (optional - will auto-fetch)
         timeframe: Timeframe for analysis (default: 15m)
 
     Returns:
-        Dict with complete market analysis including:
-        - Market structure (trend, HH/HL/LH/LL)
-        - Order blocks
-        - Fair value gaps
-        - Liquidity sweep detection
-        - Entry zones
-        - Indicators (EMA, RSI, ATR)
+        Dict with market analysis: structure, order blocks, FVG, indicators
     """
     try:
-        # Parse klines if provided as string
-        if isinstance(klines, str):
-            klines_data = json.loads(klines)
-        else:
-            klines_data = klines
+        # Normalize symbol format for Bybit
+        clean_symbol = symbol.upper().replace("/", "").replace(":USDT", "").replace("-", "")
+        if not clean_symbol.endswith("USDT"):
+            clean_symbol = clean_symbol + "USDT"
 
-        # If no klines provided, fetch from bybit
+        # Parse klines if provided as string
+        klines_data = None
+        if klines:
+            if isinstance(klines, str):
+                try:
+                    klines_data = json.loads(klines)
+                except json.JSONDecodeError:
+                    klines_data = None
+            else:
+                klines_data = klines
+
+        # Fetch klines if not provided
         if not klines_data:
             from .bybit_v5 import bybit_v5
             result = bybit_v5(
                 action="get_kline",
-                symbol=symbol.replace("/", "").replace(":USDT", ""),
+                symbol=clean_symbol,
                 kwargs=json.dumps({"interval": timeframe, "limit": 200})
             )
+
             if result.get("status") == "error":
-                return result
+                error_msg = result.get("content", [{}])[0].get("text", "Unknown error")
+                return {
+                    "status": "error",
+                    "symbol": clean_symbol,
+                    "content": [{"text": f"Failed to fetch klines for {clean_symbol}: {error_msg}"}]
+                }
+
             klines_data = result.get("klines", [])
+
+            if not klines_data:
+                return {
+                    "status": "error",
+                    "symbol": clean_symbol,
+                    "content": [{"text": f"No kline data returned for {clean_symbol}. Check if symbol is valid."}]
+                }
 
         if not klines_data or len(klines_data) < 50:
             return {
