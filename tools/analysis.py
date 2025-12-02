@@ -247,9 +247,10 @@ def detect_liquidity_sweep(highs: List[float], lows: List[float], closes: List[f
 
 
 def find_entry_zone(current_price: float, trend: str, order_blocks: List[Dict],
-                    fvgs: List[Dict]) -> Dict[str, Any]:
+                    fvgs: List[Dict], min_sl_pct: float = 0.3) -> Dict[str, Any]:
     """
     Find valid entry zone based on trend direction
+    min_sl_pct: Minimum stop loss distance in percent (default 0.3%)
     """
     valid_zones = []
 
@@ -257,6 +258,11 @@ def find_entry_zone(current_price: float, trend: str, order_blocks: List[Dict],
         # Look for bullish OBs and FVGs below current price
         for ob in order_blocks:
             if ob["type"] == "bullish" and ob["top"] < current_price:
+                # Check SL distance is valid (not entry = stop)
+                sl_pct = abs(ob["top"] - ob["bottom"]) / ob["top"] * 100
+                if sl_pct < min_sl_pct:
+                    continue  # Skip invalid zones with micro SL
+
                 distance_pct = (current_price - ob["top"]) / current_price * 100
                 if distance_pct < 2:  # Within 2% of current price
                     valid_zones.append({
@@ -264,11 +270,16 @@ def find_entry_zone(current_price: float, trend: str, order_blocks: List[Dict],
                         "zone_type": "bullish",
                         "entry": ob["top"],
                         "stop": ob["bottom"],
+                        "sl_pct": sl_pct,
                         "distance_pct": distance_pct
                     })
 
         for fvg in fvgs:
             if fvg["type"] == "bullish" and fvg["top"] < current_price:
+                sl_pct = abs(fvg["top"] - fvg["bottom"]) / fvg["top"] * 100
+                if sl_pct < min_sl_pct:
+                    continue
+
                 distance_pct = (current_price - fvg["top"]) / current_price * 100
                 if distance_pct < 2:
                     valid_zones.append({
@@ -276,6 +287,7 @@ def find_entry_zone(current_price: float, trend: str, order_blocks: List[Dict],
                         "zone_type": "bullish",
                         "entry": fvg["top"],
                         "stop": fvg["bottom"],
+                        "sl_pct": sl_pct,
                         "distance_pct": distance_pct
                     })
 
@@ -283,6 +295,10 @@ def find_entry_zone(current_price: float, trend: str, order_blocks: List[Dict],
         # Look for bearish OBs and FVGs above current price
         for ob in order_blocks:
             if ob["type"] == "bearish" and ob["bottom"] > current_price:
+                sl_pct = abs(ob["top"] - ob["bottom"]) / ob["bottom"] * 100
+                if sl_pct < min_sl_pct:
+                    continue
+
                 distance_pct = (ob["bottom"] - current_price) / current_price * 100
                 if distance_pct < 2:
                     valid_zones.append({
@@ -290,11 +306,16 @@ def find_entry_zone(current_price: float, trend: str, order_blocks: List[Dict],
                         "zone_type": "bearish",
                         "entry": ob["bottom"],
                         "stop": ob["top"],
+                        "sl_pct": sl_pct,
                         "distance_pct": distance_pct
                     })
 
         for fvg in fvgs:
             if fvg["type"] == "bearish" and fvg["bottom"] > current_price:
+                sl_pct = abs(fvg["top"] - fvg["bottom"]) / fvg["bottom"] * 100
+                if sl_pct < min_sl_pct:
+                    continue
+
                 distance_pct = (fvg["bottom"] - current_price) / current_price * 100
                 if distance_pct < 2:
                     valid_zones.append({
@@ -302,6 +323,7 @@ def find_entry_zone(current_price: float, trend: str, order_blocks: List[Dict],
                         "zone_type": "bearish",
                         "entry": fvg["bottom"],
                         "stop": fvg["top"],
+                        "sl_pct": sl_pct,
                         "distance_pct": distance_pct
                     })
 

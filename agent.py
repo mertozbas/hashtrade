@@ -19,7 +19,7 @@ load_dotenv()
 # Trading configuration
 TRADING_COINS = ["BTCUSDT", "ETHUSDT", "SOLUSDT", "XRPUSDT", "CRVUSDT"]
 RISK_PERCENT = 5.0  # Risk 5% of balance per trade
-LEVERAGE_RANGE = (10, 30)  # Min and max leverage
+LEVERAGE_RANGE = (5, 30)  # Min and max leverage (lower min for small balances)
 MAX_POSITIONS = 1  # Only 1 position at a time
 
 
@@ -140,74 +140,43 @@ RECENT JOURNAL:
         workflow = f"""
 {context}
 
-You are a Smart Money trading agent using SMC/ICT concepts.
-Execute this trading cycle following the rules strictly.
+You are a Smart Money trading agent. TAKE ACTION when signals appear.
 
-=== CONFIGURATION ===
-- Coins to scan: {', '.join(TRADING_COINS)}
-- Timeframe: 15m
-- Risk per trade: {RISK_PERCENT}% of balance
-- Leverage: {LEVERAGE_RANGE[0]}-{LEVERAGE_RANGE[1]}x (based on SL distance)
-- Max positions: {MAX_POSITIONS}
-- Current open positions: {state['position_count']}
+=== CONFIG ===
+Coins: {', '.join(TRADING_COINS)} | TF: 15m | Risk: {RISK_PERCENT}%
+Leverage: {LEVERAGE_RANGE[0]}-{LEVERAGE_RANGE[1]}x | Max Pos: {MAX_POSITIONS}
+Open positions: {state['position_count']}
 
-=== STRATEGY RULES ===
+=== EXECUTE NOW ===
 
-1. IF POSITION IS OPEN ({state['position_count']}/{MAX_POSITIONS}):
-   - Use manage_position(action="check_tp") to check P&L
-   - IF P&L >= +1%:
-     * Close 50% of position (partial take profit)
-     * Move stop-loss to breakeven (entry price)
-     * Log: "TP1 hit - closed 50%, SL to breakeven"
-   - IF structure breaks against position:
-     * Close remaining position
-     * Log: "Structure break - closed position"
-   - IF P&L < 1%: Hold and wait
-   - THEN STOP - do not scan for new entries when position is open
+IF POSITION OPEN ({state['position_count']}/{MAX_POSITIONS}):
+  → Check P&L with manage_position(action="check_tp")
+  → IF P&L >= +1%: Close 50%, move SL to breakeven
+  → IF structure breaks: Close all
+  → STOP - don't scan new entries
 
-2. IF NO POSITION OPEN:
-   - Scan each coin using analyze_market(symbol=COIN)
-   - For each coin, use check_entry_signal(symbol=COIN)
-   - Look for:
-     * Clear trend (uptrend or downtrend)
-     * Liquidity sweep (manipulation phase)
-     * Entry zone (Order Block or FVG)
-     * Confirmation (rejection candle, EMA alignment)
+IF NO POSITION:
+  1. Scan: check_entry_signal(symbol=COIN) for each coin
+  2. IF signal="ENTRY" found (score >= 5):
+     → IMMEDIATELY execute trade:
+     → bybit_v5(action="set_leverage", symbol=X, kwargs='{{"buyLeverage":"10","sellLeverage":"10"}}')
+     → bybit_v5(action="place_order", symbol=X, kwargs='{{"side":"Buy/Sell","orderType":"Market","qty":"0.01"}}')
+     → bybit_v5(action="set_trading_stop", symbol=X, kwargs='{{"stopLoss":"X","takeProfit":"Y"}}')
+  3. IF no entry signal: Log "NO TRADE" and wait
 
-3. IF ENTRY SIGNAL FOUND (score >= 5):
-   - Use calculate_position() to get proper size:
-     * entry_price from signal
-     * stop_loss from signal (below OB/FVG)
-     * risk_percent = {RISK_PERCENT}
-     * leverage = based on SL distance (use select_leverage)
-   - Execute trade using bybit_v5(action="place_order")
-   - Set TP/SL using bybit_v5(action="set_trading_stop")
-   - Log entry details to journal
-
-4. IF NO SIGNAL:
-   - Log: "No setup found - waiting"
-   - This is the CORRECT decision when market is unclear
-
-=== EXIT RULES ===
-- TP1: +1% -> Close 50%, move SL to breakeven
-- TP2: Structure break OR next liquidity target -> Close remaining
-- SL: Entry zone invalidation (below OB/FVG for longs)
+=== POSITION SIZING FOR SMALL BALANCE ===
+With ${state.get('balance_text', '23')} balance:
+- Use LOWER leverage (5-15x) if SL is tight (<0.5%)
+- Margin should be < 30% of balance
+- Formula: qty = (balance * risk%) / (SL% * leverage * price)
 
 === IMPORTANT ===
-- "No trade" is often the right decision
-- Quality over quantity - wait for A+ setups
-- Never risk more than {RISK_PERCENT}% per trade
-- Only 1 position at a time
+- Score 5+ = TAKE THE TRADE (don't wait for "perfect")
+- Lower leverage is OK for small accounts
+- Execute orders, don't just analyze
 
-=== JOURNAL FORMAT ===
-Write a short journal entry (max 200 chars):
-"Cycle #{self.trade_count}: [ACTION] | [COIN] | [REASON] | Balance: $X | Pos: {state['position_count']}/{MAX_POSITIONS}"
-
-Examples:
-- "Cycle #5: NO TRADE | Scanned all - no clear setup | Balance: $78 | Pos: 0/1"
-- "Cycle #6: ENTRY LONG | BTCUSDT | Liquidity sweep + OB retest | Balance: $78 | Pos: 1/1"
-- "Cycle #7: TP1 HIT | BTCUSDT | +1.2%, closed 50%, SL to BE | Balance: $82 | Pos: 1/1"
-- "Cycle #8: CLOSED | BTCUSDT | Structure break, +1.8% total | Balance: $85 | Pos: 0/1"
+=== JOURNAL (max 200 chars) ===
+"Cycle #{self.trade_count}: [ACTION] | [COIN] | [REASON] | Balance: $X | Pos: X/1"
 """
 
         try:
