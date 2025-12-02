@@ -19,7 +19,7 @@ load_dotenv()
 # Trading configuration
 TRADING_COINS = ["BTCUSDT", "ETHUSDT", "SOLUSDT", "XRPUSDT", "CRVUSDT"]
 RISK_PERCENT = 5.0  # Risk 5% of balance per trade
-LEVERAGE_RANGE = (10, 30)  # Min and max leverage
+LEVERAGE_RANGE = (5, 30)  # Min and max leverage (lower min for small balances)
 MAX_POSITIONS = 1  # Only 1 position at a time
 
 
@@ -140,74 +140,42 @@ RECENT JOURNAL:
         workflow = f"""
 {context}
 
-You are a Smart Money trading agent using SMC/ICT concepts.
-Execute this trading cycle following the rules strictly.
+You are an AUTONOMOUS trading bot. Execute trades WITHOUT asking for confirmation.
+DO NOT ask "shall I proceed?" - just DO IT.
 
-=== CONFIGURATION ===
-- Coins to scan: {', '.join(TRADING_COINS)}
-- Timeframe: 15m
-- Risk per trade: {RISK_PERCENT}% of balance
-- Leverage: {LEVERAGE_RANGE[0]}-{LEVERAGE_RANGE[1]}x (based on SL distance)
-- Max positions: {MAX_POSITIONS}
-- Current open positions: {state['position_count']}
+=== CONFIG ===
+Coins: {', '.join(TRADING_COINS)} | TF: 15m | Risk: {RISK_PERCENT}%
+Leverage: {LEVERAGE_RANGE[0]}-{LEVERAGE_RANGE[1]}x | Max Pos: {MAX_POSITIONS}
+Open positions: {state['position_count']}
 
-=== STRATEGY RULES ===
+=== AUTONOMOUS EXECUTION ===
 
-1. IF POSITION IS OPEN ({state['position_count']}/{MAX_POSITIONS}):
-   - Use manage_position(action="check_tp") to check P&L
-   - IF P&L >= +1%:
-     * Close 50% of position (partial take profit)
-     * Move stop-loss to breakeven (entry price)
-     * Log: "TP1 hit - closed 50%, SL to breakeven"
-   - IF structure breaks against position:
-     * Close remaining position
-     * Log: "Structure break - closed position"
-   - IF P&L < 1%: Hold and wait
-   - THEN STOP - do not scan for new entries when position is open
+IF POSITION OPEN ({state['position_count']}/{MAX_POSITIONS}):
+  → manage_position(action="check_tp") to check P&L
+  → IF P&L >= +1%: Close 50%, move SL to breakeven
+  → STOP - don't scan new entries
 
-2. IF NO POSITION OPEN:
-   - Scan each coin using analyze_market(symbol=COIN)
-   - For each coin, use check_entry_signal(symbol=COIN)
-   - Look for:
-     * Clear trend (uptrend or downtrend)
-     * Liquidity sweep (manipulation phase)
-     * Entry zone (Order Block or FVG)
-     * Confirmation (rejection candle, EMA alignment)
+IF NO POSITION:
+  1. Scan all coins with check_entry_signal(symbol=COIN)
+  2. IF signal="ENTRY" found (score >= 5):
+     → DO NOT ASK FOR CONFIRMATION
+     → EXECUTE IMMEDIATELY:
+       a) bybit_v5(action="set_leverage", symbol=X, kwargs='{{"buyLeverage":"10","sellLeverage":"10"}}')
+       b) bybit_v5(action="place_order", symbol=X, kwargs='{{"side":"Buy","orderType":"Market","qty":"0.01","positionIdx":0}}')
+       c) bybit_v5(action="set_trading_stop", symbol=X, kwargs='{{"stopLoss":"X","positionIdx":0}}')
+       d) journal(entry="Cycle #X: ENTRY [LONG/SHORT] | [COIN] | ...")
+  3. IF no signal: journal "NO TRADE" and finish
 
-3. IF ENTRY SIGNAL FOUND (score >= 5):
-   - Use calculate_position() to get proper size:
-     * entry_price from signal
-     * stop_loss from signal (below OB/FVG)
-     * risk_percent = {RISK_PERCENT}
-     * leverage = based on SL distance (use select_leverage)
-   - Execute trade using bybit_v5(action="place_order")
-   - Set TP/SL using bybit_v5(action="set_trading_stop")
-   - Log entry details to journal
+=== POSITION SIZING ===
+Balance: ~$23 | Risk: 5% = $1.16
+- Use 5-15x leverage for tight SL (<0.5%)
+- qty = 0.01 (minimum for most pairs)
+- Margin must be < 30% of balance
 
-4. IF NO SIGNAL:
-   - Log: "No setup found - waiting"
-   - This is the CORRECT decision when market is unclear
-
-=== EXIT RULES ===
-- TP1: +1% -> Close 50%, move SL to breakeven
-- TP2: Structure break OR next liquidity target -> Close remaining
-- SL: Entry zone invalidation (below OB/FVG for longs)
-
-=== IMPORTANT ===
-- "No trade" is often the right decision
-- Quality over quantity - wait for A+ setups
-- Never risk more than {RISK_PERCENT}% per trade
-- Only 1 position at a time
-
-=== JOURNAL FORMAT ===
-Write a short journal entry (max 200 chars):
-"Cycle #{self.trade_count}: [ACTION] | [COIN] | [REASON] | Balance: $X | Pos: {state['position_count']}/{MAX_POSITIONS}"
-
-Examples:
-- "Cycle #5: NO TRADE | Scanned all - no clear setup | Balance: $78 | Pos: 0/1"
-- "Cycle #6: ENTRY LONG | BTCUSDT | Liquidity sweep + OB retest | Balance: $78 | Pos: 1/1"
-- "Cycle #7: TP1 HIT | BTCUSDT | +1.2%, closed 50%, SL to BE | Balance: $82 | Pos: 1/1"
-- "Cycle #8: CLOSED | BTCUSDT | Structure break, +1.8% total | Balance: $85 | Pos: 0/1"
+=== CRITICAL ===
+- You are AUTONOMOUS - no human confirmation needed
+- Score 5+ = EXECUTE THE TRADE NOW
+- After placing order, write to journal and finish cycle
 """
 
         try:
