@@ -94,7 +94,7 @@ class HashtradeAgent:
 
             positions_result = self.agent.agent.tool.bybit_v5(action='get_positions')
             positions_text = positions_result.get('content', [{}])[0].get('text', 'Positions unavailable')
-            open_positions = positions_result.get('open_positions', [])
+            open_positions = positions_result.get('positions', [])  # Changed from 'open_positions'
 
             return {
                 "balance_text": balance_text,
