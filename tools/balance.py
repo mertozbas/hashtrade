@@ -9,7 +9,53 @@ from datetime import datetime
 from typing import Dict, Any
 from strands import tool
 
-from .bybit_v5 import bybit_v5
+
+def _get_bybit_balance():
+    """Get balance directly from Bybit API to avoid import issues"""
+    import time
+    import hmac
+    import hashlib
+    import requests
+
+    api_key = os.getenv("BYBIT_API_KEY", "")
+    api_secret = os.getenv("BYBIT_API_SECRET", "")
+    testnet = os.getenv("BYBIT_TESTNET", "false").lower() == "true"
+    base_url = "https://api-testnet.bybit.com" if testnet else "https://api.bybit.com"
+
+    if not api_key or not api_secret:
+        return None, "API keys not found"
+
+    timestamp = str(int(time.time() * 1000))
+    recv_window = "5000"
+    params = "accountType=UNIFIED"
+
+    param_str = f"{timestamp}{api_key}{recv_window}{params}"
+    signature = hmac.new(
+        api_secret.encode('utf-8'),
+        param_str.encode('utf-8'),
+        hashlib.sha256
+    ).hexdigest()
+
+    headers = {
+        "X-BAPI-API-KEY": api_key,
+        "X-BAPI-TIMESTAMP": timestamp,
+        "X-BAPI-RECV-WINDOW": recv_window,
+        "X-BAPI-SIGN": signature
+    }
+
+    try:
+        resp = requests.get(f"{base_url}/v5/account/wallet-balance?{params}",
+                           headers=headers, timeout=10)
+        data = resp.json()
+
+        if data.get("retCode") == 0:
+            coins = data["result"]["list"][0]["coin"]
+            usdt = next((c for c in coins if c["coin"] == "USDT"), None)
+            if usdt:
+                return float(usdt.get("equity", usdt["walletBalance"])), None
+        return None, data.get("retMsg", "Unknown error")
+    except Exception as e:
+        return None, str(e)
 
 
 @tool
@@ -33,31 +79,13 @@ def balance(
             balance_data = {"history": []}
 
         if action == "get":
-            if not api_key:
-                api_key = os.getenv("BYBIT_API_KEY")
-            if not api_secret:
-                api_secret = os.getenv("BYBIT_API_SECRET")
+            equity, error = _get_bybit_balance()
 
-            if not api_key or not api_secret:
-                return {
-                    "status": "error",
-                    "content": [{"text": "API keys not found"}]
-                }
+            if error:
+                return {"status": "error", "content": [{"text": error}]}
 
-            result = bybit_v5(action="get_balance")
-
-            if result.get("status") == "error":
-                return result
-
-            # Get equity directly from result if available
-            equity = result.get("equity", 0) or result.get("balance_usdt", 0)
-
-            # Fallback to parsing text
-            if equity == 0:
-                balance_text = result.get("content", [{}])[0].get("text", "")
-                match = re.search(r'\$([\d,.]+)', balance_text)
-                if match:
-                    equity = float(match.group(1).replace(',', ''))
+            if equity is None:
+                return {"status": "error", "content": [{"text": "Failed to get balance"}]}
 
             # Save to history (keep last 50 only)
             record = {
