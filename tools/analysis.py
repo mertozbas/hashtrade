@@ -350,7 +350,10 @@ def analyze_market(
 
         # Fetch klines if not provided
         if not klines_data:
-            from .bybit_v5 import bybit_v5
+            try:
+                from tools.bybit_v5 import bybit_v5
+            except ImportError:
+                from bybit_v5 import bybit_v5
             result = bybit_v5(
                 action="get_kline",
                 symbol=clean_symbol,
