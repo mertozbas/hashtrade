@@ -22,7 +22,7 @@ load_dotenv()
 # Trading configuration - ENHANCED
 TRADING_COINS = ["BTCUSDT", "ETHUSDT", "SOLUSDT", "XRPUSDT", "CRVUSDT"]
 RISK_PERCENT = 10.0  # Risk 10% of balance per trade (doubled for larger positions)
-LEVERAGE_RANGE = (5, 20)  # Slightly lower max leverage for safety with higher risk
+LEVERAGE_RANGE = (10, 30)  # Dynamic: select_leverage() calculates based on SL distance
 MAX_POSITIONS = 3  # Allow up to 3 concurrent positions
 
 # Minimum quantities for partial close capability
@@ -193,27 +193,35 @@ For each coin, run: check_entry_signal(symbol=COIN)
 IF signal="ENTRY" found (score >= 5):
   → EXECUTE IMMEDIATELY (no confirmation needed):
 
-  a) Set leverage (10x default, adjust based on SL distance):
-     bybit_v5(action="set_leverage", symbol=X, kwargs='{{"buyLeverage":"10","sellLeverage":"10"}}')
+  a) FIRST: Calculate leverage based on SL distance:
+     → select_leverage(sl_distance_pct=SL_DISTANCE_FROM_SIGNAL)
+     → This returns recommended_leverage (10-30x based on SL tightness)
+     → LEVERAGE TABLE: SL<=0.5%→30x | SL<=1%→25x | SL<=1.5%→20x | SL<=2%→15x | SL>2%→10x
 
-  b) Place order with PARTIAL-CLOSE ENABLED QTY:
+  b) Set the calculated leverage:
+     bybit_v5(action="set_leverage", symbol=X, kwargs='{{"buyLeverage":"CALCULATED","sellLeverage":"CALCULATED"}}')
+
+  c) Place order with PARTIAL-CLOSE ENABLED QTY:
      BTCUSDT: qty=0.002 | ETHUSDT: qty=0.02 | SOLUSDT: qty=0.2
      bybit_v5(action="place_order", symbol=X, kwargs='{{"side":"Buy/Sell","orderType":"Market","qty":"SEE_ABOVE","positionIdx":0}}')
 
-  c) Set stop loss:
+  d) Set stop loss:
      bybit_v5(action="set_trading_stop", symbol=X, kwargs='{{"stopLoss":"X","positionIdx":0}}')
 
-  d) Journal entry:
-     journal(entry="Cycle #X: ENTRY [LONG/SHORT] | [COIN] @ [PRICE] | SL: [X] | Size: [X] | PARTIAL_CLOSE_READY")
+  e) Journal entry (include leverage used):
+     journal(entry="Cycle #X: ENTRY [LONG/SHORT] | [COIN] @ [PRICE] | SL: [X] | Lev: [X]x | Size: [X]")
 
 IF no signal on any coin: journal "NO TRADE - no valid SMC setup" and finish
 '''}
 
 === POSITION SIZING v2 ===
 Balance: ~$25 | Risk: 10% = $2.50 per trade
-With 10x leverage:
-- ETHUSDT 0.02 @ $2850 = $57 notional / 10 = $5.70 margin (OK, <30% of balance)
-- BTCUSDT 0.002 @ $95000 = $190 notional / 10 = $19 margin (OK)
+DYNAMIC LEVERAGE (based on SL distance):
+- SL 0.5% → 30x: ETHUSDT 0.02 @ $2850 = $1.90 margin
+- SL 1.0% → 25x: ETHUSDT 0.02 @ $2850 = $2.28 margin
+- SL 1.5% → 20x: ETHUSDT 0.02 @ $2850 = $2.85 margin
+- SL 2.0% → 15x: ETHUSDT 0.02 @ $2850 = $3.80 margin
+USE select_leverage() to get optimal leverage for each trade!
 
 === CRITICAL RULES ===
 1. You are AUTONOMOUS - no human confirmation needed
