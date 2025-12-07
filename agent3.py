@@ -213,7 +213,7 @@ IF signal="ENTRY" AND setup.rr_ratio >= {MIN_RR_RATIO}:
 
   1. FIRST get balance: balance(action="get") → extract equity number
 
-  2. Calculate position size (CRITICAL - use the returned values!):
+  2. Calculate position size (CRITICAL - check status!):
      result = calculate_position_dynamic(
        balance=EQUITY_FROM_STEP_1,
        entry_price=setup.entry,
@@ -222,8 +222,15 @@ IF signal="ENTRY" AND setup.rr_ratio >= {MIN_RR_RATIO}:
        risk_percent={RISK_PERCENT},
        symbol=COIN
      )
-     → USE result.quantity for order qty!
-     → USE result.leverage for leverage setting!
+
+     IF result.status == "skip":
+       → DO NOT TAKE TRADE
+       → Journal: "SKIP | [symbol] | [result.reason]"
+       → Continue to next coin
+
+     IF result.status == "success":
+       → USE result.quantity for order qty!
+       → USE result.leverage for leverage setting!
 
   3. Set leverage from calculate_position_dynamic result:
      bybit_v5(action="set_leverage", symbol=X, kwargs='{{"buyLeverage":"RESULT_LEVERAGE","sellLeverage":"RESULT_LEVERAGE"}}')
@@ -267,11 +274,14 @@ POSITION MANAGEMENT:
 
 === CRITICAL ===
 1. AUTONOMOUS - no confirmation needed
-2. R:R {MIN_RR_RATIO}+ = EXECUTE
+2. R:R {MIN_RR_RATIO}+ = EXECUTE (unless position calculator says SKIP)
 3. Always check balance FIRST before sizing
-4. USE CALCULATED QTY from calculate_position_dynamic (NOT fixed min qty!)
-5. Risk {RISK_PERCENT}% of balance = proper position size
-6. Journal ALL actions
+4. CHECK result.status from calculate_position_dynamic:
+   - "success" → proceed with trade using result.quantity and result.leverage
+   - "skip" → DO NOT TRADE, journal the reason, move to next coin
+5. Max leverage: 30x | Min SL distance: 0.5%
+6. Risk {RISK_PERCENT}% of balance = proper position size
+7. Journal ALL actions including SKIP reasons
 """
 
         try:

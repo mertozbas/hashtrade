@@ -406,6 +406,22 @@ def calculate_position_dynamic(
         tp_distance_pct = tp_distance / entry_price * 100
         rr_ratio = tp_distance_pct / sl_distance_pct if sl_distance_pct > 0 else 0
 
+        # SAFETY: Minimum SL distance of 0.5% to avoid excessive leverage
+        MIN_SL_DISTANCE_PCT = 0.5
+        MAX_LEVERAGE = 30  # Cap leverage at 30x (was 50x)
+
+        if sl_distance_pct < MIN_SL_DISTANCE_PCT:
+            return {
+                "status": "skip",
+                "reason": f"SL too tight: {sl_distance_pct:.2f}% (min: {MIN_SL_DISTANCE_PCT}%)",
+                "sl_distance_pct": round(sl_distance_pct, 2),
+                "content": [{
+                    "text": f"SKIP TRADE: SL distance ({sl_distance_pct:.2f}%) is below minimum ({MIN_SL_DISTANCE_PCT}%)\n"
+                            f"Tight SL = High leverage = Quick stop out\n"
+                            f"Wait for better setup with wider SL"
+                }]
+            }
+
         # Calculate risk amount
         risk_amount = balance * (risk_percent / 100)
 
@@ -422,7 +438,21 @@ def calculate_position_dynamic(
         # We want margin to be reasonable (max 50% of balance)
         max_margin = balance * 0.5
         min_leverage = position_size_usd / max_margin if max_margin > 0 else 10
-        recommended_leverage = max(10, min(50, int(min_leverage) + 5))
+        recommended_leverage = max(10, min(MAX_LEVERAGE, int(min_leverage) + 5))
+
+        # SAFETY: If position still requires more than MAX_LEVERAGE, skip trade
+        if min_leverage > MAX_LEVERAGE:
+            return {
+                "status": "skip",
+                "reason": f"Trade requires {int(min_leverage)}x leverage (max: {MAX_LEVERAGE}x)",
+                "required_leverage": int(min_leverage),
+                "sl_distance_pct": round(sl_distance_pct, 2),
+                "content": [{
+                    "text": f"SKIP TRADE: Requires {int(min_leverage)}x leverage (max allowed: {MAX_LEVERAGE}x)\n"
+                            f"Position size ${position_size_usd:.2f} too large for balance ${balance:.2f}\n"
+                            f"Either reduce risk_percent or wait for setup with wider SL"
+                }]
+            }
 
         # Actual margin with recommended leverage
         margin_required = position_size_usd / recommended_leverage
