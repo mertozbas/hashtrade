@@ -31,14 +31,8 @@ RISK_PERCENT = 10.0  # Risk 10% of balance per trade
 MAX_POSITIONS = 3  # Allow up to 3 concurrent positions
 MIN_RR_RATIO = 1.5  # Minimum R:R ratio to take a trade
 
-# Minimum quantities for partial close (2x exchange minimum)
-MIN_QTY = {
-    "BTCUSDT": 0.002,
-    "ETHUSDT": 0.02,
-    "SOLUSDT": 0.2,
-    "XRPUSDT": 20,
-    "CRVUSDT": 20,
-}
+# Note: Position sizing is calculated by calculate_position_dynamic()
+# which already handles minimum quantities for partial close capability
 
 
 class LiquiditySweepAgent:
@@ -217,28 +211,34 @@ This returns:
 
 IF signal="ENTRY" AND setup.rr_ratio >= {MIN_RR_RATIO}:
 
-  1. Calculate position:
-     calculate_position_dynamic(
-       balance=BALANCE,
+  1. FIRST get balance: balance(action="get") → extract equity number
+
+  2. Calculate position size (CRITICAL - use the returned values!):
+     result = calculate_position_dynamic(
+       balance=EQUITY_FROM_STEP_1,
        entry_price=setup.entry,
        stop_loss=setup.sl,
        take_profit=setup.tp,
        risk_percent={RISK_PERCENT},
        symbol=COIN
      )
+     → USE result.quantity for order qty!
+     → USE result.leverage for leverage setting!
 
-  2. Set leverage:
-     bybit_v5(action="set_leverage", symbol=X, kwargs='{{"buyLeverage":"LEV","sellLeverage":"LEV"}}')
+  3. Set leverage from calculate_position_dynamic result:
+     bybit_v5(action="set_leverage", symbol=X, kwargs='{{"buyLeverage":"RESULT_LEVERAGE","sellLeverage":"RESULT_LEVERAGE"}}')
 
-  3. Place order (use min qty for partial close):
-     MIN_QTY: BTCUSDT=0.002 | ETHUSDT=0.02 | SOLUSDT=0.2 | XRPUSDT=20 | CRVUSDT=20
-     bybit_v5(action="place_order", symbol=X, kwargs='{{"side":"Buy/Sell","orderType":"Market","qty":"QTY","positionIdx":0}}')
+  4. Place order with CALCULATED QTY (not min qty!):
+     bybit_v5(action="place_order", symbol=X, kwargs='{{"side":"Buy/Sell","orderType":"Market","qty":"RESULT_QUANTITY","positionIdx":0}}')
 
-  4. Set stop loss:
+     IMPORTANT: qty must be result.quantity from step 2, NOT a fixed minimum!
+     Example: If result.quantity = 6000 for CRV, use qty="6000"
+
+  5. Set stop loss:
      bybit_v5(action="set_trading_stop", symbol=X, kwargs='{{"stopLoss":"SL","positionIdx":0}}')
 
-  5. Journal entry:
-     "ENTRY | [direction] [symbol] @ [price] | SL: [sl] ([sl_pct]%) | TP: [tp] ([tp_pct]%) | R:R 1:[rr]"
+  6. Journal entry:
+     "ENTRY | [direction] [symbol] @ [price] | SL: [sl] | TP: [tp] | R:R 1:[rr] | Qty: [qty] | Lev: [lev]x"
 
 IF no valid setup on any coin:
   → Journal: "NO TRADE | Reason: [no sweep / no confirmation / R:R too low]"
@@ -269,8 +269,9 @@ POSITION MANAGEMENT:
 1. AUTONOMOUS - no confirmation needed
 2. R:R {MIN_RR_RATIO}+ = EXECUTE
 3. Always check balance FIRST before sizing
-4. Use 2x min qty for partial close capability
-5. Journal ALL actions
+4. USE CALCULATED QTY from calculate_position_dynamic (NOT fixed min qty!)
+5. Risk {RISK_PERCENT}% of balance = proper position size
+6. Journal ALL actions
 """
 
         try:
