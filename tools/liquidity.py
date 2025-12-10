@@ -183,19 +183,24 @@ def find_liquidity_pools(
 @tool
 def detect_liquidity_sweep(
     symbol: str,
-    timeframe: str = "15"
+    timeframe: str = "15",
+    lookback_candles: int = 5
 ) -> Dict[str, Any]:
     """
-    Detect if a liquidity sweep just occurred.
+    Detect if a liquidity sweep occurred in recent candles.
 
     A sweep happens when:
     1. Price takes out a swing high/low (sweeps liquidity)
     2. Then closes back inside the range (rejection)
     3. Followed by a reversal candle (confirmation)
 
+    Multi-candle detection: Checks the last N candles for sweep patterns,
+    not just the most recent candle.
+
     Args:
         symbol: Trading pair
         timeframe: Timeframe to check (default: 15m)
+        lookback_candles: Number of recent candles to check for sweeps (default: 5)
 
     Returns:
         Dict with sweep detection results
@@ -221,10 +226,6 @@ def detect_liquidity_sweep(
         closes = [float(k[4]) for k in klines]
 
         current_price = closes[-1]
-        current_high = highs[-1]
-        current_low = lows[-1]
-        current_open = opens[-1]
-        current_close = closes[-1]
 
         # Find swing points (excluding last few candles)
         swings = find_swing_points(highs[:-3], lows[:-3], lookback=3)
@@ -233,43 +234,79 @@ def detect_liquidity_sweep(
         sweep_type = None
         sweep_level = None
         sweep_wick = None
+        sweep_candle_idx = None
         confirmation = False
 
-        # Check for bearish sweep (price swept above swing high then rejected)
-        for sh in reversed(swings["swing_highs"][-5:]):
-            # Did recent candle wick above swing high but close below?
-            if current_high > sh["price"] and current_close < sh["price"]:
-                sweep_detected = True
-                sweep_type = "bearish"
-                sweep_level = sh["price"]
-                sweep_wick = current_high
-                # Confirmation: bearish candle (close < open)
-                confirmation = current_close < current_open
+        # Multi-candle sweep detection: check last N candles
+        for candle_offset in range(lookback_candles):
+            if sweep_detected:
                 break
 
-        # Check for bullish sweep (price swept below swing low then rejected)
-        if not sweep_detected:
-            for sl in reversed(swings["swing_lows"][-5:]):
-                # Did recent candle wick below swing low but close above?
-                if current_low < sl["price"] and current_close > sl["price"]:
+            idx = -(candle_offset + 1)  # -1, -2, -3, etc.
+            if abs(idx) >= len(closes):
+                break
+
+            candle_high = highs[idx]
+            candle_low = lows[idx]
+            candle_open = opens[idx]
+            candle_close = closes[idx]
+
+            # Check for bearish sweep (price swept above swing high then rejected)
+            for sh in reversed(swings["swing_highs"][-5:]):
+                # Did this candle wick above swing high but close below?
+                if candle_high > sh["price"] and candle_close < sh["price"]:
                     sweep_detected = True
-                    sweep_type = "bullish"
-                    sweep_level = sl["price"]
-                    sweep_wick = current_low
-                    # Confirmation: bullish candle (close > open)
-                    confirmation = current_close > current_open
+                    sweep_type = "bearish"
+                    sweep_level = sh["price"]
+                    sweep_wick = candle_high
+                    sweep_candle_idx = idx
+
+                    # Confirmation check: for older sweeps, check if subsequent candles confirmed
+                    if candle_offset == 0:
+                        # Most recent candle - check if it's bearish
+                        confirmation = candle_close < candle_open
+                    else:
+                        # Older sweep - check if the following candle was bearish
+                        next_idx = idx + 1
+                        if next_idx < 0:
+                            confirmation = closes[next_idx] < opens[next_idx]
+                        else:
+                            confirmation = closes[-1] < current_price  # Current below sweep
                     break
 
+            # Check for bullish sweep (price swept below swing low then rejected)
+            if not sweep_detected:
+                for sl in reversed(swings["swing_lows"][-5:]):
+                    # Did this candle wick below swing low but close above?
+                    if candle_low < sl["price"] and candle_close > sl["price"]:
+                        sweep_detected = True
+                        sweep_type = "bullish"
+                        sweep_level = sl["price"]
+                        sweep_wick = candle_low
+                        sweep_candle_idx = idx
+
+                        # Confirmation check
+                        if candle_offset == 0:
+                            confirmation = candle_close > candle_open
+                        else:
+                            next_idx = idx + 1
+                            if next_idx < 0:
+                                confirmation = closes[next_idx] > opens[next_idx]
+                            else:
+                                confirmation = closes[-1] > current_price
+                        break
+
         if sweep_detected:
-            # Calculate SL distance (from entry to sweep wick)
+            # Calculate SL distance (from current price to sweep wick)
             if sweep_type == "bullish":
                 sl_distance_pct = round((current_price - sweep_wick) / current_price * 100, 2)
             else:
                 sl_distance_pct = round((sweep_wick - current_price) / current_price * 100, 2)
 
+            candles_ago = abs(sweep_candle_idx)
             summary = f"SWEEP DETECTED | {clean_symbol} | {sweep_type.upper()}\n"
             summary += f"Level: ${sweep_level:.2f} | Wick: ${sweep_wick:.2f}\n"
-            summary += f"SL distance: {sl_distance_pct:.2f}%\n"
+            summary += f"Candles ago: {candles_ago} | SL distance: {sl_distance_pct:.2f}%\n"
             summary += f"Confirmation: {'YES' if confirmation else 'WAITING'}"
 
             return {
@@ -278,6 +315,7 @@ def detect_liquidity_sweep(
                 "sweep_type": sweep_type,
                 "sweep_level": sweep_level,
                 "sweep_wick": sweep_wick,
+                "sweep_candles_ago": candles_ago,
                 "sl_distance_pct": sl_distance_pct,
                 "confirmation": confirmation,
                 "current_price": current_price,

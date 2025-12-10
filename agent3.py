@@ -17,6 +17,7 @@ import os
 import json
 from datetime import datetime
 from pathlib import Path
+from typing import Dict
 
 sys.path.insert(0, str(Path(__file__).parent))
 
@@ -84,8 +85,9 @@ class LiquiditySweepAgent:
         self.trade_count = 0
         self.session_start = datetime.now()
 
-        # Track partial closes
-        self.partial_closed = {}  # symbol -> bool
+        # Track partial closes with file persistence
+        self.partial_closed_file = Path(__file__).parent / "data" / "partial_closed.json"
+        self.partial_closed = self._load_partial_closed()
 
         print(f"\nDevDuck agent initialized: {self.agent.model}")
         print(f"Strategy: Liquidity Sweep (MTF: 1H/15m/5m)")
@@ -93,6 +95,45 @@ class LiquiditySweepAgent:
         print(f"Risk: {RISK_PERCENT}% per trade | Min R:R: {MIN_RR_RATIO}")
         print(f"Max positions: {MAX_POSITIONS}")
         print("=" * 60)
+
+    def _load_partial_closed(self) -> Dict[str, bool]:
+        """Load partial close tracking from file"""
+        try:
+            if self.partial_closed_file.exists():
+                with open(self.partial_closed_file, 'r') as f:
+                    return json.load(f)
+        except Exception as e:
+            print(f"Warning: Could not load partial_closed: {e}")
+        return {}
+
+    def _save_partial_closed(self):
+        """Save partial close tracking to file"""
+        try:
+            self.partial_closed_file.parent.mkdir(parents=True, exist_ok=True)
+            with open(self.partial_closed_file, 'w') as f:
+                json.dump(self.partial_closed, f)
+        except Exception as e:
+            print(f"Warning: Could not save partial_closed: {e}")
+
+    def mark_partial_closed(self, symbol: str):
+        """Mark a symbol as having been partially closed"""
+        self.partial_closed[symbol] = True
+        self._save_partial_closed()
+        print(f"Marked {symbol} as partially closed")
+
+    def clear_partial_closed(self, symbol: str):
+        """Clear partial close status for a symbol (when position is fully closed)"""
+        if symbol in self.partial_closed:
+            del self.partial_closed[symbol]
+            self._save_partial_closed()
+            print(f"Cleared partial close status for {symbol}")
+
+    def sync_partial_closed_with_positions(self, open_positions: list):
+        """Remove partial_closed entries for symbols no longer in positions"""
+        positioned_symbols = {p.get('symbol', '') for p in open_positions}
+        closed_symbols = [s for s in self.partial_closed if s not in positioned_symbols]
+        for symbol in closed_symbols:
+            self.clear_partial_closed(symbol)
 
     def get_last_journal_entry(self):
         """Read last journal entry for context"""
@@ -145,6 +186,9 @@ class LiquiditySweepAgent:
         state = self.get_current_state()
         journal = self.get_last_journal_entry()
 
+        # Sync partial_closed with actual positions (clean up closed positions)
+        self.sync_partial_closed_with_positions(state['open_positions'])
+
         # Build context
         context = f"""
 CURRENT STATE:
@@ -163,12 +207,19 @@ RECENT JOURNAL:
         available_coins = [c for c in TRADING_COINS if c not in positioned_symbols]
         can_open_new = state['position_count'] < MAX_POSITIONS
 
-        # Build position info for management
+        # Build position info for management with accurate partial_closed tracking
         position_info = ""
+        partial_closed_symbols = []
         for p in state['open_positions']:
             sym = p.get('symbol', '')
-            partial_status = "PARTIAL_CLOSED" if self.partial_closed.get(sym, False) else "FULL"
+            is_partial = self.partial_closed.get(sym, False)
+            partial_status = "PARTIAL_CLOSED" if is_partial else "FULL"
+            if is_partial:
+                partial_closed_symbols.append(sym)
             position_info += f"  {sym}: size={p.get('size')}, entry={p.get('entry')}, pnl={p.get('pnl')}, status={partial_status}\n"
+
+        # Create partial_closed info for workflow
+        partial_closed_json = json.dumps(self.partial_closed)
 
         # Strategy workflow
         workflow = f"""
@@ -180,6 +231,10 @@ You are an AUTONOMOUS Liquidity Sweep trading bot. Execute trades WITHOUT asking
 Coins: {', '.join(TRADING_COINS)}
 Risk: {RISK_PERCENT}% | Min R:R: {MIN_RR_RATIO}
 Open: {state['position_count']}/{MAX_POSITIONS} | Can open new: {can_open_new}
+
+=== PARTIAL CLOSE TRACKING ===
+Already partial closed: {partial_closed_json}
+DO NOT partial close these symbols again!
 
 === STEP 1: MANAGE EXISTING POSITIONS ===
 {position_info if position_info else "No positions to manage."}
@@ -286,8 +341,15 @@ POSITION MANAGEMENT:
                 result_str = str(result)
                 print(result_str[:1000] + "..." if len(result_str) > 1000 else result_str)
 
-            # Update partial close tracking from result
-            # (Agent should communicate partial closes via structured output or journal)
+                # Update partial close tracking from result
+                # Detect partial closes from agent output
+                for symbol in TRADING_COINS:
+                    if symbol not in self.partial_closed:
+                        # Check if agent performed a partial close on this symbol
+                        if f"PARTIAL" in result_str.upper() and symbol in result_str:
+                            if "CLOSE" in result_str.upper() or "50%" in result_str:
+                                self.mark_partial_closed(symbol)
+                                print(f"Detected partial close for {symbol} from agent output")
 
         except Exception as e:
             print(f"Cycle error: {e}")

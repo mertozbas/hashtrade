@@ -284,18 +284,19 @@ def manage_position(
             recommendation = None
             new_sl = None
 
-            if pnl_pct >= 1.0:
+            if pnl_pct >= 2.0:
+                # TP2 zone - check this FIRST (higher threshold)
+                recommendation = "TP2_ZONE"
+                new_sl = entry_price
+                action_text = f"TP2 zone ({pnl_pct:.2f}%)\n" \
+                              f"Consider closing remaining position or trail SL"
+            elif pnl_pct >= 1.0:
                 # TP1 hit - recommend partial close and move SL to breakeven
                 recommendation = "TP1_HIT"
                 new_sl = entry_price
                 action_text = f"TP1 reached ({pnl_pct:.2f}%)\n" \
                               f"Recommendation: Close 50% of position\n" \
                               f"Move SL to breakeven: ${entry_price:.2f}"
-            elif pnl_pct >= 2.0:
-                # TP2 zone
-                recommendation = "TP2_ZONE"
-                action_text = f"TP2 zone ({pnl_pct:.2f}%)\n" \
-                              f"Consider closing remaining position or trail SL"
             elif pnl_pct <= -2.0:
                 # Near SL
                 recommendation = "NEAR_SL"

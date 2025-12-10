@@ -167,9 +167,9 @@ IF NO POSITION:
   3. IF no signal: journal "NO TRADE" and finish
 
 === POSITION SIZING ===
-Balance: ~$23 | Risk: 5% = $1.16
-- Use 5-15x leverage for tight SL (<0.5%)
-- qty = 0.01 (minimum for most pairs)
+Use calculate_position() with current balance from state above.
+- Risk: {RISK_PERCENT}% of balance
+- Use select_leverage() to get optimal leverage based on SL distance
 - Margin must be < 30% of balance
 
 === CRITICAL ===

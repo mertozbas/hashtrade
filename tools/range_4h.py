@@ -9,17 +9,46 @@ from typing import Dict, Any, List, Optional
 from strands import tool
 
 
+def is_dst_in_effect() -> bool:
+    """Check if Daylight Saving Time is in effect for US Eastern timezone.
+
+    DST in US: Second Sunday of March to First Sunday of November
+    """
+    now = datetime.utcnow()
+    year = now.year
+
+    # Second Sunday of March (DST starts at 2:00 AM local)
+    march_first = datetime(year, 3, 1)
+    march_second_sunday = march_first + timedelta(days=(6 - march_first.weekday() + 7) % 7 + 7)
+    dst_start = march_second_sunday.replace(hour=7)  # 2 AM EST = 7 AM UTC
+
+    # First Sunday of November (DST ends at 2:00 AM local)
+    nov_first = datetime(year, 11, 1)
+    nov_first_sunday = nov_first + timedelta(days=(6 - nov_first.weekday()) % 7)
+    dst_end = nov_first_sunday.replace(hour=6)  # 2 AM EDT = 6 AM UTC
+
+    return dst_start <= now < dst_end
+
+
 def get_ny_midnight_utc() -> datetime:
-    """Get today's midnight in New York time, converted to UTC"""
-    # New York is UTC-5 (EST) or UTC-4 (EDT)
-    # For simplicity, assume UTC-5
+    """Get today's midnight in New York time, converted to UTC.
+
+    Handles both EST (UTC-5) and EDT (UTC-4) automatically.
+    """
     now_utc = datetime.utcnow()
 
-    # NY midnight in UTC is 05:00 UTC (during EST)
-    ny_midnight_utc = now_utc.replace(hour=5, minute=0, second=0, microsecond=0)
+    # Determine UTC offset based on DST
+    if is_dst_in_effect():
+        # EDT: UTC-4, so NY midnight = 04:00 UTC
+        ny_offset_hours = 4
+    else:
+        # EST: UTC-5, so NY midnight = 05:00 UTC
+        ny_offset_hours = 5
+
+    ny_midnight_utc = now_utc.replace(hour=ny_offset_hours, minute=0, second=0, microsecond=0)
 
     # If current time is before NY midnight, use previous day
-    if now_utc.hour < 5:
+    if now_utc.hour < ny_offset_hours:
         ny_midnight_utc -= timedelta(days=1)
 
     return ny_midnight_utc

@@ -215,13 +215,17 @@ IF no signal on any coin: journal "NO TRADE - no valid SMC setup" and finish
 '''}
 
 === POSITION SIZING v2 ===
-Balance: ~$25 | Risk: 10% = $2.50 per trade
-DYNAMIC LEVERAGE (based on SL distance):
-- SL 0.5% → 30x: ETHUSDT 0.02 @ $2850 = $1.90 margin
-- SL 1.0% → 25x: ETHUSDT 0.02 @ $2850 = $2.28 margin
-- SL 1.5% → 20x: ETHUSDT 0.02 @ $2850 = $2.85 margin
-- SL 2.0% → 15x: ETHUSDT 0.02 @ $2850 = $3.80 margin
-USE select_leverage() to get optimal leverage for each trade!
+Use calculate_position() with current balance from state above.
+Risk: {RISK_PERCENT}% of balance per trade
+
+DYNAMIC LEVERAGE (use select_leverage() based on SL distance):
+- SL ≤0.5% → 30x leverage
+- SL ≤1.0% → 25x leverage
+- SL ≤1.5% → 20x leverage
+- SL ≤2.0% → 15x leverage
+- SL >2.0% → 10x leverage
+
+ALWAYS call select_leverage(sl_distance_pct=X) first to get optimal leverage!
 
 === CRITICAL RULES ===
 1. You are AUTONOMOUS - no human confirmation needed
