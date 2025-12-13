@@ -89,6 +89,10 @@ class LiquiditySweepAgent:
         self.partial_closed_file = Path(__file__).parent / "data" / "partial_closed.json"
         self.partial_closed = self._load_partial_closed()
 
+        # Track position sizes for reliable partial close detection
+        self.position_sizes_file = Path(__file__).parent / "data" / "position_sizes.json"
+        self.last_position_sizes = self._load_position_sizes()
+
         print(f"\nDevDuck agent initialized: {self.agent.model}")
         print(f"Strategy: Liquidity Sweep (MTF: 1H/15m/5m)")
         print(f"Coins: {', '.join(TRADING_COINS)}")
@@ -114,6 +118,47 @@ class LiquiditySweepAgent:
                 json.dump(self.partial_closed, f)
         except Exception as e:
             print(f"Warning: Could not save partial_closed: {e}")
+
+    def _load_position_sizes(self) -> Dict[str, float]:
+        """Load last known position sizes from file"""
+        try:
+            if self.position_sizes_file.exists():
+                with open(self.position_sizes_file, 'r') as f:
+                    return json.load(f)
+        except Exception as e:
+            print(f"Warning: Could not load position_sizes: {e}")
+        return {}
+
+    def _save_position_sizes(self, sizes: Dict[str, float]):
+        """Save current position sizes to file"""
+        try:
+            self.position_sizes_file.parent.mkdir(parents=True, exist_ok=True)
+            with open(self.position_sizes_file, 'w') as f:
+                json.dump(sizes, f)
+            self.last_position_sizes = sizes
+        except Exception as e:
+            print(f"Warning: Could not save position_sizes: {e}")
+
+    def detect_partial_close_from_size(self, open_positions: list):
+        """
+        Detect partial closes by comparing current position sizes with last known sizes.
+        If size decreased by 40-60%, it's a partial close.
+        """
+        current_sizes = {p.get('symbol', ''): float(p.get('size', 0)) for p in open_positions}
+
+        for symbol, current_size in current_sizes.items():
+            if symbol in self.last_position_sizes and symbol not in self.partial_closed:
+                last_size = self.last_position_sizes[symbol]
+                if last_size > 0 and current_size > 0:
+                    # Calculate size reduction ratio
+                    reduction_ratio = current_size / last_size
+                    # If size reduced to 40-60% of original, it's a partial close
+                    if 0.4 <= reduction_ratio <= 0.6:
+                        self.mark_partial_closed(symbol)
+                        print(f"Detected partial close for {symbol}: {last_size} -> {current_size} ({reduction_ratio:.1%})")
+
+        # Save current sizes for next comparison
+        self._save_position_sizes(current_sizes)
 
     def mark_partial_closed(self, symbol: str):
         """Mark a symbol as having been partially closed"""
@@ -188,6 +233,9 @@ class LiquiditySweepAgent:
 
         # Sync partial_closed with actual positions (clean up closed positions)
         self.sync_partial_closed_with_positions(state['open_positions'])
+
+        # Detect partial closes by comparing position sizes (reliable method)
+        self.detect_partial_close_from_size(state['open_positions'])
 
         # Build context
         context = f"""
@@ -341,15 +389,9 @@ POSITION MANAGEMENT:
                 result_str = str(result)
                 print(result_str[:1000] + "..." if len(result_str) > 1000 else result_str)
 
-                # Update partial close tracking from result
-                # Detect partial closes from agent output
-                for symbol in TRADING_COINS:
-                    if symbol not in self.partial_closed:
-                        # Check if agent performed a partial close on this symbol
-                        if f"PARTIAL" in result_str.upper() and symbol in result_str:
-                            if "CLOSE" in result_str.upper() or "50%" in result_str:
-                                self.mark_partial_closed(symbol)
-                                print(f"Detected partial close for {symbol} from agent output")
+            # Note: Partial close detection is now done via position size comparison
+            # at the start of each cycle (detect_partial_close_from_size method)
+            # This is more reliable than string parsing agent output
 
         except Exception as e:
             print(f"Cycle error: {e}")
