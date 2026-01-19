@@ -20,9 +20,9 @@ from strands import tool
 
 # Import history for adding to timeline - handle both direct and package imports
 try:
-    from history import HISTORY_FILE, _ensure
+    from .history import HISTORY_FILE, _ensure
 except ImportError:
-    from tools.history import HISTORY_FILE, _ensure
+    from server.tools.history import HISTORY_FILE, _ensure
 
 # Default theme (neon green)
 DEFAULT_THEME = {
