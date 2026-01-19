@@ -30,15 +30,6 @@ classifiers = [
     "Topic :: Internet :: WWW/HTTP :: Dynamic Content",
 ]
 
-[project.urls]
-Homepage = "https://mertozbas.github.io/hashtrade/"
-Repository = "https://github.com/mertozbas/hashtrade"
-Documentation = "https://github.com/mertozbas/hashtrade#readme"
-Issues = "https://github.com/mertozbas/hashtrade/issues"
-Changelog = "https://github.com/mertozbas/hashtrade/releases"
-Dashboard = "https://mertozbas.github.io/hashtrade/"
-PyPI = "https://pypi.org/project/hashtrade/"
-
 dependencies = [
   "strands-agents",
   "strands-agents[anthropic]",
@@ -48,6 +39,15 @@ dependencies = [
   "websockets>=12.0",
   "ccxt>=4.0.0",
 ]
+
+[project.urls]
+Homepage = "https://mertozbas.github.io/hashtrade/"
+Repository = "https://github.com/mertozbas/hashtrade"
+Documentation = "https://github.com/mertozbas/hashtrade#readme"
+Issues = "https://github.com/mertozbas/hashtrade/issues"
+Changelog = "https://github.com/mertozbas/hashtrade/releases"
+Dashboard = "https://mertozbas.github.io/hashtrade/"
+PyPI = "https://pypi.org/project/hashtrade/"
 
 [project.optional-dependencies]
 ollama = []  # ollama support built into strands
