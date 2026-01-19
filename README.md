@@ -2,13 +2,13 @@
 
 A real-time cryptocurrency trading dashboard powered by [Strands Agents](https://github.com/strands-agents/strands-agents) with AI-driven trading assistance, multi-exchange support via CCXT, and dynamic UI customization.
 
-🚀 **[Try the Live Dashboard](https://mertozbas.github.io/hashtrade/)** | 📦 **[Install from PyPI](https://pypi.org/project/hashtrade/)**
+🚀 **[Try the Live Dashboard](https://hashtrade.ai/)** | 📦 **[Install from PyPI](https://pypi.org/project/hashtrade/)**
 
 ![HashTrade Dashboard](https://img.shields.io/badge/HashTrade-Dashboard-00ff88?style=for-the-badge&logo=bitcoin&logoColor=white)
 [![Python 3.11+](https://img.shields.io/badge/python-3.11+-blue.svg)](https://www.python.org/downloads/)
 [![PyPI version](https://badge.fury.io/py/hashtrade.svg)](https://pypi.org/project/hashtrade/)
 [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](LICENSE)
-[![Dashboard](https://img.shields.io/badge/Live-Dashboard-brightgreen)](https://mertozbas.github.io/hashtrade/)
+[![Dashboard](https://img.shields.io/badge/Live-Dashboard-brightgreen)](https://hashtrade.ai/)
 
 ## ✨ Features
 
@@ -109,7 +109,7 @@ python server/main.py
 hashtrade
 ```
 
-Then open the [HashTrade Dashboard](https://mertozbas.github.io/hashtrade/) in your browser and click **Connect**.
+Then open the [HashTrade](https://hashtrade.ai/) in your browser and click **Connect**.
 
 ## 💬 Usage Examples
 
