@@ -1,0 +1,31 @@
+[build-system]
+requires = ["setuptools>=68", "wheel", "setuptools-scm"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "hashtrade"
+dynamic = ["version"]
+description = "HashTrade - Cryptocurrency trading dashboard with AI agent"
+requires-python = ">=3.11"
+
+dependencies = [
+  "strands-agents",
+  "strands-agents[anthropic]",
+  "strands-agents[openai]",
+  "strands-agents[ollama]",
+  "strands-agents-tools",
+  "websockets>=12.0",
+  "ccxt>=4.0.0",
+]
+
+[project.optional-dependencies]
+ollama = []  # ollama support built into strands
+
+[project.scripts]
+hashtrade = "server.main:main"
+
+[tool.setuptools]
+packages = ["server"]
+
+[tool.setuptools_scm]
+write_to = "server/_version.py"
