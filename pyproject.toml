@@ -5,8 +5,37 @@ build-backend = "setuptools.build_meta"
 [project]
 name = "hashtrade"
 dynamic = ["version"]
-description = "HashTrade - Cryptocurrency trading dashboard with AI agent"
+description = "A real-time cryptocurrency trading dashboard powered by AI agents with multi-exchange support"
+readme = "README.md"
 requires-python = ">=3.11"
+license = {text = "Apache-2.0"}
+authors = [
+    {name = "Mert Ozbas", email = "mertozbas@gmail.com"}
+]
+maintainers = [
+    {name = "Mert Ozbas", email = "mertozbas@gmail.com"}
+]
+keywords = ["cryptocurrency", "trading", "dashboard", "ai", "agent", "ccxt", "websocket"]
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Intended Audience :: Developers",
+    "Intended Audience :: Financial and Insurance Industry",
+    "License :: OSI Approved :: Apache Software License",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Topic :: Office/Business :: Financial :: Investment",
+    "Topic :: Software Development :: Libraries :: Python Modules",
+    "Topic :: Internet :: WWW/HTTP :: Dynamic Content",
+]
+
+[project.urls]
+Homepage = "https://github.com/mertozbas/hashtrade"
+Repository = "https://github.com/mertozbas/hashtrade"
+Documentation = "https://github.com/mertozbas/hashtrade#readme"
+Issues = "https://github.com/mertozbas/hashtrade/issues"
+Changelog = "https://github.com/mertozbas/hashtrade/releases"
 
 dependencies = [
   "strands-agents",
