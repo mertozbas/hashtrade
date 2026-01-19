@@ -21,9 +21,9 @@ import websockets
 from strands import Agent, tool
 
 # Import tools
-from tools.history import history
-from tools.use_ccxt import use_ccxt
-from tools.interface import interface
+from .tools.history import history
+from .tools.use_ccxt import use_ccxt
+from .tools.interface import interface
 
 # Try to import ccxt for direct UI operations
 try:
