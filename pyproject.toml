@@ -31,11 +31,13 @@ classifiers = [
 ]
 
 [project.urls]
-Homepage = "https://github.com/mertozbas/hashtrade"
+Homepage = "https://mertozbas.github.io/hashtrade/"
 Repository = "https://github.com/mertozbas/hashtrade"
 Documentation = "https://github.com/mertozbas/hashtrade#readme"
 Issues = "https://github.com/mertozbas/hashtrade/issues"
 Changelog = "https://github.com/mertozbas/hashtrade/releases"
+Dashboard = "https://mertozbas.github.io/hashtrade/"
+PyPI = "https://pypi.org/project/hashtrade/"
 
 dependencies = [
   "strands-agents",

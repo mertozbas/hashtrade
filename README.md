@@ -2,9 +2,13 @@
 
 A real-time cryptocurrency trading dashboard powered by [Strands Agents](https://github.com/strands-agents/strands-agents) with AI-driven trading assistance, multi-exchange support via CCXT, and dynamic UI customization.
 
+🚀 **[Try the Live Dashboard](https://mertozbas.github.io/hashtrade/)** | 📦 **[Install from PyPI](https://pypi.org/project/hashtrade/)**
+
 ![HashTrade Dashboard](https://img.shields.io/badge/HashTrade-Dashboard-00ff88?style=for-the-badge&logo=bitcoin&logoColor=white)
 [![Python 3.11+](https://img.shields.io/badge/python-3.11+-blue.svg)](https://www.python.org/downloads/)
+[![PyPI version](https://badge.fury.io/py/hashtrade.svg)](https://pypi.org/project/hashtrade/)
 [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](LICENSE)
+[![Dashboard](https://img.shields.io/badge/Live-Dashboard-brightgreen)](https://mertozbas.github.io/hashtrade/)
 
 ## ✨ Features
 
@@ -22,7 +26,7 @@ A real-time cryptocurrency trading dashboard powered by [Strands Agents](https:/
 ┌─────────────────────────────────────────────────────────────────┐
 │                     HashTrade Dashboard                          │
 ├─────────────────────────────────────────────────────────────────┤
-│  Frontend (web/index.html)                                       │
+│  Frontend (docs/index.html)                                     │
 │  ├── Market Graph (OHLCV Chart)                                 │
 │  ├── History of Actions (Timeline)                              │
 │  ├── Agent Screen (Chat with streaming)                         │
@@ -45,15 +49,18 @@ A real-time cryptocurrency trading dashboard powered by [Strands Agents](https:/
 ### Installation
 
 ```bash
-# Clone the repository
-git clone https://github.com/mertozbas/hashtrade-dashboard.git
-cd hashtrade-dashboard/strands-trading-dashboard
+# Install from PyPI
+pip install hashtrade
+
+# Or clone the repository
+git clone https://github.com/mertozbas/hashtrade.git
+cd hashtrade
 
 # Create virtual environment
 python3 -m venv .venv
 source .venv/bin/activate  # On Windows: .venv\Scripts\activate
 
-# Install package
+# Install in development mode
 pip install -e .
 ```
 
@@ -102,7 +109,7 @@ python server/main.py
 hashtrade
 ```
 
-Then open `docs/index.html` in your browser and click **Connect**.
+Then open the [HashTrade Dashboard](https://mertozbas.github.io/hashtrade/) in your browser and click **Connect**.
 
 ## 💬 Usage Examples
 
@@ -215,17 +222,17 @@ Dynamic UI rendering and theme control.
 ## 📁 Project Structure
 
 ```
-strands-trading-dashboard/
+hashtrade/
 ├── server/
 │   ├── main.py              # WebSocket server & agent
+│   ├── data/
+│   │   └── history.jsonl    # Persisted history (auto-created)
 │   └── tools/
 │       ├── use_ccxt.py      # CCXT exchange tool
 │       ├── history.py       # Action history tool
 │       └── interface.py     # UI/theme tool
-├── web/
-│   └── index.html           # Dashboard frontend
-├── data/
-│   └── history.jsonl        # Persisted history (auto-created)
+├── docs/
+│   └── index.html           # Dashboard frontend (GitHub Pages)
 ├── pyproject.toml           # Package configuration
 └── README.md
 ```
