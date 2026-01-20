@@ -1,1924 +1,1532 @@
 <!doctype html>
-<html lang="en" class="dark">
+<html lang="en">
 <head>
   <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>HashTrade Dashboard</title>
-
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="theme-color" content="#000000" />
+  <meta name="description" content="AI-powered cryptocurrency trading assistant" />
+  
+  <title>HashTrade</title>
+  
+  <!-- PWA -->
+  <link rel="manifest" href="manifest.json" />
+  <link rel="apple-touch-icon" href="icon-192.png" />
+  
+  <!-- Syntax highlighting -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.min.css">
   <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
 
   <style>
     :root {
       --neon: #00ff88;
       --neon-dim: #00ff8880;
       --neon-glow: rgba(0, 255, 136, 0.5);
-      --neon-subtle: rgba(0, 255, 136, 0.1);
+      --neon-subtle: rgba(0, 255, 136, 0.08);
       --neon-border: rgba(0, 255, 136, 0.2);
       --bg: #000000;
-      --panel: #000000;
-      --panel-glass: rgba(0, 0, 0, 0.8);
-      --text: #00ff88;
-      --text-dim: #00ff8899;
-      --muted: rgba(0, 255, 136, 0.5);
-      --line: rgba(0, 255, 136, 0.15);
+      --bg-card: rgba(0, 20, 10, 0.6);
+      --text: #e0ffe8;
+      --text-dim: #a0c8b0;
+      --muted: rgba(0, 255, 136, 0.4);
       --good: #00ff88;
-      --bad: #ff3366;
+      --bad: #ff4466;
       --warn: #ffcc00;
-      --shadow: 0 0 30px rgba(0, 255, 136, 0.15);
-      --radius: 12px;
-      --mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
-      --sans: Inter, system-ui, -apple-system, sans-serif;
+      --radius: 16px;
+      --radius-sm: 10px;
+      --safe-top: env(safe-area-inset-top, 0px);
+      --safe-bottom: env(safe-area-inset-bottom, 0px);
     }
 
-    * { box-sizing: border-box; }
-    html, body { height: 100%; margin: 0; }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
     
-    body {
-      font-family: var(--sans);
-      color: var(--text);
+    html, body {
+      height: 100%;
+      font-family: -apple-system, BlinkMacSystemFont, 'SF Pro', 'Segoe UI', system-ui, sans-serif;
       background: var(--bg);
+      color: var(--text);
       overflow: hidden;
+      -webkit-font-smoothing: antialiased;
+      -webkit-tap-highlight-color: transparent;
     }
 
-    /* Animated background */
+    /* Ambient background */
     body::before {
       content: '';
       position: fixed;
-      top: 0; left: 0; right: 0; bottom: 0;
+      inset: 0;
       background: 
-        radial-gradient(ellipse 80% 50% at 20% 30%, rgba(0, 255, 136, 0.08), transparent 50%),
-        radial-gradient(ellipse 60% 40% at 80% 70%, rgba(0, 255, 136, 0.05), transparent 50%);
+        radial-gradient(ellipse 100% 60% at 50% 0%, rgba(0, 255, 136, 0.08), transparent 60%),
+        radial-gradient(circle at 20% 80%, rgba(0, 255, 136, 0.04), transparent 40%);
       pointer-events: none;
-      z-index: -1;
+      z-index: 0;
     }
 
     .app {
       height: 100%;
-      display: grid;
-      grid-template-columns: 520px 1fr 420px;
-      grid-template-rows: 64px 1fr 86px;
-      gap: 12px;
-      padding: 12px;
+      display: flex;
+      flex-direction: column;
+      position: relative;
+      z-index: 1;
     }
 
-    /* Glass panels */
-    .glass {
-      background: var(--panel-glass);
-      backdrop-filter: blur(10px);
-      -webkit-backdrop-filter: blur(10px);
-      border: 1px solid var(--neon-border);
-      border-radius: var(--radius);
-      box-shadow: var(--shadow);
-    }
-
-    .neon-glow {
-      box-shadow: 0 0 20px var(--neon-glow), var(--shadow);
-    }
-
-    .neon-text {
-      color: var(--neon);
-      text-shadow: 0 0 10px var(--neon-glow), 0 0 20px rgba(0, 255, 136, 0.3);
-      animation: aurora-pulse 3s ease-in-out infinite;
-    }
-
-    @keyframes aurora-pulse {
-      0%, 100% { text-shadow: 0 0 10px var(--neon-glow), 0 0 20px rgba(0, 255, 136, 0.3); }
-      50% { text-shadow: 0 0 15px var(--neon-glow), 0 0 30px rgba(0, 255, 136, 0.5); }
-    }
-
+    /* Header */
     header {
-      grid-column: 1/4;
+      flex-shrink: 0;
+      padding: calc(var(--safe-top) + 12px) 16px 12px;
       display: flex;
       align-items: center;
       justify-content: space-between;
-      padding: 10px 16px;
-    }
-
-    footer {
-      grid-column: 1/4;
-      display: flex;
-      gap: 12px;
-      align-items: center;
-      padding: 10px 16px;
+      background: linear-gradient(180deg, rgba(0,0,0,0.9) 0%, transparent 100%);
+      position: relative;
+      z-index: 100;
     }
 
     .brand {
       display: flex;
-      gap: 12px;
       align-items: center;
+      gap: 10px;
     }
 
     .logo {
-      width: 38px;
-      height: 38px;
+      width: 36px;
+      height: 36px;
       border-radius: 10px;
-      background: conic-gradient(from 180deg, var(--neon), #00cc66, var(--neon));
-      box-shadow: 0 0 15px var(--neon-glow);
-      animation: logo-spin 8s linear infinite;
-    }
-
-    @keyframes logo-spin {
-      from { transform: rotate(0deg); }
-      to { transform: rotate(360deg); }
-    }
-
-    .brand h1 {
-      font-size: 15px;
-      margin: 0;
-      font-weight: 600;
-    }
-
-    .sub {
-      font-size: 11px;
-      color: var(--muted);
-    }
-
-    .top {
-      display: flex;
-      gap: 12px;
-      align-items: center;
-      padding: 8px 12px;
-      border: 1px solid var(--neon-border);
-      background: var(--neon-subtle);
-      border-radius: 10px;
-    }
-
-    .pill {
-      font-family: var(--mono);
-      font-size: 10px;
-      color: var(--muted);
-      text-transform: uppercase;
-      letter-spacing: 0.5px;
-    }
-
-    .balance {
-      font-family: var(--mono);
-      font-size: 14px;
-      font-weight: 600;
-    }
-
-    .panel {
-      overflow: hidden;
-      display: flex;
-      flex-direction: column;
-      min-height: 0;
-    }
-
-    .hd {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 12px 14px;
-      border-bottom: 1px solid var(--line);
-      background: rgba(0, 255, 136, 0.03);
-      font-weight: 500;
-    }
-
-    .bd {
-      padding: 12px;
-      overflow: auto;
-      min-height: 0;
-      flex: 1;
-    }
-
-    /* Scrollbar */
-    ::-webkit-scrollbar { width: 6px; height: 6px; }
-    ::-webkit-scrollbar-track { background: transparent; }
-    ::-webkit-scrollbar-thumb { background: var(--neon-border); border-radius: 3px; }
-    ::-webkit-scrollbar-thumb:hover { background: var(--neon-dim); }
-
-    /* Chat */
-    .chat {
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
-    }
-
-    .turn {
-      border: 1px solid var(--line);
-      background: rgba(0, 0, 0, 0.5);
-      border-radius: 10px;
-      overflow: hidden;
-    }
-
-    .msgRow {
-      padding: 10px 12px;
-      border-bottom: 1px solid var(--line);
-    }
-
-    .msgRow:last-child { border-bottom: none; }
-
-    .msgRow.user {
-      background: rgba(0, 255, 136, 0.05);
-    }
-
-    .msgRow.assistant {
-      background: transparent;
-    }
-
-    .msgRow pre {
-      background: rgba(0, 255, 136, 0.05);
-      border: 1px solid var(--line);
-      padding: 10px;
-      border-radius: 8px;
-      overflow: auto;
-    }
-
-    .msgRow code {
-      font-family: var(--mono);
-      font-size: 12px;
-      color: var(--neon);
-    }
-
-    .ts {
-      font-family: var(--mono);
-      font-size: 10px;
-      color: var(--muted);
-    }
-
-    .tool-status {
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      padding: 4px 10px;
-      margin: 6px 0;
-      border: 1px solid var(--line);
-      border-radius: 999px;
-      background: var(--neon-subtle);
-      font-size: 11px;
-      color: var(--muted);
-    }
-
-    .tool-status.success {
-      color: var(--good);
-      border-color: rgba(0, 255, 136, 0.4);
-      box-shadow: 0 0 10px rgba(0, 255, 136, 0.2);
-    }
-
-    .tool-status.error {
-      color: var(--bad);
-      border-color: rgba(255, 51, 102, 0.4);
-    }
-
-    .loading-cursor {
-      display: inline-block;
-      width: 2px;
-      height: 14px;
-      background: var(--neon);
-      margin-left: 4px;
-      animation: blink 1s infinite;
-      box-shadow: 0 0 8px var(--neon-glow);
-    }
-
-    @keyframes blink {
-      0%, 50% { opacity: 1; }
-      51%, 100% { opacity: 0; }
-    }
-
-    /* Timeline / History */
-    .timeline {
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
-    }
-
-    .event {
-      border: 1px solid var(--line);
-      background: rgba(0, 0, 0, 0.5);
-      border-radius: 10px;
-      padding: 10px 12px;
-      cursor: default;
-      transition: all 0.2s ease;
-    }
-
-    .event:hover {
-      border-color: var(--neon-dim);
-      box-shadow: 0 0 15px rgba(0, 255, 136, 0.1);
-    }
-
-    .event { cursor: pointer; }
-    .event.clickable {
-      cursor: pointer;
-      transition: all 0.2s ease;
-    }
-    .event.clickable:hover {
-      border-color: var(--neon);
-      background: rgba(0, 255, 136, 0.1);
-      box-shadow: 0 0 15px rgba(0, 255, 136, 0.2);
-      transform: translateX(4px);
-    }
-    .event.clickable:active {
-      background: rgba(0, 255, 136, 0.2);
-    }
-    .event.order { border-left: 3px solid var(--good); }
-    .event.trade { border-left: 3px solid #00ccff; }
-    .event.signal { border-left: 3px solid var(--warn); }
-
-    .event .msg {
-      margin-top: 6px;
-      font-size: 13px;
-      line-height: 1.5;
-    }
-
-    .event .msg p { margin: 0.4em 0; }
-    .event .msg pre {
-      background: rgba(0, 255, 136, 0.05);
-      border: 1px solid var(--line);
-      padding: 8px;
-      border-radius: 6px;
-      overflow-x: auto;
-    }
-    .event .msg code { font-family: var(--mono); font-size: 11px; }
-    .event .msg .mermaid { background: transparent; }
-
-    .row {
-      display: flex;
-      justify-content: space-between;
-      gap: 10px;
-    }
-
-    /* Controls */
-    .controls {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-    }
-
-    .btn {
-      border: 1px solid var(--neon-border);
-      background: var(--neon-subtle);
-      color: var(--text);
-      padding: 8px 12px;
-      border-radius: 8px;
-      cursor: pointer;
-      font-size: 12px;
-      font-weight: 500;
-      transition: all 0.2s ease;
-    }
-
-    .btn:hover {
-      background: rgba(0, 255, 136, 0.15);
-      border-color: var(--neon-dim);
-      box-shadow: 0 0 15px rgba(0, 255, 136, 0.2);
-    }
-
-    .btn.primary {
-      background: var(--neon);
-      color: #000;
-      border-color: var(--neon);
-      font-weight: 600;
-    }
-
-    .btn.primary:hover {
-      background: #00cc66;
+      background: conic-gradient(from 180deg, var(--neon), #00aa55, var(--neon));
       box-shadow: 0 0 20px var(--neon-glow);
+      animation: logo-pulse 3s ease-in-out infinite;
     }
 
-    .sliderWrap {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      flex: 1;
+    @keyframes logo-pulse {
+      0%, 100% { box-shadow: 0 0 20px var(--neon-glow); }
+      50% { box-shadow: 0 0 30px var(--neon-glow), 0 0 40px rgba(0,255,136,0.2); }
     }
 
-    input[type=range] {
-      width: 100%;
-      accent-color: var(--neon);
-    }
-
-    .timeReadout {
-      font-family: var(--mono);
-      font-size: 11px;
-      color: var(--muted);
-      min-width: 260px;
-      text-align: right;
-    }
-
-    .chatInputWrap {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      flex: 1.2;
-    }
-
-    .chatInput {
-      flex: 1;
-      background: rgba(0, 0, 0, 0.5);
-      border: 1px solid var(--line);
-      border-radius: 10px;
-      padding: 10px 14px;
-      color: var(--text);
-      font-size: 13px;
-      outline: none;
-      transition: all 0.2s ease;
-    }
-
-    .chatInput:focus {
-      border-color: var(--neon-dim);
-      box-shadow: 0 0 15px rgba(0, 255, 136, 0.15);
-    }
-
-    .chatInput::placeholder { color: var(--muted); }
-
-    /* Chart */
-    .chartWrap {
-      height: 100%;
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
-    }
-
-    .canvasWrap {
-      flex: 1;
-      border: 1px solid var(--line);
-      background: rgba(0, 0, 0, 0.5);
-      border-radius: 10px;
-      overflow: hidden;
-      position: relative;
-    }
-
-    canvas {
-      display: block;
-      width: 100%;
-      height: 100%;
-    }
-
-    .legend {
-      display: flex;
-      gap: 12px;
-      font-size: 11px;
-      color: var(--muted);
-    }
-
-    .dot {
-      width: 8px;
-      height: 8px;
-      border-radius: 99px;
-      display: inline-block;
-      margin-right: 5px;
-    }
-
-    /* Modal */
-    .modal-overlay {
-      position: fixed;
-      top: 0; left: 0;
-      width: 100%; height: 100%;
-      background: rgba(0, 0, 0, 0.85);
-      backdrop-filter: blur(5px);
-      display: none;
-      align-items: center;
-      justify-content: center;
-      z-index: 1000;
-    }
-
-    .modal-overlay.show { display: flex; }
-
-    .modal {
-      background: var(--bg);
-      border: 1px solid var(--neon-border);
-      border-radius: var(--radius);
-      padding: 24px;
-      width: 420px;
-      max-width: 90%;
-      box-shadow: 0 0 40px rgba(0, 255, 136, 0.2);
-    }
-
-    .modal h2 {
-      margin: 0 0 20px;
+    .brand-text h1 {
       font-size: 18px;
+      font-weight: 700;
+      color: var(--neon);
+      text-shadow: 0 0 20px var(--neon-glow);
+      letter-spacing: -0.5px;
     }
 
-    .form-group {
-      margin-bottom: 16px;
-    }
-
-    .form-group label {
-      display: block;
+    .brand-text .status {
       font-size: 11px;
       color: var(--muted);
-      margin-bottom: 6px;
-      text-transform: uppercase;
-      letter-spacing: 0.5px;
-    }
-
-    .form-group input,
-    .form-group select {
-      width: 100%;
-      background: rgba(0, 0, 0, 0.5);
-      border: 1px solid var(--line);
-      border-radius: 8px;
-      padding: 10px 12px;
-      color: var(--text);
-      font-size: 13px;
-      outline: none;
-    }
-
-    .form-group input:focus,
-    .form-group select:focus {
-      border-color: var(--neon-dim);
-      box-shadow: 0 0 10px rgba(0, 255, 136, 0.15);
-    }
-
-    .form-group select option {
-      background: #111;
-      color: var(--text);
-    }
-
-    .form-row {
       display: flex;
-      gap: 12px;
+      align-items: center;
+      gap: 5px;
     }
 
-    .form-row .form-group { flex: 1; }
-
-    .modal-actions {
-      display: flex;
-      gap: 10px;
-      margin-top: 24px;
-    }
-
-    .modal-actions .btn { flex: 1; }
-
-    /* Status indicators */
     .status-dot {
-      display: inline-block;
-      width: 8px;
-      height: 8px;
+      width: 6px;
+      height: 6px;
       border-radius: 50%;
-      margin-right: 6px;
+      background: var(--bad);
     }
 
     .status-dot.connected {
       background: var(--good);
       box-shadow: 0 0 8px var(--neon-glow);
-    }
-
-    .status-dot.disconnected {
-      background: var(--bad);
-    }
-
-    .live-indicator {
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      padding: 4px 10px;
-      border-radius: 20px;
-      font-size: 10px;
-      font-weight: 600;
-      text-transform: uppercase;
-      letter-spacing: 0.5px;
-      background: rgba(0, 255, 136, 0.1);
-      color: var(--good);
-      border: 1px solid rgba(0, 255, 136, 0.3);
-    }
-
-    .live-indicator.paused {
-      background: rgba(255, 204, 0, 0.1);
-      color: var(--warn);
-      border-color: rgba(255, 204, 0, 0.3);
-    }
-
-    .live-dot {
-      width: 6px;
-      height: 6px;
-      border-radius: 50%;
-      background: var(--good);
-      animation: pulse 1.5s infinite;
-    }
-
-    .live-indicator.paused .live-dot {
-      background: var(--warn);
-      animation: none;
+      animation: pulse 2s infinite;
     }
 
     @keyframes pulse {
-      0%, 100% { opacity: 1; transform: scale(1); }
-      50% { opacity: 0.5; transform: scale(1.2); }
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.5; }
     }
 
-    @keyframes slideIn {
-      from { transform: translateX(100%); opacity: 0; }
-      to { transform: translateX(0); opacity: 1; }
+    .header-actions {
+      display: flex;
+      gap: 8px;
     }
 
-    @keyframes fadeOut {
+    .icon-btn {
+      width: 40px;
+      height: 40px;
+      border-radius: var(--radius-sm);
+      border: 1px solid var(--neon-border);
+      background: var(--neon-subtle);
+      color: var(--neon);
+      font-size: 18px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .icon-btn:active {
+      transform: scale(0.95);
+      background: rgba(0, 255, 136, 0.15);
+    }
+
+    /* Main chat/timeline area */
+    .timeline-container {
+      flex: 1;
+      overflow-y: auto;
+      overflow-x: hidden;
+      padding: 0 12px 120px;
+      scroll-behavior: smooth;
+      -webkit-overflow-scrolling: touch;
+    }
+
+    .timeline {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      padding-top: 8px;
+    }
+
+    /* Message bubbles */
+    .message {
+      max-width: 92%;
+      animation: fadeSlideIn 0.3s ease;
+    }
+
+    @keyframes fadeSlideIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .message.user {
+      align-self: flex-end;
+    }
+
+    .message.assistant {
+      align-self: flex-start;
+    }
+
+    .message.history {
+      align-self: stretch;
+      max-width: 100%;
+    }
+
+    .bubble {
+      padding: 12px 16px;
+      border-radius: var(--radius);
+      font-size: 15px;
+      line-height: 1.5;
+      word-wrap: break-word;
+    }
+
+    .message.user .bubble {
+      background: linear-gradient(135deg, var(--neon) 0%, #00cc66 100%);
+      color: #000;
+      border-bottom-right-radius: 4px;
+      font-weight: 500;
+    }
+
+    .message.assistant .bubble {
+      background: var(--bg-card);
+      border: 1px solid var(--neon-border);
+      border-bottom-left-radius: 4px;
+      backdrop-filter: blur(10px);
+    }
+
+    .message.assistant .bubble pre {
+      background: rgba(0, 0, 0, 0.4);
+      border-radius: 8px;
+      padding: 12px;
+      overflow-x: auto;
+      margin: 8px 0;
+      font-size: 13px;
+    }
+
+    .message.assistant .bubble code {
+      font-family: 'SF Mono', Monaco, monospace;
+      font-size: 13px;
+    }
+
+    .message.assistant .bubble p { margin: 0.5em 0; }
+    .message.assistant .bubble p:first-child { margin-top: 0; }
+    .message.assistant .bubble p:last-child { margin-bottom: 0; }
+
+    /* History/Event cards */
+    .event-card {
+      background: var(--bg-card);
+      border: 1px solid var(--neon-border);
+      border-radius: var(--radius);
+      padding: 14px 16px;
+      backdrop-filter: blur(10px);
+    }
+
+    .event-card.order {
+      border-left: 3px solid var(--good);
+    }
+
+    .event-card.trade {
+      border-left: 3px solid #00ccff;
+    }
+
+    .event-card.signal {
+      border-left: 3px solid var(--warn);
+    }
+
+    .event-card.theme {
+      border-left: 3px solid #ff00ff;
+    }
+
+    .event-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 8px;
+    }
+
+    .event-type {
+      font-size: 11px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      color: var(--neon);
+      padding: 3px 8px;
+      background: var(--neon-subtle);
+      border-radius: 4px;
+    }
+
+    .event-time {
+      font-size: 11px;
+      color: var(--muted);
+      font-family: 'SF Mono', monospace;
+    }
+
+    .event-content {
+      font-size: 14px;
+      color: var(--text);
+      line-height: 1.5;
+    }
+
+    .event-content strong {
+      color: var(--neon);
+    }
+
+    /* Tool status indicators */
+    .tool-indicator {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 6px 12px;
+      margin: 6px 0;
+      border-radius: 20px;
+      font-size: 12px;
+      background: var(--neon-subtle);
+      border: 1px solid var(--neon-border);
+      color: var(--muted);
+    }
+
+    .tool-indicator.running {
+      border-color: var(--neon-dim);
+    }
+
+    .tool-indicator.success {
+      color: var(--good);
+      border-color: rgba(0, 255, 136, 0.4);
+    }
+
+    .tool-indicator.error {
+      color: var(--bad);
+      border-color: rgba(255, 68, 102, 0.4);
+    }
+
+    .tool-spinner {
+      width: 12px;
+      height: 12px;
+      border: 2px solid var(--neon-border);
+      border-top-color: var(--neon);
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    /* Typing indicator */
+    .typing-indicator {
+      display: flex;
+      gap: 4px;
+      padding: 12px 16px;
+    }
+
+    .typing-indicator span {
+      width: 8px;
+      height: 8px;
+      background: var(--neon);
+      border-radius: 50%;
+      animation: typing 1.4s infinite;
+    }
+
+    .typing-indicator span:nth-child(2) { animation-delay: 0.2s; }
+    .typing-indicator span:nth-child(3) { animation-delay: 0.4s; }
+
+    @keyframes typing {
+      0%, 60%, 100% { transform: translateY(0); opacity: 0.4; }
+      30% { transform: translateY(-8px); opacity: 1; }
+    }
+
+    /* Input area */
+    .input-area {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      padding: 12px 12px calc(var(--safe-bottom) + 12px);
+      background: linear-gradient(0deg, rgba(0,0,0,0.95) 0%, rgba(0,0,0,0.8) 80%, transparent 100%);
+      z-index: 100;
+    }
+
+    .input-row {
+      display: flex;
+      gap: 10px;
+      align-items: flex-end;
+    }
+
+    .input-wrap {
+      flex: 1;
+      position: relative;
+    }
+
+    .chat-input {
+      width: 100%;
+      min-height: 48px;
+      max-height: 120px;
+      padding: 14px 16px;
+      border-radius: var(--radius);
+      border: 1px solid var(--neon-border);
+      background: var(--bg-card);
+      color: var(--text);
+      font-size: 16px;
+      line-height: 1.4;
+      resize: none;
+      outline: none;
+      font-family: inherit;
+      transition: border-color 0.2s, box-shadow 0.2s;
+    }
+
+    .chat-input:focus {
+      border-color: var(--neon-dim);
+      box-shadow: 0 0 20px rgba(0, 255, 136, 0.1);
+    }
+
+    .chat-input::placeholder {
+      color: var(--muted);
+    }
+
+    .send-btn {
+      width: 48px;
+      height: 48px;
+      border-radius: var(--radius);
+      border: none;
+      background: var(--neon);
+      color: #000;
+      font-size: 20px;
+      font-weight: 700;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.2s;
+      box-shadow: 0 0 20px var(--neon-glow);
+    }
+
+    .send-btn:active {
+      transform: scale(0.95);
+    }
+
+    .send-btn:disabled {
+      opacity: 0.5;
+      box-shadow: none;
+    }
+
+    /* Chart overlay */
+    .chart-fab {
+      position: fixed;
+      bottom: calc(var(--safe-bottom) + 80px);
+      right: 16px;
+      width: 56px;
+      height: 56px;
+      border-radius: 50%;
+      border: 2px solid var(--neon);
+      background: var(--bg);
+      color: var(--neon);
+      font-size: 24px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      z-index: 99;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5), 0 0 30px var(--neon-glow);
+      transition: all 0.3s;
+    }
+
+    .chart-fab:active {
+      transform: scale(0.95);
+    }
+
+    .chart-fab .badge {
+      position: absolute;
+      top: -4px;
+      right: -4px;
+      min-width: 20px;
+      height: 20px;
+      padding: 0 6px;
+      border-radius: 10px;
+      background: var(--neon);
+      color: #000;
+      font-size: 11px;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    /* Chart modal */
+    .chart-modal {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.95);
+      z-index: 1000;
+      display: none;
+      flex-direction: column;
+      opacity: 0;
+      transition: opacity 0.3s;
+    }
+
+    .chart-modal.show {
+      display: flex;
+      opacity: 1;
+    }
+
+    .chart-header {
+      padding: calc(var(--safe-top) + 12px) 16px 12px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px solid var(--neon-border);
+    }
+
+    .chart-title {
+      font-size: 16px;
+      font-weight: 600;
+      color: var(--neon);
+    }
+
+    .chart-meta {
+      font-size: 12px;
+      color: var(--muted);
+    }
+
+    .chart-close {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      border: 1px solid var(--neon-border);
+      background: transparent;
+      color: var(--text);
+      font-size: 24px;
+      cursor: pointer;
+    }
+
+    .chart-body {
+      flex: 1;
+      padding: 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .chart-controls {
+      display: flex;
+      gap: 8px;
+      overflow-x: auto;
+      padding-bottom: 8px;
+    }
+
+    .chart-controls::-webkit-scrollbar { display: none; }
+
+    .tf-btn {
+      padding: 8px 16px;
+      border-radius: 20px;
+      border: 1px solid var(--neon-border);
+      background: transparent;
+      color: var(--text-dim);
+      font-size: 13px;
+      font-weight: 500;
+      cursor: pointer;
+      white-space: nowrap;
+      transition: all 0.2s;
+    }
+
+    .tf-btn.active {
+      background: var(--neon);
+      color: #000;
+      border-color: var(--neon);
+    }
+
+    .chart-canvas-wrap {
+      flex: 1;
+      border: 1px solid var(--neon-border);
+      border-radius: var(--radius);
+      overflow: hidden;
+      background: rgba(0, 20, 10, 0.5);
+    }
+
+    .chart-canvas-wrap canvas {
+      width: 100%;
+      height: 100%;
+    }
+
+    .chart-info {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 8px;
+    }
+
+    .chart-stat {
+      text-align: center;
+      padding: 12px 8px;
+      background: var(--bg-card);
+      border-radius: var(--radius-sm);
+      border: 1px solid var(--neon-border);
+    }
+
+    .chart-stat-label {
+      font-size: 10px;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 4px;
+    }
+
+    .chart-stat-value {
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--text);
+      font-family: 'SF Mono', monospace;
+    }
+
+    .chart-stat-value.up { color: var(--good); }
+    .chart-stat-value.down { color: var(--bad); }
+
+    /* Settings modal */
+    .modal-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.9);
+      z-index: 1000;
+      display: none;
+      align-items: flex-end;
+      justify-content: center;
+    }
+
+    .modal-overlay.show {
+      display: flex;
+    }
+
+    .modal-sheet {
+      width: 100%;
+      max-width: 500px;
+      max-height: 85vh;
+      background: var(--bg);
+      border-top-left-radius: 24px;
+      border-top-right-radius: 24px;
+      padding: 20px 20px calc(var(--safe-bottom) + 20px);
+      overflow-y: auto;
+      animation: slideUp 0.3s ease;
+    }
+
+    @keyframes slideUp {
+      from { transform: translateY(100%); }
+      to { transform: translateY(0); }
+    }
+
+    .modal-handle {
+      width: 40px;
+      height: 4px;
+      background: var(--neon-border);
+      border-radius: 2px;
+      margin: 0 auto 20px;
+    }
+
+    .modal-title {
+      font-size: 20px;
+      font-weight: 700;
+      color: var(--neon);
+      margin-bottom: 24px;
+    }
+
+    .form-group {
+      margin-bottom: 20px;
+    }
+
+    .form-label {
+      display: block;
+      font-size: 12px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      color: var(--muted);
+      margin-bottom: 8px;
+    }
+
+    .form-input, .form-select {
+      width: 100%;
+      padding: 14px 16px;
+      border-radius: var(--radius-sm);
+      border: 1px solid var(--neon-border);
+      background: var(--bg-card);
+      color: var(--text);
+      font-size: 16px;
+      outline: none;
+      font-family: inherit;
+    }
+
+    .form-input:focus, .form-select:focus {
+      border-color: var(--neon-dim);
+    }
+
+    .form-select {
+      appearance: none;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%2300ff88' d='M6 8L1 3h10z'/%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right 16px center;
+      padding-right: 40px;
+    }
+
+    .form-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+    }
+
+    .btn {
+      width: 100%;
+      padding: 16px;
+      border-radius: var(--radius);
+      border: none;
+      font-size: 16px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .btn-primary {
+      background: var(--neon);
+      color: #000;
+    }
+
+    .btn-secondary {
+      background: var(--neon-subtle);
+      color: var(--neon);
+      border: 1px solid var(--neon-border);
+    }
+
+    .btn-row {
+      display: flex;
+      gap: 12px;
+      margin-top: 24px;
+    }
+
+    .btn-row .btn {
+      flex: 1;
+    }
+
+    /* Toast notifications */
+    .toast-container {
+      position: fixed;
+      top: calc(var(--safe-top) + 70px);
+      left: 12px;
+      right: 12px;
+      z-index: 2000;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      pointer-events: none;
+    }
+
+    .toast {
+      padding: 14px 16px;
+      border-radius: var(--radius-sm);
+      background: var(--bg-card);
+      border: 1px solid var(--neon-border);
+      backdrop-filter: blur(10px);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 14px;
+      animation: toastIn 0.3s ease, toastOut 0.3s ease 2.7s forwards;
+      pointer-events: auto;
+    }
+
+    .toast.success { border-color: var(--good); }
+    .toast.error { border-color: var(--bad); }
+    .toast.warning { border-color: var(--warn); }
+
+    .toast-icon {
+      font-size: 18px;
+    }
+
+    @keyframes toastIn {
+      from { opacity: 0; transform: translateY(-20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes toastOut {
       from { opacity: 1; }
       to { opacity: 0; transform: translateY(-10px); }
     }
 
-    @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(-10px); }
-      to { opacity: 1; transform: translateY(0); }
+    /* Empty state */
+    .empty-state {
+      text-align: center;
+      padding: 60px 20px;
+      color: var(--muted);
     }
 
-    /* Dynamic UI elements */
-    .dynamic-ui-element {
-      transition: all 0.3s ease;
+    .empty-state-icon {
+      font-size: 48px;
+      margin-bottom: 16px;
+      opacity: 0.5;
     }
 
-    .dynamic-ui-element:hover {
-      transform: scale(1.01);
+    .empty-state-text {
+      font-size: 15px;
+      line-height: 1.5;
     }
 
-    .dynamic-card, .dynamic-table, .dynamic-chart, .dynamic-widget, .dynamic-progress {
-      margin-bottom: 12px;
-    }
+    /* Scrollbar */
+    ::-webkit-scrollbar { width: 4px; height: 4px; }
+    ::-webkit-scrollbar-track { background: transparent; }
+    ::-webkit-scrollbar-thumb { background: var(--neon-border); border-radius: 2px; }
 
-    /* Toast notifications stack */
-    .toast-notification + .toast-notification {
-      margin-top: 60px;
-    }
-
-    /* Theme preset buttons */
-    .theme-preset-btn {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      padding: 10px 12px;
-      font-size: 11px;
-    }
-
-    .theme-preview {
-      width: 16px;
-      height: 16px;
-      border-radius: 50%;
-      box-shadow: 0 0 8px currentColor;
-    }
-
-    .theme-preset-btn:hover .theme-preview {
-      box-shadow: 0 0 15px currentColor;
-    }
-
-    /* Responsive */
-    @media (max-width: 1200px) {
-      body { overflow: auto; }
-      .app {
-        height: auto;
-        grid-template-columns: 1fr;
-        grid-template-rows: auto;
-      }
-      header, footer { grid-column: 1; }
+    /* Desktop adjustments */
+    @media (min-width: 768px) {
+      .timeline-container { padding: 0 24px 140px; }
+      .input-area { padding: 16px 24px calc(var(--safe-bottom) + 16px); }
+      .message { max-width: 70%; }
+      .modal-sheet { border-radius: 24px; margin-bottom: 20px; }
     }
   </style>
 </head>
 <body>
   <div class="app">
-    <header class="glass">
+    <!-- Header -->
+    <header>
       <div class="brand">
         <div class="logo"></div>
-        <div>
-          <h1 class="neon-text">HashTrade <span class="sub"><a href="https://x.com/hashtag/Trade?src=hashtag_click">#trade</a></span></h1>
-          <div class="sub" id="conn"><span class="status-dot disconnected"></span>disconnected</div>
+        <div class="brand-text">
+          <h1>HashTrade</h1>
+          <div class="status">
+            <span class="status-dot" id="statusDot"></span>
+            <span id="statusText">Disconnected</span>
+          </div>
         </div>
       </div>
-      <div class="top">
-        <div><div class="pill">Balance</div><div class="balance"><span id="balUsd">$0.00</span></div></div>
-        <div><div class="pill">USDT</div><div class="balance"><span id="balUsdt">0.00</span></div></div>
-        <div><div class="pill">Symbol</div><div class="balance" id="sym">BTC/USDT</div></div>
-        <div class="live-indicator paused" id="liveIndicator"><span class="live-dot"></span><span id="liveText">Paused</span></div>
-        <button class="btn" id="btnTheme" title="Change Theme">🎨</button>
-        <button class="btn" id="btnSettings">⚙ Settings</button>
+      <div class="header-actions">
+        <button class="icon-btn" id="btnClear" title="Clear">🗑</button>
+        <button class="icon-btn" id="btnSettings" title="Settings">⚙️</button>
       </div>
     </header>
 
-    <!-- Settings Modal -->
-    <div class="modal-overlay" id="settingsModal">
-      <div class="modal">
-        <h2 class="neon-text">Exchange Settings</h2>
-        <div class="form-group">
-          <label>Exchange</label>
-          <select id="settingsExchange">
-            <option value="bybit">Bybit</option>
-            <option value="binance">Binance</option>
-            <option value="okx">OKX</option>
-            <option value="kucoin">KuCoin</option>
-            <option value="kraken">Kraken</option>
-            <option value="coinbase">Coinbase</option>
-          </select>
-        </div>
-        <div class="form-group">
-          <label>API Key</label>
-          <input type="text" id="settingsApiKey" placeholder="Enter your API key" autocomplete="off" />
-        </div>
-        <div class="form-group">
-          <label>API Secret</label>
-          <input type="password" id="settingsApiSecret" placeholder="Enter your API secret" autocomplete="off" />
-        </div>
-        <div class="form-row">
-          <div class="form-group">
-            <label>Symbol</label>
-            <input type="text" id="settingsSymbol" value="BTC/USDT" placeholder="BTC/USDT" />
+    <!-- Main timeline -->
+    <div class="timeline-container" id="timelineContainer">
+      <div class="timeline" id="timeline">
+        <div class="empty-state" id="emptyState">
+          <div class="empty-state-icon">📊</div>
+          <div class="empty-state-text">
+            Start trading with AI<br>
+            <span style="color: var(--neon);">Try: "buy 10 USDT of BTC"</span>
           </div>
-          <div class="form-group">
-            <label>Timeframe</label>
-            <select id="settingsTimeframe">
-              <option value="1m">1 minute</option>
-              <option value="5m">5 minutes</option>
-              <option value="15m">15 minutes</option>
-              <option value="1h">1 hour</option>
-              <option value="4h">4 hours</option>
-              <option value="1d">1 day</option>
-            </select>
-          </div>
-        </div>
-        <div class="form-group">
-          <label>Live Update Interval</label>
-          <select id="settingsInterval">
-            <option value="0">Disabled</option>
-            <option value="5000" selected>5 seconds</option>
-            <option value="10000">10 seconds</option>
-            <option value="30000">30 seconds</option>
-            <option value="60000">1 minute</option>
-          </select>
-        </div>
-        <div class="modal-actions">
-          <button class="btn" id="btnSettingsCancel">Cancel</button>
-          <button class="btn primary" id="btnSettingsSave">Save & Connect</button>
         </div>
       </div>
     </div>
 
-    <!-- Theme Modal -->
-    <div class="modal-overlay" id="themeModal">
-      <div class="modal" style="width: 500px;">
-        <h2 class="neon-text">🎨 Theme Customization</h2>
-        <div class="form-group">
-          <label>Preset Themes</label>
-          <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-top: 8px;">
-            <button class="btn theme-preset-btn" data-preset="neon_green" style="--preview-color: #00ff88;">
-              <span class="theme-preview" style="background: #00ff88;"></span>
-              Neon Green
-            </button>
-            <button class="btn theme-preset-btn" data-preset="cyberpunk" style="--preview-color: #ff00ff;">
-              <span class="theme-preview" style="background: #ff00ff;"></span>
-              Cyberpunk
-            </button>
-            <button class="btn theme-preset-btn" data-preset="ocean_blue" style="--preview-color: #00d4ff;">
-              <span class="theme-preview" style="background: #00d4ff;"></span>
-              Ocean Blue
-            </button>
-            <button class="btn theme-preset-btn" data-preset="sunset_orange" style="--preview-color: #ff6b35;">
-              <span class="theme-preview" style="background: #ff6b35;"></span>
-              Sunset
-            </button>
-            <button class="btn theme-preset-btn" data-preset="gold_luxury" style="--preview-color: #ffd700;">
-              <span class="theme-preview" style="background: #ffd700;"></span>
-              Gold
-            </button>
-            <button class="btn theme-preset-btn" data-preset="matrix_green" style="--preview-color: #00ff00;">
-              <span class="theme-preview" style="background: #00ff00;"></span>
-              Matrix
-            </button>
-            <button class="btn theme-preset-btn" data-preset="dark_minimal" style="--preview-color: #ffffff;">
-              <span class="theme-preview" style="background: #ffffff;"></span>
-              Minimal
-            </button>
-          </div>
+    <!-- Chart FAB -->
+    <button class="chart-fab" id="chartFab">
+      📈
+      <span class="badge" id="chartBadge" style="display: none;">!</span>
+    </button>
+
+    <!-- Input area -->
+    <div class="input-area">
+      <div class="input-row">
+        <div class="input-wrap">
+          <textarea 
+            class="chat-input" 
+            id="chatInput" 
+            placeholder="Ask anything... buy BTC, check balance, change theme"
+            rows="1"
+          ></textarea>
         </div>
-        <div class="form-group" style="margin-top: 20px;">
-          <label>Custom Accent Color</label>
-          <div style="display: flex; gap: 10px; align-items: center; margin-top: 8px;">
-            <input type="color" id="customAccentColor" value="#00ff88" style="width: 60px; height: 40px; border: none; border-radius: 8px; cursor: pointer;" />
-            <input type="text" id="customAccentHex" value="#00ff88" placeholder="#00ff88" style="flex: 1;" />
-            <button class="btn primary" id="btnApplyCustomColor">Apply</button>
-          </div>
-        </div>
-        <div class="modal-actions" style="margin-top: 24px;">
-          <button class="btn" id="btnThemeReset">Reset to Default</button>
-          <button class="btn" id="btnThemeClose">Close</button>
-        </div>
+        <button class="send-btn" id="btnSend">↑</button>
       </div>
     </div>
-
-    <section class="panel glass" style="grid-column:1;grid-row:2;">
-      <div class="hd"><div class="neon-text">Market Graph</div><div class="ts" id="chartMeta">waiting...</div></div>
-      <div class="bd" style="height:100%">
-        <div class="chartWrap">
-          <div class="legend">
-            <span><span class="dot" style="background:var(--neon)"></span>close</span>
-            <span><span class="dot" style="background:#00ccff"></span>buy</span>
-            <span><span class="dot" style="background:var(--bad)"></span>sell</span>
-          </div>
-          <div class="canvasWrap"><canvas id="chart"></canvas></div>
-        </div>
-      </div>
-    </section>
-
-    <section class="panel glass" style="grid-column:2;grid-row:2;">
-      <div class="hd"><div class="neon-text">History of Actions</div><div class="ts">items: <span id="eventCount">0</span></div></div>
-      <div class="bd"><div class="timeline" id="timeline"></div></div>
-    </section>
-
-    <section class="panel glass" style="grid-column:3;grid-row:2;">
-      <div class="hd"><div class="neon-text">Agent Screen</div><div class="ts">turns: <span id="turnCount">0</span></div></div>
-      <div class="bd"><div class="chat" id="chat"></div></div>
-    </section>
-
-    <footer class="glass">
-      <div class="controls">
-        <button class="btn primary" id="btnConnect">Connect</button>
-        <button class="btn" id="btnPrev">⟵</button>
-        <button class="btn primary" id="btnPlay">▶ Play</button>
-        <button class="btn" id="btnNext">⟶</button>
-        <button class="btn" id="btnRefresh">↻ Refresh</button>
-        <button class="btn" id="btnClearHistory">Clear</button>
-      </div>
-      <div class="sliderWrap">
-        <input type="range" id="timeSlider" min="0" max="0" step="1" value="0" />
-        <div class="timeReadout" id="timeReadout">t=0</div>
-      </div>
-      <div class="chatInputWrap">
-        <input class="chatInput" id="chatInput" placeholder='Send message to agent (e.g. "buy 5 dollars eth")' />
-        <button class="btn primary" id="btnSend">Send</button>
-      </div>
-    </footer>
   </div>
 
-<script>
-  // Initialize mermaid with neon theme
-  mermaid.initialize({
-    startOnLoad: false,
-    theme: 'dark',
-    themeVariables: {
-      primaryColor: '#00ff88',
-      primaryTextColor: '#00ff88',
-      primaryBorderColor: 'rgba(0,255,136,0.3)',
-      lineColor: '#00ff88',
-      secondaryColor: '#001a0d',
-      tertiaryColor: '#000000',
-      background: '#000000',
-      mainBkg: '#001a0d',
-      nodeBorder: '#00ff88',
-      clusterBkg: 'rgba(0,255,136,0.05)',
-      titleColor: '#00ff88',
-      edgeLabelBackground: '#000000'
-    }
-  });
+  <!-- Chart Modal -->
+  <div class="chart-modal" id="chartModal">
+    <div class="chart-header">
+      <div>
+        <div class="chart-title" id="chartSymbol">BTC/USDT</div>
+        <div class="chart-meta" id="chartMeta">Loading...</div>
+      </div>
+      <button class="chart-close" id="chartClose">×</button>
+    </div>
+    <div class="chart-body">
+      <div class="chart-controls" id="chartControls">
+        <button class="tf-btn active" data-tf="1m">1m</button>
+        <button class="tf-btn" data-tf="5m">5m</button>
+        <button class="tf-btn" data-tf="15m">15m</button>
+        <button class="tf-btn" data-tf="1h">1H</button>
+        <button class="tf-btn" data-tf="4h">4H</button>
+        <button class="tf-btn" data-tf="1d">1D</button>
+      </div>
+      <div class="chart-canvas-wrap">
+        <canvas id="chartCanvas"></canvas>
+      </div>
+      <div class="chart-info">
+        <div class="chart-stat">
+          <div class="chart-stat-label">Price</div>
+          <div class="chart-stat-value" id="statPrice">--</div>
+        </div>
+        <div class="chart-stat">
+          <div class="chart-stat-label">24h</div>
+          <div class="chart-stat-value" id="stat24h">--</div>
+        </div>
+        <div class="chart-stat">
+          <div class="chart-stat-label">High</div>
+          <div class="chart-stat-value" id="statHigh">--</div>
+        </div>
+        <div class="chart-stat">
+          <div class="chart-stat-label">Low</div>
+          <div class="chart-stat-value" id="statLow">--</div>
+        </div>
+      </div>
+    </div>
+  </div>
 
-  marked.setOptions({
-    highlight: (code, lang) => {
-      try {
-        if (lang && hljs.getLanguage(lang)) return hljs.highlight(code, {language: lang}).value;
-        return hljs.highlightAuto(code).value;
-      } catch { return code; }
-    },
-    breaks: true,
-    gfm: true
-  });
-
-  const state = {
-    playing: false, playTimer: null, nowIndex: 0,
-    streamEvents: [],
-    streamSnaps: [],
-    historyItems: [],
-    chart: { symbol: 'BTC/USDT', tf: '1m', ohlcv: [] },
-    settings: {
-      exchange: 'bybit',
-      apiKey: '',
-      apiSecret: '',
-      symbol: 'BTC/USDT',
-      timeframe: '1m',
-      liveInterval: 5000
-    },
-    liveTimer: null
-  };
-
-  let ws = null;
-
-  function loadSettings() {
-    try {
-      const saved = localStorage.getItem('tradingDashboardSettings');
-      if (saved) Object.assign(state.settings, JSON.parse(saved));
-    } catch (e) { console.warn('Failed to load settings:', e); }
-
-    document.getElementById('settingsExchange').value = state.settings.exchange;
-    document.getElementById('settingsApiKey').value = state.settings.apiKey;
-    document.getElementById('settingsApiSecret').value = state.settings.apiSecret;
-    document.getElementById('settingsSymbol').value = state.settings.symbol;
-    document.getElementById('settingsTimeframe').value = state.settings.timeframe;
-    document.getElementById('settingsInterval').value = String(state.settings.liveInterval);
-
-    state.chart.symbol = state.settings.symbol;
-    state.chart.tf = state.settings.timeframe;
-    document.getElementById('sym').textContent = state.settings.symbol;
-  }
-
-  function saveSettings() {
-    state.settings.exchange = document.getElementById('settingsExchange').value;
-    state.settings.apiKey = document.getElementById('settingsApiKey').value;
-    state.settings.apiSecret = document.getElementById('settingsApiSecret').value;
-    state.settings.symbol = document.getElementById('settingsSymbol').value;
-    state.settings.timeframe = document.getElementById('settingsTimeframe').value;
-    state.settings.liveInterval = parseInt(document.getElementById('settingsInterval').value, 10);
-
-    localStorage.setItem('tradingDashboardSettings', JSON.stringify(state.settings));
-
-    state.chart.symbol = state.settings.symbol;
-    state.chart.tf = state.settings.timeframe;
-    document.getElementById('sym').textContent = state.settings.symbol;
-
-    sendCredentials();
-    startLiveTimer();
-    closeSettingsModal();
-    requestChart();
-    requestBalance();
-  }
-
-  function sendCredentials() {
-    if (!ws || ws.readyState !== 1) return;
-    ws.send(JSON.stringify({
-      type: 'credentials',
-      exchange: state.settings.exchange,
-      apiKey: state.settings.apiKey,
-      apiSecret: state.settings.apiSecret
-    }));
-  }
-
-  function openSettingsModal() { document.getElementById('settingsModal').classList.add('show'); }
-  function closeSettingsModal() { document.getElementById('settingsModal').classList.remove('show'); }
-
-  function startLiveTimer() {
-    if (state.liveTimer) { clearInterval(state.liveTimer); state.liveTimer = null; }
-
-    const indicator = document.getElementById('liveIndicator');
-    const liveText = document.getElementById('liveText');
-
-    if (state.settings.liveInterval > 0) {
-      indicator.classList.remove('paused');
-      liveText.textContent = 'Live';
-      state.liveTimer = setInterval(() => {
-        if (ws && ws.readyState === 1) requestChart();
-      }, state.settings.liveInterval);
-    } else {
-      indicator.classList.add('paused');
-      liveText.textContent = 'Paused';
-    }
-  }
-
-  function stopLiveTimer() {
-    if (state.liveTimer) { clearInterval(state.liveTimer); state.liveTimer = null; }
-    document.getElementById('liveIndicator').classList.add('paused');
-    document.getElementById('liveText').textContent = 'Paused';
-  }
-
-  const turns = new Map();
-
-  function isoNow() { return new Date().toISOString(); }
-
-  function escapeHtml(s) {
-    return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#039;');
-  }
-
-  function addStreamEvent(type, msg) {
-    state.streamEvents.push({ts: isoNow(), type, msg});
-    buildStreamSnaps();
-    // Only update index, don't render if we're in live mode (streaming)
-    // Live rendering is handled directly in ws.onmessage
-    state.nowIndex = state.streamEvents.length - 1;
-    document.getElementById('timeSlider').value = String(state.nowIndex);
-    
-    // Only render non-chat events immediately (balance, ohlcv, history, ui)
-    // Chat events are rendered directly in ws.onmessage for smooth streaming
-    if (['balance', 'ohlcv', 'history', 'history_sync', 'history_cleared', 'ui_render', 'ui_alert', 'theme_update'].includes(type)) {
-      renderNonChatState();
-    }
-  }
-
-  function buildStreamSnaps() {
-    const snaps = [];
-    let bal = null, chart = null, historyUpToNow = [];
-    
-    for (let i = 0; i < state.streamEvents.length; i++) {
-      const e = state.streamEvents[i];
-      if (e.type === 'balance') bal = e.msg.data;
-      if (e.type === 'ohlcv') chart = e.msg.data;
-      if (e.type === 'history') historyUpToNow = [...historyUpToNow, e.msg.data];
-      if (e.type === 'history_sync') historyUpToNow = Array.isArray(e.msg.data) ? [...e.msg.data] : [];
-      if (e.type === 'history_cleared') historyUpToNow = [];
-      snaps.push({ i, ts: e.ts, bal, chart, history: [...historyUpToNow], events: state.streamEvents.slice(0, i + 1) });
-    }
-    state.streamSnaps = snaps;
-    document.getElementById('timeSlider').max = String(Math.max(0, snaps.length - 1));
-  }
-
-  function setIndex(i) {
-    const wasLive = isLive();
-    state.nowIndex = Math.max(0, Math.min(i, state.streamSnaps.length - 1));
-    document.getElementById('timeSlider').value = String(state.nowIndex);
-    // Full render when scrubbing through time (not live)
-    renderAll();
-  }
-
-  function isLive() { return state.nowIndex >= Math.max(0, state.streamSnaps.length - 1); }
-  
-  // Render only balance, chart, history - NOT chat (to preserve streaming)
-  function renderNonChatState() {
-    const snap = state.streamSnaps[state.nowIndex] || {bal: null, chart: null, history: [], ts: ''};
-    document.getElementById('timeReadout').textContent = snap.ts ? `index ${state.nowIndex}/${Math.max(0, state.streamSnaps.length - 1)} • ${snap.ts}` : 't=0';
-
-    if (snap.bal) {
-      const bal = snap.bal;
-      if (bal.total) {
-        const usdt = parseFloat(bal.total.USDT || bal.total.USD || 0);
-        const btc = parseFloat(bal.total.BTC || 0);
-        const approxUsd = usdt + (btc * (state.chart.ohlcv?.length ? state.chart.ohlcv[state.chart.ohlcv.length - 1][4] : 0));
-        document.getElementById('balUsd').textContent = '$' + approxUsd.toFixed(2);
-        document.getElementById('balUsdt').textContent = usdt.toFixed(2);
-      }
-    }
-
-    if (snap.chart) {
-      state.chart = snap.chart;
-      document.getElementById('sym').textContent = snap.chart.symbol;
-      document.getElementById('chartMeta').textContent = `${snap.chart.symbol} • ${snap.chart.timeframe} • ${snap.chart.ohlcv.length} pts`;
-      drawChart(snap.chart.ohlcv);
-    }
-
-    renderHistoryPanel(snap.history || []);
-  }
-
-  function addHistoryItem(rec) { if (rec) state.historyItems.push(rec); }
-
-  function renderAll() {
-    const snap = state.streamSnaps[state.nowIndex] || {events: [], bal: null, chart: null, history: [], ts: ''};
-    document.getElementById('timeReadout').textContent = snap.ts ? `index ${state.nowIndex}/${Math.max(0, state.streamSnaps.length - 1)} • ${snap.ts}` : 't=0';
-
-    if (snap.bal) {
-      const bal = snap.bal;
-      if (bal.total) {
-        const usdt = parseFloat(bal.total.USDT || bal.total.USD || 0);
-        const btc = parseFloat(bal.total.BTC || 0);
-        const approxUsd = usdt + (btc * (state.chart.ohlcv?.length ? state.chart.ohlcv[state.chart.ohlcv.length - 1][4] : 0));
-        document.getElementById('balUsd').textContent = '$' + approxUsd.toFixed(2);
-        document.getElementById('balUsdt').textContent = usdt.toFixed(2);
-      }
-    }
-
-    if (snap.chart) {
-      state.chart = snap.chart;
-      document.getElementById('sym').textContent = snap.chart.symbol;
-      document.getElementById('chartMeta').textContent = `${snap.chart.symbol} • ${snap.chart.timeframe} • ${snap.chart.ohlcv.length} pts`;
-      drawChart(snap.chart.ohlcv);
-    } else {
-      drawChart([]);
-    }
-
-    renderHistoryPanel(snap.history || []);
-    renderChatFromStream(snap.events);
-  }
-
-  function renderHistoryPanel(historyForSnap) {
-    const items = historyForSnap.length > 0 ? historyForSnap : state.historyItems;
-    
-    // Filter out UI/tool events - only show explicit history entries
-    const SKIP_TYPES = new Set(['tool_start', 'tool_end', 'ui', 'balance', 'raw']);
-    const filteredItems = items.filter(r => !SKIP_TYPES.has(r.type));
-    
-    document.getElementById('eventCount').textContent = String(filteredItems.length);
-    const tl = document.getElementById('timeline');
-    tl.innerHTML = '';
-
-    const displayItems = filteredItems.slice(-250);
-
-    for (const r of displayItems) {
-      const d = document.createElement('div');
-      const type = r.type || 'note';
-      const ts = r.ts ? new Date(r.ts * 1000).toISOString() : isoNow();
-      const data = r.data || {};  // Define data FIRST
+  <!-- Settings Modal -->
+  <div class="modal-overlay" id="settingsModal">
+    <div class="modal-sheet">
+      <div class="modal-handle"></div>
+      <div class="modal-title">⚙️ Settings</div>
       
-      d.className = 'event';
-      // Make clickable if has symbol data (for chart switching)
-      const hasSymbolData = data.symbol || data.exchange;
-      
-      // Add type-specific styling
-      if (['order', 'trade', 'buy', 'sell'].includes(type)) {
-        d.className += ' order';
-        if (hasSymbolData) d.className += ' clickable';
-      } else if (type === 'signal') {
-        d.className += ' signal';
-        if (hasSymbolData) d.className += ' clickable';
-      } else if (type === 'theme') {
-        d.style.borderLeft = '3px solid ' + (data.neon || data.color_value || 'var(--neon)');
-      } else if (type.startsWith('ui_')) {
-        d.style.borderLeft = '3px solid var(--neon)';
-        d.style.background = 'var(--neon-subtle)';
-      } else if (hasSymbolData) {
-        // Any event with symbol data is clickable
-        d.className += ' clickable';
-      }
-      
-      let msgContent = '';
-      
-      // Check if there's HTML to render directly
-      if (data.html && type.startsWith('ui_')) {
-        // For UI elements, render the HTML directly
-        const timeStr = ts.split('T')[1]?.split('.')[0] || ts;
-        d.innerHTML = `<div class="row"><div class="ts">${escapeHtml(type)}</div><div class="ts">${escapeHtml(timeStr)}</div></div><div class="msg">${data.html}</div>`;
-        tl.appendChild(d);
-        continue;
-      }
-      
-      if (typeof data === 'string') {
-        msgContent = data;
-      } else if (data.message) {
-        msgContent = data.message;
-      } else if (data.text) {
-        msgContent = data.text;
-      } else if (data.title && data.message) {
-        msgContent = `**${data.title}**\n\n${data.message}`;
-      } else if (data.title) {
-        msgContent = `**${data.title}**`;
-      } else if (data.symbol || data.exchange || data.side) {
-        const parts = [];
-        if (data.side) parts.push(`**${data.side.toUpperCase()}**`);
-        if (data.amount) parts.push(`${data.amount}`);
-        if (data.symbol) parts.push(`${data.symbol}`);
-        if (data.exchange) parts.push(`@ ${data.exchange}`);
-        if (data.price) parts.push(`price: ${data.price}`);
-        if (data.status) parts.push(`(${data.status})`);
-        msgContent = parts.join(' ') || JSON.stringify(data);
-      } else {
-        msgContent = '```json\n' + JSON.stringify(data, null, 2) + '\n```';
-      }
-      
-      const renderedMsg = marked.parse(msgContent);
-      const timeStr = ts.split('T')[1]?.split('.')[0] || ts;
-      
-      d.innerHTML = `<div class="row"><div class="ts">${escapeHtml(type)}</div><div class="ts">${escapeHtml(timeStr)}</div></div><div class="msg">${renderedMsg}</div>`;
-      
-      if (d.classList.contains('clickable') && (data.symbol || data.exchange)) {
-        d.dataset.symbol = data.symbol || '';
-        d.dataset.exchange = data.exchange || '';
-        d.onclick = function(e) {
-          e.stopPropagation();
-          const sym = this.dataset.symbol;
-          const ex = this.dataset.exchange;
-          console.log('History click:', {sym, ex});
-          
-          if (sym) {
-            state.settings.symbol = sym;
-            state.chart.symbol = sym;
-            document.getElementById('settingsSymbol').value = sym;
-            document.getElementById('sym').textContent = sym;
-          }
-          if (ex) {
-            state.settings.exchange = ex;
-            document.getElementById('settingsExchange').value = ex;
-          }
-          
-          // Save to localStorage
-          localStorage.setItem('tradingDashboardSettings', JSON.stringify(state.settings));
-          
-          // Request new chart immediately
-          if (ws && ws.readyState === 1) {
-            ws.send(JSON.stringify({
-              type: 'ui',
-              action: 'fetch_ohlcv',
-              exchange: state.settings.exchange,
-              symbol: state.settings.symbol,
-              timeframe: state.settings.timeframe,
-              limit: 240
-            }));
-          }
-        };
-      }
-      
-      tl.appendChild(d);
-    }
-    
-    setTimeout(() => {
-      try { mermaid.run({ nodes: tl.querySelectorAll('.mermaid') }); }
-      catch(e) { console.warn('Mermaid render:', e); }
-    }, 100);
-  }
+      <div class="form-group">
+        <label class="form-label">WebSocket Server</label>
+        <input type="text" class="form-input" id="settingsWsUrl" value="ws://127.0.0.1:8090" />
+      </div>
 
-  function clearChat() {
-    document.getElementById('chat').innerHTML = '';
-    turns.clear();
-    document.getElementById('turnCount').textContent = '0';
-  }
+      <div class="form-group">
+        <label class="form-label">Exchange</label>
+        <select class="form-select" id="settingsExchange">
+          <option value="bybit">Bybit</option>
+          <option value="binance">Binance</option>
+          <option value="okx">OKX</option>
+          <option value="kucoin">KuCoin</option>
+          <option value="kraken">Kraken</option>
+        </select>
+      </div>
 
-  function createTurn(turnId, userMessage) {
-    const root = document.createElement('div');
-    root.className = 'turn';
-    root.dataset.turnId = turnId;
+      <div class="form-group">
+        <label class="form-label">API Key</label>
+        <input type="text" class="form-input" id="settingsApiKey" placeholder="Optional - for trading" autocomplete="off" />
+      </div>
 
-    const user = document.createElement('div');
-    user.className = 'msgRow user';
-    user.innerHTML = `<div class="ts">${escapeHtml(isoNow())}</div><div class="msg">${escapeHtml(userMessage)}</div>`;
+      <div class="form-group">
+        <label class="form-label">API Secret</label>
+        <input type="password" class="form-input" id="settingsApiSecret" placeholder="Optional - for trading" autocomplete="off" />
+      </div>
 
-    const assistant = document.createElement('div');
-    assistant.className = 'msgRow assistant';
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">Symbol</label>
+          <input type="text" class="form-input" id="settingsSymbol" value="BTC/USDT" />
+        </div>
+        <div class="form-group">
+          <label class="form-label">Timeframe</label>
+          <select class="form-select" id="settingsTimeframe">
+            <option value="1m">1 minute</option>
+            <option value="5m">5 minutes</option>
+            <option value="15m">15 minutes</option>
+            <option value="1h">1 hour</option>
+          </select>
+        </div>
+      </div>
 
-    const content = document.createElement('div');
-    content.className = 'msg';
-    content.style.whiteSpace = 'normal';
+      <div class="btn-row">
+        <button class="btn btn-secondary" id="btnSettingsCancel">Cancel</button>
+        <button class="btn btn-primary" id="btnSettingsSave">Save & Connect</button>
+      </div>
+    </div>
+  </div>
 
-    const cursor = document.createElement('span');
-    cursor.className = 'loading-cursor';
+  <!-- Toast container -->
+  <div class="toast-container" id="toastContainer"></div>
 
-    assistant.appendChild(content);
-    assistant.appendChild(cursor);
-    root.appendChild(user);
-    root.appendChild(assistant);
+  <script>
+    // Initialize markdown
+    marked.setOptions({
+      highlight: (code, lang) => {
+        try {
+          if (lang && hljs.getLanguage(lang)) return hljs.highlight(code, {language: lang}).value;
+          return hljs.highlightAuto(code).value;
+        } catch { return code; }
+      },
+      breaks: true,
+      gfm: true
+    });
 
-    document.getElementById('chat').appendChild(root);
-    turns.set(turnId, {root, userEl: user, assistantEl: assistant, contentEl: content, cursorEl: cursor, text: '', tools: []});
-    document.getElementById('turnCount').textContent = String(turns.size);
-    return turns.get(turnId);
-  }
-
-  function updateTurnContent(turnId, delta) {
-    const turn = turns.get(turnId);
-    if (!turn) return;
-    turn.text += (delta || '');
-    const html = marked.parse(turn.text);
-    turn.contentEl.innerHTML = html;
-    turn.contentEl.querySelectorAll('pre code').forEach(block => hljs.highlightElement(block));
-  }
-
-  function addToolStatus(turnId, toolName, toolNumber) {
-    const turn = turns.get(turnId);
-    if (!turn) return;
-    const tool = document.createElement('div');
-    tool.className = 'tool-status';
-    tool.textContent = `Tool #${toolNumber}: ${toolName}`;
-    turn.assistantEl.insertBefore(tool, turn.contentEl);
-    turn.tools.push(tool);
-  }
-
-  function updateToolStatus(turnId, success) {
-    const turn = turns.get(turnId);
-    if (!turn || !turn.tools.length) return;
-    const last = turn.tools[turn.tools.length - 1];
-    last.className = 'tool-status ' + (success ? 'success' : 'error');
-    last.textContent += (success ? ' ✓' : ' ✗');
-  }
-
-  function finalizeTurn(turnId) {
-    const turn = turns.get(turnId);
-    if (!turn) return;
-    if (turn.cursorEl && turn.cursorEl.parentNode) turn.cursorEl.remove();
-  }
-
-  function renderChatFromStream(streamEvents) {
-    clearChat();
-    for (const e of streamEvents) {
-      const msg = e.msg || {};
-      switch (e.type) {
-        case 'turn_start': createTurn(msg.turn_id, msg.data || ''); break;
-        case 'chunk': updateTurnContent(msg.turn_id, msg.data || ''); break;
-        case 'tool_start': addToolStatus(msg.turn_id, msg.data || 'tool', msg.tool_number || 1); break;
-        case 'tool_end': updateToolStatus(msg.turn_id, !!msg.success); break;
-        case 'turn_end': finalizeTurn(msg.turn_id); break;
-      }
-    }
-    const chat = document.getElementById('chat');
-    chat.scrollTop = chat.scrollHeight;
-  }
-
-  function connect() {
-    if (ws && ws.readyState === 1) return;
-    ws = new WebSocket('ws://127.0.0.1:8090');
-    document.getElementById('conn').innerHTML = '<span class="status-dot disconnected"></span>connecting...';
-
-    ws.onopen = () => {
-      document.getElementById('conn').innerHTML = '<span class="status-dot connected"></span>connected';
-      sendCredentials();
-      requestChart();
-      requestBalance();
-      startLiveTimer();
+    // State
+    const state = {
+      ws: null,
+      connected: false,
+      settings: {
+        wsUrl: 'ws://127.0.0.1:8090',
+        exchange: 'bybit',
+        apiKey: '',
+        apiSecret: '',
+        symbol: 'BTC/USDT',
+        timeframe: '1m'
+      },
+      chart: { ohlcv: [], symbol: 'BTC/USDT', timeframe: '1m' },
+      turns: new Map(),
+      historyItems: []
     };
 
-    ws.onclose = () => {
-      document.getElementById('conn').innerHTML = '<span class="status-dot disconnected"></span>disconnected';
-      stopLiveTimer();
+    // Elements
+    const els = {
+      timeline: document.getElementById('timeline'),
+      timelineContainer: document.getElementById('timelineContainer'),
+      emptyState: document.getElementById('emptyState'),
+      chatInput: document.getElementById('chatInput'),
+      btnSend: document.getElementById('btnSend'),
+      statusDot: document.getElementById('statusDot'),
+      statusText: document.getElementById('statusText'),
+      chartModal: document.getElementById('chartModal'),
+      chartCanvas: document.getElementById('chartCanvas'),
+      settingsModal: document.getElementById('settingsModal'),
+      toastContainer: document.getElementById('toastContainer')
     };
 
-    ws.onerror = (e) => console.log('ws error', e);
-
-    // === THEME FUNCTIONS ===
-    function applyTheme(themeData) {
-      if (!themeData) return;
-      const root = document.documentElement;
-      
-      // Map theme data keys to CSS variable names
-      const varMap = {
-        'neon': '--neon',
-        'neon_dim': '--neon-dim',
-        'neon_glow': '--neon-glow',
-        'neon_subtle': '--neon-subtle',
-        'neon_border': '--neon-border',
-        'bg': '--bg',
-        'panel': '--panel',
-        'panel_glass': '--panel-glass',
-        'text': '--text',
-        'text_dim': '--text-dim',
-        'muted': '--muted',
-        'line': '--line',
-        'good': '--good',
-        'bad': '--bad',
-        'warn': '--warn',
-      };
-      
-      for (const [key, cssVar] of Object.entries(varMap)) {
-        if (themeData[key]) {
-          root.style.setProperty(cssVar, themeData[key]);
-        }
-      }
-      
-      // Store current theme
-      state.currentTheme = themeData;
-      localStorage.setItem('dashboardTheme', JSON.stringify(themeData));
-      console.log('Theme applied:', themeData);
-    }
-    
-    // Load saved theme on startup
-    function loadSavedTheme() {
+    // Load settings
+    function loadSettings() {
       try {
-        const saved = localStorage.getItem('dashboardTheme');
-        if (saved) {
-          applyTheme(JSON.parse(saved));
-        }
-      } catch (e) {
-        console.warn('Failed to load saved theme:', e);
-      }
-    }
-    loadSavedTheme();
-
-    // === TOAST NOTIFICATIONS ===
-    function showToast(message, type = 'info', title = null) {
-      const colorMap = {
-        'success': 'var(--good)',
-        'error': 'var(--bad)',
-        'warning': 'var(--warn)',
-        'info': 'var(--neon)',
-      };
-      const iconMap = {
-        'success': '✓',
-        'error': '✗',
-        'warning': '⚠',
-        'info': 'ℹ',
-      };
+        const saved = localStorage.getItem('hashtradeSettings');
+        if (saved) Object.assign(state.settings, JSON.parse(saved));
+      } catch (e) {}
       
+      document.getElementById('settingsWsUrl').value = state.settings.wsUrl;
+      document.getElementById('settingsExchange').value = state.settings.exchange;
+      document.getElementById('settingsApiKey').value = state.settings.apiKey;
+      document.getElementById('settingsApiSecret').value = state.settings.apiSecret;
+      document.getElementById('settingsSymbol').value = state.settings.symbol;
+      document.getElementById('settingsTimeframe').value = state.settings.timeframe;
+      state.chart.symbol = state.settings.symbol;
+      state.chart.timeframe = state.settings.timeframe;
+    }
+
+    function saveSettings() {
+      state.settings.wsUrl = document.getElementById('settingsWsUrl').value;
+      state.settings.exchange = document.getElementById('settingsExchange').value;
+      state.settings.apiKey = document.getElementById('settingsApiKey').value;
+      state.settings.apiSecret = document.getElementById('settingsApiSecret').value;
+      state.settings.symbol = document.getElementById('settingsSymbol').value;
+      state.settings.timeframe = document.getElementById('settingsTimeframe').value;
+      
+      localStorage.setItem('hashtradeSettings', JSON.stringify(state.settings));
+      state.chart.symbol = state.settings.symbol;
+      state.chart.timeframe = state.settings.timeframe;
+      
+      closeSettings();
+      connect();
+    }
+
+    // Toast notifications
+    function showToast(message, type = 'info') {
+      const icons = { success: '✓', error: '✗', warning: '⚠', info: 'ℹ' };
       const toast = document.createElement('div');
-      toast.className = 'toast-notification';
-      toast.style.cssText = `
-        position: fixed;
-        top: 80px;
-        right: 20px;
-        padding: 12px 20px;
-        border-radius: 10px;
-        border: 1px solid ${colorMap[type] || 'var(--neon-border)'};
-        background: var(--panel-glass);
-        backdrop-filter: blur(10px);
-        color: ${colorMap[type] || 'var(--text)'};
-        font-size: 13px;
-        z-index: 9999;
-        animation: slideIn 0.3s ease, fadeOut 0.3s ease 3s forwards;
-        box-shadow: 0 0 20px ${colorMap[type] || 'var(--neon-glow)'};
-        display: flex;
-        align-items: center;
-        gap: 10px;
-        max-width: 400px;
-      `;
-      
-      toast.innerHTML = `
-        <span style="font-size: 18px;">${iconMap[type] || '•'}</span>
-        <div>
-          ${title ? `<div style="font-weight: 600; margin-bottom: 4px;">${escapeHtml(title)}</div>` : ''}
-          <div>${escapeHtml(message)}</div>
-        </div>
-      `;
-      
-      document.body.appendChild(toast);
-      
-      // Remove after animation
-      setTimeout(() => {
-        if (toast.parentNode) toast.remove();
-      }, 3500);
+      toast.className = `toast ${type}`;
+      toast.innerHTML = `<span class="toast-icon">${icons[type] || '•'}</span><span>${message}</span>`;
+      els.toastContainer.appendChild(toast);
+      setTimeout(() => toast.remove(), 3000);
     }
 
-    // === DYNAMIC UI RENDERING ===
-    function renderDynamicUI(msg) {
-      const target = msg.target || 'timeline';
-      const html = msg.html || msg.data?.html || '';
-      const widgetId = msg.widget_id || `ui-${Date.now()}`;
-      
-      let container;
-      if (target === 'timeline') {
-        container = document.getElementById('timeline');
-      } else if (target === 'chat') {
-        container = document.getElementById('chat');
-      } else if (target === 'modal') {
-        // Create modal overlay
-        showModal(html, widgetId);
-        return;
+    // WebSocket
+    function connect() {
+      if (state.ws) {
+        state.ws.close();
       }
-      
-      if (!container) {
-        console.warn('Unknown render target:', target);
-        return;
-      }
-      
-      // Remove existing widget with same ID
-      const existing = document.getElementById(widgetId);
-      if (existing) existing.remove();
-      
-      // Create wrapper element
-      const wrapper = document.createElement('div');
-      wrapper.id = widgetId;
-      wrapper.className = 'dynamic-ui-element event';
-      wrapper.innerHTML = html;
-      wrapper.style.cssText = `
-        animation: fadeIn 0.3s ease;
-      `;
-      
-      // Insert at top of timeline
-      if (container.firstChild) {
-        container.insertBefore(wrapper, container.firstChild);
-      } else {
-        container.appendChild(wrapper);
-      }
-      
-      // Update event count
-      document.getElementById('eventCount').textContent = String(container.children.length);
-    }
 
-    function showModal(html, widgetId) {
-      // Remove existing modal
-      const existingModal = document.querySelector('.dynamic-modal-overlay');
-      if (existingModal) existingModal.remove();
-      
-      const overlay = document.createElement('div');
-      overlay.className = 'dynamic-modal-overlay modal-overlay show';
-      overlay.innerHTML = `
-        <div class="modal" id="${widgetId}">
-          <button class="btn" onclick="this.closest('.dynamic-modal-overlay').remove()" style="position: absolute; top: 12px; right: 12px;">✕</button>
-          ${html}
-        </div>
-      `;
-      overlay.onclick = (e) => {
-        if (e.target === overlay) overlay.remove();
+      state.ws = new WebSocket(state.settings.wsUrl);
+      els.statusText.textContent = 'Connecting...';
+
+      state.ws.onopen = () => {
+        state.connected = true;
+        els.statusDot.classList.add('connected');
+        els.statusText.textContent = 'Connected';
+        showToast('Connected to server', 'success');
+        
+        // Send credentials
+        state.ws.send(JSON.stringify({
+          type: 'credentials',
+          exchange: state.settings.exchange,
+          apiKey: state.settings.apiKey,
+          apiSecret: state.settings.apiSecret
+        }));
+        
+        // Request initial chart
+        requestChart();
       };
-      
-      document.body.appendChild(overlay);
+
+      state.ws.onclose = () => {
+        state.connected = false;
+        els.statusDot.classList.remove('connected');
+        els.statusText.textContent = 'Disconnected';
+      };
+
+      state.ws.onerror = () => {
+        showToast('Connection error', 'error');
+      };
+
+      state.ws.onmessage = handleMessage;
     }
 
-    function clearDynamicUI(target, widgetId) {
-      if (widgetId) {
-        // Clear specific widget
-        const el = document.getElementById(widgetId);
-        if (el) el.remove();
-        return;
-      }
+    function handleMessage(ev) {
+      let msg;
+      try { msg = JSON.parse(ev.data); } catch { return; }
       
-      // Clear all dynamic UI from target
-      let container;
-      if (target === 'timeline') {
-        container = document.getElementById('timeline');
-      } else if (target === 'chat') {
-        container = document.getElementById('chat');
-      }
-      
-      if (container) {
-        const dynamicElements = container.querySelectorAll('.dynamic-ui-element');
-        dynamicElements.forEach(el => el.remove());
-      }
-    }
-
-    ws.onmessage = (ev) => {
-      let msg = null;
-      try { msg = JSON.parse(ev.data); } catch { msg = {type: 'raw', data: ev.data}; }
       const t = msg.type;
 
-      // === THEME UPDATES ===
-      if (t === 'theme_update') {
-        applyTheme(msg.data);
-        // Add to history for persistence
-        addHistoryItem({
-          ts: msg.timestamp || Date.now() / 1000,
-          type: 'theme',
-          data: {
-            title: 'Theme: ' + (msg.preset || 'Custom'),
-            message: 'Changed theme to ' + (msg.preset || 'custom'),
-            preset: msg.preset,
-            neon: msg.data?.neon
-          }
-        });
-        addStreamEvent(t, msg);
-        if (msg.preset) {
-          showToast(`🎨 Theme changed to ${msg.preset}`, 'success');
-        }
-        return;
-      }
-
-      // === UI RENDERING ===
-      if (t === 'ui_render') {
-        // Add to history items so it persists across re-renders
-        addHistoryItem({
-          ts: msg.timestamp || Date.now() / 1000,
-          type: 'ui_' + (msg.render_type || 'render'),
-          data: { 
-            html: msg.html, 
-            title: msg.title, 
-            widget_id: msg.widget_id,
-            render_type: msg.render_type 
-          }
-        });
-        addStreamEvent(t, msg);
-        // Don't call renderDynamicUI - let renderHistoryPanel handle it
-        return;
-      }
-
-      // === UI ALERTS ===
-      if (t === 'ui_alert') {
-        // Add to history for persistence
-        addHistoryItem({
-          ts: msg.timestamp || Date.now() / 1000,
-          type: 'ui_alert',
-          data: {
-            title: msg.title,
-            message: msg.content,
-            alert_type: msg.alert_type
-          }
-        });
-        addStreamEvent(t, msg);
-        showToast(msg.content, msg.alert_type, msg.title);
-        return;
-      }
-
-      // === UI CLEAR ===
-      if (t === 'ui_clear') {
-        clearDynamicUI(msg.target, msg.widget_id);
-        return;
-      }
-
-      if (t === 'history_sync') {
-        state.historyItems = Array.isArray(msg.data) ? msg.data : [];
-        addStreamEvent(t, msg);
-        // Redraw chart to show order dots
-        if (state.chart.ohlcv && state.chart.ohlcv.length) {
-          drawChart(state.chart.ohlcv);
-        }
-        return;
-      }
-      if (t === 'history') {
-        addHistoryItem(msg.data);
-        addStreamEvent(t, msg);
-        // Redraw chart to show new order dots
-        if (state.chart.ohlcv && state.chart.ohlcv.length) {
-          drawChart(state.chart.ohlcv);
-        }
-        return;
-      }
-      if (t === 'history_cleared') {
-        state.historyItems = [];
-        addStreamEvent(t, msg);
-        return;
-      }
-
-      if (['turn_start', 'chunk', 'tool_start', 'tool_end', 'turn_end', 'balance', 'ohlcv', 'error'].includes(t)) {
-        addStreamEvent(t, msg);
-      }
-
-      if (!isLive()) return;
-
       switch (t) {
-        case 'connected': return;
-        case 'turn_start': createTurn(msg.turn_id, msg.data || ''); break;
-        case 'chunk': updateTurnContent(msg.turn_id, msg.data || ''); break;
-        case 'tool_start': addToolStatus(msg.turn_id, msg.data || 'tool', msg.tool_number || 1); break;
-        case 'tool_end': updateToolStatus(msg.turn_id, !!msg.success); break;
-        case 'turn_end': finalizeTurn(msg.turn_id); break;
-        case 'error': if (msg.turn_id) finalizeTurn(msg.turn_id); break;
+        case 'connected':
+          break;
+
+        case 'turn_start':
+          createTurn(msg.turn_id, msg.data);
+          break;
+
+        case 'chunk':
+          appendToTurn(msg.turn_id, msg.data);
+          break;
+
+        case 'tool_start':
+          addToolIndicator(msg.turn_id, msg.data, 'running');
+          break;
+
+        case 'tool_end':
+          updateToolIndicator(msg.turn_id, msg.success);
+          break;
+
+        case 'turn_end':
+          finalizeTurn(msg.turn_id);
+          break;
+
+        case 'history_sync':
+          state.historyItems = Array.isArray(msg.data) ? msg.data : [];
+          renderHistory();
+          break;
+
+        case 'history':
+          if (msg.data) {
+            state.historyItems.push(msg.data);
+            addHistoryItem(msg.data);
+          }
+          break;
+
+        case 'history_cleared':
+          state.historyItems = [];
+          clearTimeline();
+          break;
+
+        case 'ohlcv':
+          if (msg.data) {
+            state.chart = msg.data;
+            updateChartStats();
+            if (els.chartModal.classList.contains('show')) {
+              drawChart();
+            }
+          }
+          break;
+
+        case 'theme_update':
+          applyTheme(msg.data);
+          break;
+
+        case 'ui_alert':
+          showToast(msg.content, msg.alert_type || 'info');
+          break;
       }
-
-      document.getElementById('chat').scrollTop = document.getElementById('chat').scrollHeight;
-    };
-  }
-
-  function send() {
-    const input = document.getElementById('chatInput');
-    const text = input.value.trim();
-    if (!text) return;
-    input.value = '';
-    ws?.send(text);
-  }
-
-  function requestChart() {
-    ws?.send(JSON.stringify({
-      type: 'ui',
-      action: 'fetch_ohlcv',
-      exchange: state.settings.exchange,
-      symbol: state.settings.symbol,
-      timeframe: state.settings.timeframe,
-      limit: 240
-    }));
-  }
-
-  function requestBalance() {
-    ws?.send(JSON.stringify({
-      type: 'ui',
-      action: 'fetch_balance',
-      exchange: state.settings.exchange,
-      apiKey: state.settings.apiKey,
-      apiSecret: state.settings.apiSecret
-    }));
-  }
-
-  function clearHistory() {
-    ws?.send(JSON.stringify({type: 'history', action: 'clear'}));
-  }
-
-  function togglePlay() {
-    state.playing = !state.playing;
-    document.getElementById('btnPlay').textContent = state.playing ? '⏸ Pause' : '▶ Play';
-    if (state.playing) {
-      state.playTimer = setInterval(() => {
-        if (!state.streamSnaps.length) return;
-        if (state.nowIndex >= state.streamSnaps.length - 1) {
-          state.playing = false;
-          document.getElementById('btnPlay').textContent = '▶ Play';
-          clearInterval(state.playTimer);
-          return;
-        }
-        setIndex(state.nowIndex + 1);
-      }, 250);
-    } else {
-      clearInterval(state.playTimer);
-    }
-  }
-
-  function drawChart(ohlcv) {
-    const canvas = document.getElementById('chart');
-    const wrap = canvas.parentElement;
-    const dpr = Math.max(1, window.devicePixelRatio || 1);
-    const w = wrap.clientWidth, h = wrap.clientHeight;
-    canvas.width = Math.floor(w * dpr);
-    canvas.height = Math.floor(h * dpr);
-    const ctx = canvas.getContext('2d');
-    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-
-    ctx.clearRect(0, 0, w, h);
-    ctx.fillStyle = 'rgba(0, 0, 0, 0.3)';
-    ctx.fillRect(0, 0, w, h);
-
-    // Grid
-    ctx.strokeStyle = 'rgba(0, 255, 136, 0.1)';
-    ctx.lineWidth = 1;
-    for (let i = 0; i <= 6; i++) { const y = (h / 6) * i; ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(w, y); ctx.stroke(); }
-    for (let i = 0; i <= 8; i++) { const x = (w / 8) * i; ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x, h); ctx.stroke(); }
-
-    if (!ohlcv || !ohlcv.length) {
-      ctx.fillStyle = 'rgba(0, 255, 136, 0.5)';
-      ctx.font = '12px ' + getComputedStyle(document.body).fontFamily;
-      ctx.fillText('No OHLCV data. Click Refresh.', 12, 20);
-      return;
     }
 
-    const xs = ohlcv.map(r => r[0]);
-    const closes = ohlcv.map(r => r[4]);
-    const minY = Math.min(...closes);
-    const maxY = Math.max(...closes);
-    const pad = (maxY - minY) * 0.1 || 1;
-    const lo = minY - pad, hi = maxY + pad;
-
-    const x0 = xs[0], x1 = xs[xs.length - 1];
-    const xScale = (t) => ((t - x0) / (x1 - x0)) * (w - 20) + 10;
-    const yScale = (v) => h - (((v - lo) / (hi - lo)) * (h - 20) + 10);
-
-    // Gradient fill
-    const gradient = ctx.createLinearGradient(0, 0, 0, h);
-    gradient.addColorStop(0, 'rgba(0, 255, 136, 0.3)');
-    gradient.addColorStop(1, 'rgba(0, 255, 136, 0)');
-
-    ctx.beginPath();
-    ctx.moveTo(xScale(xs[0]), h);
-    for (let i = 0; i < xs.length; i++) {
-      ctx.lineTo(xScale(xs[i]), yScale(closes[i]));
+    // Timeline management
+    function hideEmptyState() {
+      if (els.emptyState) els.emptyState.style.display = 'none';
     }
-    ctx.lineTo(xScale(xs[xs.length - 1]), h);
-    ctx.closePath();
-    ctx.fillStyle = gradient;
-    ctx.fill();
 
-    // Line with glow
-    ctx.shadowColor = 'rgba(0, 255, 136, 0.5)';
-    ctx.shadowBlur = 10;
-    ctx.strokeStyle = '#00ff88';
-    ctx.lineWidth = 2;
-    ctx.beginPath();
-    for (let i = 0; i < xs.length; i++) {
-      const x = xScale(xs[i]);
-      const y = yScale(closes[i]);
-      if (i === 0) ctx.moveTo(x, y); else ctx.lineTo(x, y);
+    function clearTimeline() {
+      els.timeline.innerHTML = '';
+      state.turns.clear();
+      els.emptyState.style.display = 'block';
+      els.timeline.appendChild(els.emptyState);
     }
-    ctx.stroke();
-    ctx.shadowBlur = 0;
 
-    // Price label
-    ctx.fillStyle = '#00ff88';
-    ctx.font = 'bold 13px ' + getComputedStyle(document.body).fontFamily;
-    ctx.fillText(`$${closes[closes.length - 1].toFixed(2)}`, 12, 22);
-    
-    // Draw order dots from history
-    const orders = state.historyItems.filter(r => 
-      ['order', 'trade', 'buy', 'sell'].includes(r.type) && r.data
-    );
-    
-    for (const order of orders) {
-      const data = order.data || {};
-      const orderTs = (order.ts || 0) * 1000; // Convert to milliseconds
-      const orderPrice = parseFloat(data.price) || 0;
-      const side = (data.side || '').toLowerCase();
+    function createTurn(turnId, userMessage) {
+      hideEmptyState();
       
-      // Skip if no valid price or timestamp out of range
-      if (!orderPrice || orderTs < x0 || orderTs > x1) continue;
+      // User message
+      const userEl = document.createElement('div');
+      userEl.className = 'message user';
+      userEl.innerHTML = `<div class="bubble">${escapeHtml(userMessage)}</div>`;
+      els.timeline.appendChild(userEl);
+
+      // Assistant message container
+      const assistantEl = document.createElement('div');
+      assistantEl.className = 'message assistant';
+      assistantEl.dataset.turnId = turnId;
       
-      const dotX = xScale(orderTs);
-      const dotY = yScale(orderPrice);
+      const bubble = document.createElement('div');
+      bubble.className = 'bubble';
       
-      // Draw dot with glow
-      ctx.beginPath();
-      ctx.arc(dotX, dotY, 6, 0, Math.PI * 2);
+      const content = document.createElement('div');
+      content.className = 'content';
       
-      if (side === 'buy') {
-        ctx.fillStyle = '#00ccff';
-        ctx.shadowColor = 'rgba(0, 204, 255, 0.8)';
-      } else if (side === 'sell' || side === 'short') {
-        ctx.fillStyle = '#ff3366';
-        ctx.shadowColor = 'rgba(255, 51, 102, 0.8)';
+      const typing = document.createElement('div');
+      typing.className = 'typing-indicator';
+      typing.innerHTML = '<span></span><span></span><span></span>';
+      
+      bubble.appendChild(content);
+      bubble.appendChild(typing);
+      assistantEl.appendChild(bubble);
+      els.timeline.appendChild(assistantEl);
+
+      state.turns.set(turnId, { el: assistantEl, content, typing, bubble, text: '', tools: [] });
+      scrollToBottom();
+    }
+
+    function appendToTurn(turnId, text) {
+      const turn = state.turns.get(turnId);
+      if (!turn) return;
+      
+      turn.text += (text || '');
+      turn.content.innerHTML = marked.parse(turn.text);
+      turn.content.querySelectorAll('pre code').forEach(block => hljs.highlightElement(block));
+      scrollToBottom();
+    }
+
+    function addToolIndicator(turnId, toolName, status) {
+      const turn = state.turns.get(turnId);
+      if (!turn) return;
+
+      const indicator = document.createElement('div');
+      indicator.className = `tool-indicator ${status}`;
+      indicator.innerHTML = `<div class="tool-spinner"></div><span>${toolName}</span>`;
+      turn.bubble.insertBefore(indicator, turn.content);
+      turn.tools.push(indicator);
+    }
+
+    function updateToolIndicator(turnId, success) {
+      const turn = state.turns.get(turnId);
+      if (!turn || !turn.tools.length) return;
+      
+      const last = turn.tools[turn.tools.length - 1];
+      last.className = `tool-indicator ${success ? 'success' : 'error'}`;
+      last.innerHTML = `<span>${success ? '✓' : '✗'}</span>${last.querySelector('span:last-child').textContent}`;
+    }
+
+    function finalizeTurn(turnId) {
+      const turn = state.turns.get(turnId);
+      if (!turn) return;
+      turn.typing.remove();
+    }
+
+    function addHistoryItem(item) {
+      hideEmptyState();
+      
+      const type = item.type || 'note';
+      const data = item.data || {};
+      const ts = item.ts ? new Date(item.ts * 1000).toLocaleTimeString() : '';
+      
+      // Skip UI/tool events
+      if (['tool_start', 'tool_end', 'ui', 'balance', 'raw'].includes(type)) return;
+
+      const el = document.createElement('div');
+      el.className = 'message history';
+      
+      let content = '';
+      if (typeof data === 'string') {
+        content = data;
+      } else if (data.message) {
+        content = data.message;
+      } else if (data.symbol) {
+        content = `<strong>${(data.side || type).toUpperCase()}</strong> ${data.amount || ''} ${data.symbol} ${data.price ? '@ ' + data.price : ''}`;
       } else {
-        ctx.fillStyle = '#ffcc00';
-        ctx.shadowColor = 'rgba(255, 204, 0, 0.8)';
+        content = JSON.stringify(data);
       }
+
+      el.innerHTML = `
+        <div class="event-card ${type}">
+          <div class="event-header">
+            <span class="event-type">${type}</span>
+            <span class="event-time">${ts}</span>
+          </div>
+          <div class="event-content">${content}</div>
+        </div>
+      `;
       
-      ctx.shadowBlur = 10;
-      ctx.fill();
-      ctx.shadowBlur = 0;
-      
-      // Draw ring around dot
-      ctx.strokeStyle = ctx.fillStyle;
-      ctx.lineWidth = 2;
-      ctx.beginPath();
-      ctx.arc(dotX, dotY, 10, 0, Math.PI * 2);
-      ctx.stroke();
+      els.timeline.appendChild(el);
+      scrollToBottom();
     }
-  }
 
-  // Event listeners
-  document.getElementById('btnConnect').onclick = connect;
-  document.getElementById('btnSend').onclick = send;
-  document.getElementById('chatInput').addEventListener('keydown', e => { if (e.key === 'Enter') send(); });
-  document.getElementById('btnPrev').onclick = () => setIndex(state.nowIndex - 1);
-  document.getElementById('btnNext').onclick = () => setIndex(state.nowIndex + 1);
-  document.getElementById('btnPlay').onclick = togglePlay;
-  document.getElementById('btnRefresh').onclick = requestChart;
-  document.getElementById('btnClearHistory').onclick = clearHistory;
-  document.getElementById('timeSlider').addEventListener('input', (e) => setIndex(parseInt(e.target.value || '0', 10)));
-
-  document.getElementById('btnSettings').onclick = openSettingsModal;
-  document.getElementById('btnSettingsCancel').onclick = closeSettingsModal;
-  document.getElementById('btnSettingsSave').onclick = saveSettings;
-  document.getElementById('settingsModal').onclick = (e) => { if (e.target.id === 'settingsModal') closeSettingsModal(); };
-
-  // Theme modal handlers
-  const themePresets = {
-    neon_green: {
-      neon: "#00ff88", neon_dim: "#00ff8880", neon_glow: "rgba(0, 255, 136, 0.5)",
-      neon_subtle: "rgba(0, 255, 136, 0.1)", neon_border: "rgba(0, 255, 136, 0.2)",
-      bg: "#000000", panel: "#000000", panel_glass: "rgba(0, 0, 0, 0.8)",
-      text: "#00ff88", text_dim: "#00ff8899", muted: "rgba(0, 255, 136, 0.5)",
-      line: "rgba(0, 255, 136, 0.15)", good: "#00ff88", bad: "#ff3366", warn: "#ffcc00"
-    },
-    cyberpunk: {
-      neon: "#ff00ff", neon_dim: "#ff00ff80", neon_glow: "rgba(255, 0, 255, 0.5)",
-      neon_subtle: "rgba(255, 0, 255, 0.1)", neon_border: "rgba(255, 0, 255, 0.2)",
-      bg: "#0a0014", panel: "#0a0014", panel_glass: "rgba(10, 0, 20, 0.8)",
-      text: "#ff00ff", text_dim: "#ff00ff99", muted: "rgba(255, 0, 255, 0.5)",
-      line: "rgba(255, 0, 255, 0.15)", good: "#00ffff", bad: "#ff0066", warn: "#ffcc00"
-    },
-    ocean_blue: {
-      neon: "#00d4ff", neon_dim: "#00d4ff80", neon_glow: "rgba(0, 212, 255, 0.5)",
-      neon_subtle: "rgba(0, 212, 255, 0.1)", neon_border: "rgba(0, 212, 255, 0.2)",
-      bg: "#000a14", panel: "#000a14", panel_glass: "rgba(0, 10, 20, 0.8)",
-      text: "#00d4ff", text_dim: "#00d4ff99", muted: "rgba(0, 212, 255, 0.5)",
-      line: "rgba(0, 212, 255, 0.15)", good: "#00ff88", bad: "#ff3366", warn: "#ffa500"
-    },
-    sunset_orange: {
-      neon: "#ff6b35", neon_dim: "#ff6b3580", neon_glow: "rgba(255, 107, 53, 0.5)",
-      neon_subtle: "rgba(255, 107, 53, 0.1)", neon_border: "rgba(255, 107, 53, 0.2)",
-      bg: "#140800", panel: "#140800", panel_glass: "rgba(20, 8, 0, 0.8)",
-      text: "#ff6b35", text_dim: "#ff6b3599", muted: "rgba(255, 107, 53, 0.5)",
-      line: "rgba(255, 107, 53, 0.15)", good: "#00ff88", bad: "#ff3366", warn: "#ffcc00"
-    },
-    gold_luxury: {
-      neon: "#ffd700", neon_dim: "#ffd70080", neon_glow: "rgba(255, 215, 0, 0.5)",
-      neon_subtle: "rgba(255, 215, 0, 0.1)", neon_border: "rgba(255, 215, 0, 0.2)",
-      bg: "#0a0a00", panel: "#0a0a00", panel_glass: "rgba(10, 10, 0, 0.8)",
-      text: "#ffd700", text_dim: "#ffd70099", muted: "rgba(255, 215, 0, 0.5)",
-      line: "rgba(255, 215, 0, 0.15)", good: "#00ff88", bad: "#ff3366", warn: "#ffa500"
-    },
-    matrix_green: {
-      neon: "#00ff00", neon_dim: "#00ff0080", neon_glow: "rgba(0, 255, 0, 0.5)",
-      neon_subtle: "rgba(0, 255, 0, 0.1)", neon_border: "rgba(0, 255, 0, 0.2)",
-      bg: "#000500", panel: "#000500", panel_glass: "rgba(0, 5, 0, 0.8)",
-      text: "#00ff00", text_dim: "#00ff0099", muted: "rgba(0, 255, 0, 0.5)",
-      line: "rgba(0, 255, 0, 0.15)", good: "#00ff00", bad: "#ff0000", warn: "#ffff00"
-    },
-    dark_minimal: {
-      neon: "#ffffff", neon_dim: "#ffffff80", neon_glow: "rgba(255, 255, 255, 0.3)",
-      neon_subtle: "rgba(255, 255, 255, 0.05)", neon_border: "rgba(255, 255, 255, 0.1)",
-      bg: "#0a0a0a", panel: "#0a0a0a", panel_glass: "rgba(10, 10, 10, 0.9)",
-      text: "#ffffff", text_dim: "#ffffff99", muted: "rgba(255, 255, 255, 0.4)",
-      line: "rgba(255, 255, 255, 0.1)", good: "#00ff88", bad: "#ff3366", warn: "#ffcc00"
-    }
-  };
-
-  function applyThemeLocal(themeData) {
-    if (!themeData) return;
-    const root = document.documentElement;
-    const varMap = {
-      'neon': '--neon', 'neon_dim': '--neon-dim', 'neon_glow': '--neon-glow',
-      'neon_subtle': '--neon-subtle', 'neon_border': '--neon-border',
-      'bg': '--bg', 'panel': '--panel', 'panel_glass': '--panel-glass',
-      'text': '--text', 'text_dim': '--text-dim', 'muted': '--muted',
-      'line': '--line', 'good': '--good', 'bad': '--bad', 'warn': '--warn'
-    };
-    for (const [key, cssVar] of Object.entries(varMap)) {
-      if (themeData[key]) root.style.setProperty(cssVar, themeData[key]);
-    }
-    state.currentTheme = themeData;
-    localStorage.setItem('dashboardTheme', JSON.stringify(themeData));
-  }
-
-  function openThemeModal() { document.getElementById('themeModal').classList.add('show'); }
-  function closeThemeModal() { document.getElementById('themeModal').classList.remove('show'); }
-
-  document.getElementById('btnTheme').onclick = openThemeModal;
-  document.getElementById('btnThemeClose').onclick = closeThemeModal;
-  document.getElementById('themeModal').onclick = (e) => { if (e.target.id === 'themeModal') closeThemeModal(); };
-
-  // Preset theme buttons
-  document.querySelectorAll('.theme-preset-btn').forEach(btn => {
-    btn.onclick = () => {
-      const preset = btn.dataset.preset;
-      if (themePresets[preset]) {
-        applyThemeLocal(themePresets[preset]);
-        closeThemeModal();
-        // Also send to agent via chat if connected
-        if (ws && ws.readyState === 1) {
-          ws.send(`change theme to ${preset.replace('_', ' ')}`);
+    function renderHistory() {
+      // Keep existing turns, just add history items
+      const SKIP = new Set(['tool_start', 'tool_end', 'ui', 'balance', 'raw']);
+      for (const item of state.historyItems.slice(-50)) {
+        if (!SKIP.has(item.type)) {
+          addHistoryItem(item);
         }
       }
-    };
-  });
-
-  // Custom color picker
-  document.getElementById('customAccentColor').oninput = (e) => {
-    document.getElementById('customAccentHex').value = e.target.value;
-  };
-  document.getElementById('customAccentHex').oninput = (e) => {
-    const val = e.target.value;
-    if (/^#[0-9A-Fa-f]{6}$/.test(val)) {
-      document.getElementById('customAccentColor').value = val;
     }
-  };
 
-  document.getElementById('btnApplyCustomColor').onclick = () => {
-    const color = document.getElementById('customAccentHex').value;
-    if (!/^#[0-9A-Fa-f]{6}$/.test(color)) {
-      alert('Invalid color format. Use #RRGGBB');
-      return;
+    function scrollToBottom() {
+      requestAnimationFrame(() => {
+        els.timelineContainer.scrollTop = els.timelineContainer.scrollHeight;
+      });
     }
-    const customTheme = { ...themePresets.neon_green };
-    customTheme.neon = color;
-    customTheme.neon_dim = color + '80';
-    customTheme.text = color;
-    customTheme.text_dim = color + '99';
-    customTheme.good = color;
-    applyThemeLocal(customTheme);
-    closeThemeModal();
-  };
 
-  document.getElementById('btnThemeReset').onclick = () => {
-    applyThemeLocal(themePresets.neon_green);
-    closeThemeModal();
-  };
+    // Send message
+    function send() {
+      const text = els.chatInput.value.trim();
+      if (!text || !state.connected) return;
+      
+      els.chatInput.value = '';
+      els.chatInput.style.height = 'auto';
+      state.ws.send(text);
+    }
 
-  // Load saved theme on init
-  try {
-    const saved = localStorage.getItem('dashboardTheme');
-    if (saved) applyThemeLocal(JSON.parse(saved));
-  } catch (e) { console.warn('Failed to load theme:', e); }
+    // Chart
+    function requestChart() {
+      if (!state.ws || state.ws.readyState !== 1) return;
+      state.ws.send(JSON.stringify({
+        type: 'ui',
+        action: 'fetch_ohlcv',
+        exchange: state.settings.exchange,
+        symbol: state.settings.symbol,
+        timeframe: state.settings.timeframe,
+        limit: 200
+      }));
+    }
 
-  // Initialize
-  loadSettings();
-  connect();
-</script>
+    function openChart() {
+      els.chartModal.classList.add('show');
+      document.getElementById('chartSymbol').textContent = state.chart.symbol || state.settings.symbol;
+      requestChart();
+      setTimeout(drawChart, 100);
+    }
+
+    function closeChart() {
+      els.chartModal.classList.remove('show');
+    }
+
+    function updateChartStats() {
+      const ohlcv = state.chart.ohlcv || [];
+      if (!ohlcv.length) return;
+
+      const last = ohlcv[ohlcv.length - 1];
+      const first = ohlcv[0];
+      const price = last[4];
+      const open = first[1];
+      const change = ((price - open) / open * 100).toFixed(2);
+      const high = Math.max(...ohlcv.map(c => c[2]));
+      const low = Math.min(...ohlcv.map(c => c[3]));
+
+      document.getElementById('statPrice').textContent = '$' + price.toLocaleString();
+      
+      const changeEl = document.getElementById('stat24h');
+      changeEl.textContent = (change >= 0 ? '+' : '') + change + '%';
+      changeEl.className = 'chart-stat-value ' + (change >= 0 ? 'up' : 'down');
+      
+      document.getElementById('statHigh').textContent = '$' + high.toLocaleString();
+      document.getElementById('statLow').textContent = '$' + low.toLocaleString();
+      
+      document.getElementById('chartMeta').textContent = `${state.chart.timeframe} • ${ohlcv.length} candles`;
+    }
+
+    function drawChart() {
+      const canvas = els.chartCanvas;
+      const wrap = canvas.parentElement;
+      const dpr = window.devicePixelRatio || 1;
+      const w = wrap.clientWidth;
+      const h = wrap.clientHeight;
+      
+      canvas.width = w * dpr;
+      canvas.height = h * dpr;
+      canvas.style.width = w + 'px';
+      canvas.style.height = h + 'px';
+      
+      const ctx = canvas.getContext('2d');
+      ctx.scale(dpr, dpr);
+      ctx.clearRect(0, 0, w, h);
+
+      const ohlcv = state.chart.ohlcv || [];
+      if (!ohlcv.length) {
+        ctx.fillStyle = 'rgba(0, 255, 136, 0.3)';
+        ctx.font = '14px system-ui';
+        ctx.fillText('No data', w/2 - 30, h/2);
+        return;
+      }
+
+      // Grid
+      ctx.strokeStyle = 'rgba(0, 255, 136, 0.1)';
+      ctx.lineWidth = 1;
+      for (let i = 0; i <= 5; i++) {
+        const y = (h / 5) * i;
+        ctx.beginPath();
+        ctx.moveTo(0, y);
+        ctx.lineTo(w, y);
+        ctx.stroke();
+      }
+
+      const closes = ohlcv.map(c => c[4]);
+      const minY = Math.min(...closes);
+      const maxY = Math.max(...closes);
+      const pad = (maxY - minY) * 0.1 || 1;
+      const lo = minY - pad, hi = maxY + pad;
+
+      const xScale = (i) => (i / (ohlcv.length - 1)) * (w - 20) + 10;
+      const yScale = (v) => h - ((v - lo) / (hi - lo) * (h - 20) + 10);
+
+      // Gradient fill
+      const gradient = ctx.createLinearGradient(0, 0, 0, h);
+      gradient.addColorStop(0, 'rgba(0, 255, 136, 0.25)');
+      gradient.addColorStop(1, 'rgba(0, 255, 136, 0)');
+
+      ctx.beginPath();
+      ctx.moveTo(xScale(0), h);
+      for (let i = 0; i < ohlcv.length; i++) {
+        ctx.lineTo(xScale(i), yScale(closes[i]));
+      }
+      ctx.lineTo(xScale(ohlcv.length - 1), h);
+      ctx.closePath();
+      ctx.fillStyle = gradient;
+      ctx.fill();
+
+      // Line
+      ctx.strokeStyle = '#00ff88';
+      ctx.lineWidth = 2;
+      ctx.shadowColor = 'rgba(0, 255, 136, 0.5)';
+      ctx.shadowBlur = 8;
+      ctx.beginPath();
+      for (let i = 0; i < ohlcv.length; i++) {
+        const x = xScale(i);
+        const y = yScale(closes[i]);
+        if (i === 0) ctx.moveTo(x, y);
+        else ctx.lineTo(x, y);
+      }
+      ctx.stroke();
+      ctx.shadowBlur = 0;
+
+      // Price label
+      ctx.fillStyle = '#00ff88';
+      ctx.font = 'bold 14px SF Mono, monospace';
+      ctx.fillText('$' + closes[closes.length - 1].toLocaleString(), 12, 24);
+    }
+
+    // Theme
+    function applyTheme(theme) {
+      if (!theme) return;
+      const root = document.documentElement;
+      const map = {
+        'neon': '--neon', 'neon_dim': '--neon-dim', 'neon_glow': '--neon-glow',
+        'neon_subtle': '--neon-subtle', 'neon_border': '--neon-border',
+        'bg': '--bg', 'text': '--text', 'text_dim': '--text-dim',
+        'muted': '--muted', 'good': '--good', 'bad': '--bad', 'warn': '--warn'
+      };
+      for (const [key, cssVar] of Object.entries(map)) {
+        if (theme[key]) root.style.setProperty(cssVar, theme[key]);
+      }
+      localStorage.setItem('hashtradeTheme', JSON.stringify(theme));
+    }
+
+    // Utils
+    function escapeHtml(s) {
+      return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+    }
+
+    function openSettings() {
+      els.settingsModal.classList.add('show');
+    }
+
+    function closeSettings() {
+      els.settingsModal.classList.remove('show');
+    }
+
+    // Auto-resize textarea
+    els.chatInput.addEventListener('input', function() {
+      this.style.height = 'auto';
+      this.style.height = Math.min(this.scrollHeight, 120) + 'px';
+    });
+
+    // Event listeners
+    els.btnSend.addEventListener('click', send);
+    els.chatInput.addEventListener('keydown', e => {
+      if (e.key === 'Enter' && !e.shiftKey) {
+        e.preventDefault();
+        send();
+      }
+    });
+
+    document.getElementById('btnSettings').addEventListener('click', openSettings);
+    document.getElementById('btnSettingsCancel').addEventListener('click', closeSettings);
+    document.getElementById('btnSettingsSave').addEventListener('click', saveSettings);
+    els.settingsModal.addEventListener('click', e => {
+      if (e.target === els.settingsModal) closeSettings();
+    });
+
+    document.getElementById('chartFab').addEventListener('click', openChart);
+    document.getElementById('chartClose').addEventListener('click', closeChart);
+
+    document.getElementById('chartControls').addEventListener('click', e => {
+      if (e.target.classList.contains('tf-btn')) {
+        document.querySelectorAll('.tf-btn').forEach(b => b.classList.remove('active'));
+        e.target.classList.add('active');
+        state.settings.timeframe = e.target.dataset.tf;
+        state.chart.timeframe = e.target.dataset.tf;
+        requestChart();
+      }
+    });
+
+    document.getElementById('btnClear').addEventListener('click', () => {
+      if (state.ws && state.ws.readyState === 1) {
+        state.ws.send(JSON.stringify({ type: 'history', action: 'clear' }));
+      }
+      clearTimeline();
+    });
+
+    // Handle resize for chart
+    window.addEventListener('resize', () => {
+      if (els.chartModal.classList.contains('show')) {
+        drawChart();
+      }
+    });
+
+    // Init
+    loadSettings();
+    
+    // Load saved theme
+    try {
+      const savedTheme = localStorage.getItem('hashtradeTheme');
+      if (savedTheme) applyTheme(JSON.parse(savedTheme));
+    } catch (e) {}
+
+    // Auto-connect
+    connect();
+
+    // Register service worker
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.register('sw.js').catch(() => {});
+    }
+  </script>
 </body>
 </html>
