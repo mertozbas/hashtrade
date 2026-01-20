@@ -6,15 +6,10 @@
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
   <meta name="theme-color" content="#000000" />
-  <meta name="description" content="AI-powered cryptocurrency trading assistant" />
-  
   <title>HashTrade</title>
   
-  <!-- PWA -->
   <link rel="manifest" href="manifest.json" />
   <link rel="apple-touch-icon" href="icon-192.png" />
-  
-  <!-- Syntax highlighting -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.min.css">
   <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
@@ -22,20 +17,21 @@
   <style>
     :root {
       --neon: #00ff88;
-      --neon-dim: #00ff8880;
-      --neon-glow: rgba(0, 255, 136, 0.5);
-      --neon-subtle: rgba(0, 255, 136, 0.08);
-      --neon-border: rgba(0, 255, 136, 0.2);
-      --bg: #000000;
-      --bg-card: rgba(0, 20, 10, 0.6);
-      --text: #e0ffe8;
-      --text-dim: #a0c8b0;
-      --muted: rgba(0, 255, 136, 0.4);
+      --neon-dim: #00ff8866;
+      --neon-glow: rgba(0, 255, 136, 0.4);
+      --neon-subtle: rgba(0, 255, 136, 0.1);
+      --neon-border: rgba(0, 255, 136, 0.25);
+      --bg: #0a0a0a;
+      --bg-card: rgba(20, 40, 30, 0.7);
+      --bg-input: rgba(0, 0, 0, 0.5);
+      --text: #ffffff;
+      --text-dim: #b0d0c0;
+      --muted: rgba(255, 255, 255, 0.5);
       --good: #00ff88;
-      --bad: #ff4466;
+      --bad: #ff5566;
       --warn: #ffcc00;
-      --radius: 16px;
-      --radius-sm: 10px;
+      --radius: 20px;
+      --radius-sm: 14px;
       --safe-top: env(safe-area-inset-top, 0px);
       --safe-bottom: env(safe-area-inset-bottom, 0px);
     }
@@ -44,7 +40,7 @@
     
     html, body {
       height: 100%;
-      font-family: -apple-system, BlinkMacSystemFont, 'SF Pro', 'Segoe UI', system-ui, sans-serif;
+      font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI', system-ui, sans-serif;
       background: var(--bg);
       color: var(--text);
       overflow: hidden;
@@ -57,325 +53,307 @@
       position: fixed;
       inset: 0;
       background: 
-        radial-gradient(ellipse 100% 60% at 50% 0%, rgba(0, 255, 136, 0.08), transparent 60%),
-        radial-gradient(circle at 20% 80%, rgba(0, 255, 136, 0.04), transparent 40%);
+        radial-gradient(ellipse 120% 80% at 50% -20%, rgba(0, 255, 136, 0.12), transparent 50%),
+        radial-gradient(circle at 80% 90%, rgba(0, 255, 136, 0.06), transparent 40%);
       pointer-events: none;
-      z-index: 0;
     }
 
-    .app {
-      height: 100%;
-      display: flex;
-      flex-direction: column;
-      position: relative;
-      z-index: 1;
-    }
+    .app { height: 100%; display: flex; flex-direction: column; }
 
+    /* Header */
     header {
       flex-shrink: 0;
-      padding: calc(var(--safe-top) + 12px) 16px 12px;
+      padding: calc(var(--safe-top) + 16px) 20px 16px;
       display: flex;
       align-items: center;
       justify-content: space-between;
-      background: linear-gradient(180deg, rgba(0,0,0,0.9) 0%, transparent 100%);
+      background: linear-gradient(180deg, rgba(0,0,0,0.95) 0%, transparent 100%);
       position: relative;
       z-index: 100;
     }
 
-    .brand { display: flex; align-items: center; gap: 10px; }
+    .brand { display: flex; align-items: center; gap: 14px; }
 
     .logo {
-      width: 36px; height: 36px;
-      border-radius: 10px;
-      background: conic-gradient(from 180deg, var(--neon), #00aa55, var(--neon));
-      box-shadow: 0 0 20px var(--neon-glow);
-      animation: logo-pulse 3s ease-in-out infinite;
+      width: 44px; height: 44px;
+      border-radius: 14px;
+      background: linear-gradient(135deg, var(--neon) 0%, #00aa66 100%);
+      box-shadow: 0 0 30px var(--neon-glow), inset 0 2px 4px rgba(255,255,255,0.3);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 22px;
     }
 
-    @keyframes logo-pulse {
-      0%, 100% { box-shadow: 0 0 20px var(--neon-glow); }
-      50% { box-shadow: 0 0 30px var(--neon-glow), 0 0 40px rgba(0,255,136,0.2); }
-    }
+    .brand-text h1 { font-size: 22px; font-weight: 700; color: var(--text); letter-spacing: -0.5px; }
+    .brand-text .status { font-size: 13px; color: var(--muted); display: flex; align-items: center; gap: 6px; margin-top: 2px; }
 
-    .brand-text h1 { font-size: 18px; font-weight: 700; color: var(--neon); text-shadow: 0 0 20px var(--neon-glow); }
-    .brand-text .status { font-size: 11px; color: var(--muted); display: flex; align-items: center; gap: 5px; }
+    .status-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--bad); transition: all 0.3s; }
+    .status-dot.connected { background: var(--good); box-shadow: 0 0 12px var(--neon-glow); }
 
-    .status-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--bad); }
-    .status-dot.connected { background: var(--good); box-shadow: 0 0 8px var(--neon-glow); animation: pulse 2s infinite; }
-
-    @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
-
-    .header-actions { display: flex; gap: 8px; }
+    .header-actions { display: flex; gap: 10px; }
 
     .icon-btn {
-      width: 40px; height: 40px;
+      width: 48px; height: 48px;
       border-radius: var(--radius-sm);
-      border: 1px solid var(--neon-border);
-      background: var(--neon-subtle);
-      color: var(--neon);
-      font-size: 18px;
+      border: 2px solid var(--neon-border);
+      background: var(--bg-card);
+      color: var(--text);
+      font-size: 20px;
       display: flex; align-items: center; justify-content: center;
       cursor: pointer;
       transition: all 0.2s;
     }
 
-    .icon-btn:active { transform: scale(0.95); background: rgba(0, 255, 136, 0.15); }
+    .icon-btn:active { transform: scale(0.95); background: var(--neon-subtle); }
 
+    /* Timeline */
     .timeline-container {
       flex: 1;
       overflow-y: auto;
-      overflow-x: hidden;
-      padding: 0 12px 120px;
+      padding: 0 16px 140px;
       scroll-behavior: smooth;
       -webkit-overflow-scrolling: touch;
     }
 
-    .timeline { display: flex; flex-direction: column; gap: 12px; padding-top: 8px; }
+    .timeline { display: flex; flex-direction: column; gap: 16px; padding-top: 12px; }
 
-    .message { max-width: 92%; animation: fadeSlideIn 0.3s ease; }
-
-    @keyframes fadeSlideIn {
-      from { opacity: 0; transform: translateY(10px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
+    .message { max-width: 88%; animation: fadeSlideIn 0.3s ease; }
+    @keyframes fadeSlideIn { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: translateY(0); } }
 
     .message.user { align-self: flex-end; }
     .message.assistant { align-self: flex-start; }
     .message.history { align-self: stretch; max-width: 100%; }
+    .message.auto-trigger { opacity: 0.85; }
 
-    .bubble { padding: 12px 16px; border-radius: var(--radius); font-size: 15px; line-height: 1.5; word-wrap: break-word; }
+    .bubble {
+      padding: 16px 20px;
+      border-radius: var(--radius);
+      font-size: 16px;
+      line-height: 1.6;
+      word-wrap: break-word;
+    }
 
     .message.user .bubble {
       background: linear-gradient(135deg, var(--neon) 0%, #00cc66 100%);
       color: #000;
-      border-bottom-right-radius: 4px;
+      border-bottom-right-radius: 6px;
       font-weight: 500;
+      box-shadow: 0 4px 20px rgba(0, 255, 136, 0.3);
     }
 
     .message.assistant .bubble {
       background: var(--bg-card);
       border: 1px solid var(--neon-border);
-      border-bottom-left-radius: 4px;
-      backdrop-filter: blur(10px);
+      border-bottom-left-radius: 6px;
+      backdrop-filter: blur(20px);
     }
 
-    .message.assistant .bubble pre { background: rgba(0, 0, 0, 0.4); border-radius: 8px; padding: 12px; overflow-x: auto; margin: 8px 0; font-size: 13px; }
-    .message.assistant .bubble code { font-family: 'SF Mono', Monaco, monospace; font-size: 13px; }
-    .message.assistant .bubble p { margin: 0.5em 0; }
-    .message.assistant .bubble p:first-child { margin-top: 0; }
-    .message.assistant .bubble p:last-child { margin-bottom: 0; }
+    .message.assistant .bubble pre { background: rgba(0, 0, 0, 0.5); border-radius: 12px; padding: 14px; overflow-x: auto; margin: 10px 0; }
+    .message.assistant .bubble code { font-family: 'SF Mono', Monaco, monospace; font-size: 14px; }
+
+    .auto-badge {
+      display: inline-flex; align-items: center; gap: 5px;
+      font-size: 11px; font-weight: 700;
+      padding: 4px 10px;
+      background: rgba(255, 204, 0, 0.2);
+      border: 1px solid var(--warn);
+      border-radius: 6px;
+      color: var(--warn);
+      margin-bottom: 8px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
 
     .event-card {
       background: var(--bg-card);
       border: 1px solid var(--neon-border);
       border-radius: var(--radius);
-      padding: 14px 16px;
-      backdrop-filter: blur(10px);
+      padding: 18px 20px;
+      backdrop-filter: blur(20px);
       cursor: pointer;
       transition: all 0.2s;
     }
 
-    .event-card:hover { border-color: var(--neon-dim); transform: translateX(4px); }
-    .event-card:active { background: rgba(0, 255, 136, 0.1); }
+    .event-card:active { transform: scale(0.98); background: var(--neon-subtle); }
 
-    .event-card.order { border-left: 3px solid var(--good); }
-    .event-card.trade { border-left: 3px solid #00ccff; }
-    .event-card.signal { border-left: 3px solid var(--warn); }
-    .event-card.theme { border-left: 3px solid #ff00ff; }
-    .event-card.note { border-left: 3px solid var(--muted); }
-
-    .event-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
-
-    .event-type {
-      font-size: 11px; font-weight: 600;
-      text-transform: uppercase; letter-spacing: 0.5px;
-      color: var(--neon);
-      padding: 3px 8px;
-      background: var(--neon-subtle);
-      border-radius: 4px;
-    }
-
-    .event-time { font-size: 11px; color: var(--muted); font-family: 'SF Mono', monospace; }
-
-    .event-content { font-size: 14px; color: var(--text); line-height: 1.5; }
+    .event-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
+    .event-type { font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; color: var(--neon); padding: 5px 12px; background: var(--neon-subtle); border-radius: 8px; }
+    .event-time { font-size: 12px; color: var(--muted); font-family: 'SF Mono', monospace; }
+    .event-content { font-size: 15px; color: var(--text); line-height: 1.5; }
     .event-content strong { color: var(--neon); }
 
-    /* Dynamic UI elements */
-    .event-card .dynamic-html { margin-top: 10px; }
-    .event-card table { width: 100%; border-collapse: collapse; font-size: 12px; margin-top: 8px; }
-    .event-card th, .event-card td { padding: 6px 10px; text-align: left; border-bottom: 1px solid var(--neon-border); }
-    .event-card th { color: var(--neon); font-weight: 600; }
-
     .tool-indicator {
-      display: inline-flex; align-items: center; gap: 6px;
-      padding: 6px 12px; margin: 6px 0;
-      border-radius: 20px; font-size: 12px;
+      display: inline-flex; align-items: center; gap: 8px;
+      padding: 10px 16px; margin: 8px 0;
+      border-radius: 25px; font-size: 13px; font-weight: 500;
       background: var(--neon-subtle);
       border: 1px solid var(--neon-border);
-      color: var(--muted);
+      color: var(--text-dim);
     }
 
-    .tool-indicator.running { border-color: var(--neon-dim); }
-    .tool-indicator.success { color: var(--good); border-color: rgba(0, 255, 136, 0.4); }
-    .tool-indicator.error { color: var(--bad); border-color: rgba(255, 68, 102, 0.4); }
-
-    .tool-spinner {
-      width: 12px; height: 12px;
-      border: 2px solid var(--neon-border);
-      border-top-color: var(--neon);
-      border-radius: 50%;
-      animation: spin 0.8s linear infinite;
-    }
-
+    .tool-spinner { width: 14px; height: 14px; border: 2px solid var(--neon-border); border-top-color: var(--neon); border-radius: 50%; animation: spin 0.8s linear infinite; }
     @keyframes spin { to { transform: rotate(360deg); } }
 
-    .typing-indicator { display: flex; gap: 4px; padding: 12px 16px; }
-    .typing-indicator span { width: 8px; height: 8px; background: var(--neon); border-radius: 50%; animation: typing 1.4s infinite; }
+    .typing-indicator { display: flex; gap: 6px; padding: 16px 20px; }
+    .typing-indicator span { width: 10px; height: 10px; background: var(--neon); border-radius: 50%; animation: typing 1.4s infinite; }
     .typing-indicator span:nth-child(2) { animation-delay: 0.2s; }
     .typing-indicator span:nth-child(3) { animation-delay: 0.4s; }
+    @keyframes typing { 0%, 60%, 100% { transform: translateY(0); opacity: 0.4; } 30% { transform: translateY(-10px); opacity: 1; } }
 
-    @keyframes typing {
-      0%, 60%, 100% { transform: translateY(0); opacity: 0.4; }
-      30% { transform: translateY(-8px); opacity: 1; }
-    }
-
+    /* Input Area */
     .input-area {
       position: fixed; bottom: 0; left: 0; right: 0;
-      padding: 12px 12px calc(var(--safe-bottom) + 12px);
-      background: linear-gradient(0deg, rgba(0,0,0,0.95) 0%, rgba(0,0,0,0.8) 80%, transparent 100%);
+      padding: 16px 16px calc(var(--safe-bottom) + 16px);
+      background: linear-gradient(0deg, rgba(10,10,10,0.98) 0%, rgba(10,10,10,0.9) 70%, transparent 100%);
       z-index: 100;
     }
 
-    .input-row { display: flex; gap: 10px; align-items: flex-end; }
-    .input-wrap { flex: 1; position: relative; }
+    .input-row { display: flex; gap: 12px; align-items: flex-end; }
 
     .chat-input {
-      width: 100%; min-height: 48px; max-height: 120px;
-      padding: 14px 16px;
+      flex: 1;
+      min-height: 56px; max-height: 140px;
+      padding: 18px 20px;
       border-radius: var(--radius);
-      border: 1px solid var(--neon-border);
+      border: 2px solid var(--neon-border);
       background: var(--bg-card);
       color: var(--text);
-      font-size: 16px; line-height: 1.4;
+      font-size: 17px; line-height: 1.4;
       resize: none; outline: none;
       font-family: inherit;
-      transition: border-color 0.2s, box-shadow 0.2s;
+      transition: all 0.2s;
     }
 
-    .chat-input:focus { border-color: var(--neon-dim); box-shadow: 0 0 20px rgba(0, 255, 136, 0.1); }
+    .chat-input:focus { border-color: var(--neon); box-shadow: 0 0 30px rgba(0, 255, 136, 0.15); }
     .chat-input::placeholder { color: var(--muted); }
 
     .send-btn {
-      width: 48px; height: 48px;
+      width: 56px; height: 56px;
       border-radius: var(--radius);
       border: none;
-      background: var(--neon);
+      background: linear-gradient(135deg, var(--neon) 0%, #00cc66 100%);
       color: #000;
-      font-size: 20px; font-weight: 700;
+      font-size: 24px; font-weight: 700;
       cursor: pointer;
       display: flex; align-items: center; justify-content: center;
       transition: all 0.2s;
-      box-shadow: 0 0 20px var(--neon-glow);
+      box-shadow: 0 4px 20px var(--neon-glow);
     }
 
     .send-btn:active { transform: scale(0.95); }
-    .send-btn:disabled { opacity: 0.5; box-shadow: none; }
 
-    .chart-fab {
+    /* FABs */
+    .fab {
       position: fixed;
-      bottom: calc(var(--safe-bottom) + 80px);
-      right: 16px;
-      width: 56px; height: 56px;
       border-radius: 50%;
-      border: 2px solid var(--neon);
-      background: var(--bg);
-      color: var(--neon);
-      font-size: 24px;
+      border: 2px solid var(--neon-border);
+      background: var(--bg-card);
+      backdrop-filter: blur(20px);
+      color: var(--text);
       display: flex; align-items: center; justify-content: center;
       cursor: pointer;
       z-index: 99;
-      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5), 0 0 30px var(--neon-glow);
+      box-shadow: 0 4px 25px rgba(0, 0, 0, 0.5);
       transition: all 0.3s;
     }
 
-    .chart-fab:active { transform: scale(0.95); }
+    .fab:active { transform: scale(0.92); }
 
-    .chart-modal {
-      position: fixed; inset: 0;
-      background: rgba(0, 0, 0, 0.95);
-      z-index: 1000;
+    .chart-fab {
+      bottom: calc(var(--safe-bottom) + 90px); right: 20px;
+      width: 64px; height: 64px;
+      font-size: 28px;
+      border-color: var(--neon);
+      box-shadow: 0 4px 25px rgba(0, 0, 0, 0.5), 0 0 40px var(--neon-glow);
+    }
+
+    .time-fab {
+      bottom: calc(var(--safe-bottom) + 90px); left: 20px;
+      width: 56px; height: 56px;
+      font-size: 22px;
+    }
+
+    .auto-fab {
+      bottom: calc(var(--safe-bottom) + 165px); left: 20px;
+      width: 56px; height: 56px;
+      font-size: 20px;
+      flex-direction: column;
+      color: var(--muted);
+    }
+
+    .auto-fab.enabled { border-color: var(--warn); color: var(--warn); box-shadow: 0 0 25px rgba(255, 204, 0, 0.3); }
+    .auto-fab-timer { font-size: 9px; font-weight: 700; font-family: 'SF Mono', monospace; margin-top: 2px; }
+
+    .time-fab.has-history { border-color: var(--neon); box-shadow: 0 0 20px var(--neon-glow); }
+
+    /* Panels */
+    .panel {
+      position: fixed;
+      top: calc(var(--safe-top) + 80px);
+      left: 16px; right: 16px;
+      padding: 20px;
+      background: rgba(10, 20, 15, 0.95);
+      border: 2px solid var(--neon-border);
+      border-radius: var(--radius);
+      backdrop-filter: blur(30px);
+      z-index: 200;
       display: none;
       flex-direction: column;
-      opacity: 0;
-      transition: opacity 0.3s;
+      gap: 16px;
+      animation: panelIn 0.3s ease;
     }
 
-    .chart-modal.show { display: flex; opacity: 1; }
+    .panel.show { display: flex; }
+    .panel.warn { border-color: var(--warn); }
 
-    .chart-header {
-      padding: calc(var(--safe-top) + 12px) 16px 12px;
-      display: flex; justify-content: space-between; align-items: center;
-      border-bottom: 1px solid var(--neon-border);
-    }
+    @keyframes panelIn { from { opacity: 0; transform: translateY(-20px) scale(0.95); } to { opacity: 1; transform: translateY(0) scale(1); } }
 
-    .chart-title { font-size: 16px; font-weight: 600; color: var(--neon); }
-    .chart-meta { font-size: 12px; color: var(--muted); }
+    .panel-header { display: flex; align-items: center; justify-content: space-between; }
+    .panel-title { font-size: 18px; font-weight: 700; color: var(--neon); display: flex; align-items: center; gap: 10px; }
+    .panel-close { width: 36px; height: 36px; border-radius: 50%; border: none; background: rgba(255,255,255,0.1); color: var(--text); font-size: 20px; cursor: pointer; }
 
-    .chart-close {
-      width: 40px; height: 40px;
-      border-radius: 50%;
-      border: 1px solid var(--neon-border);
-      background: transparent;
-      color: var(--text);
-      font-size: 24px;
+    .panel-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; }
+    .panel-stat { padding: 14px; background: rgba(0,0,0,0.3); border-radius: var(--radius-sm); text-align: center; }
+    .panel-stat-label { font-size: 11px; text-transform: uppercase; letter-spacing: 1px; color: var(--muted); margin-bottom: 6px; }
+    .panel-stat-value { font-size: 20px; font-weight: 700; color: var(--text); font-family: 'SF Mono', monospace; }
+    .panel-stat-value.warn { color: var(--warn); }
+
+    .snooze-pills { display: flex; gap: 8px; justify-content: center; flex-wrap: wrap; }
+    .snooze-pill { padding: 8px 16px; border-radius: 20px; font-size: 13px; font-weight: 600; background: rgba(255,255,255,0.1); color: var(--text-dim); }
+    .snooze-pill.active { background: var(--warn); color: #000; }
+
+    .panel-buttons { display: flex; gap: 10px; flex-wrap: wrap; }
+    .panel-btn {
+      flex: 1; min-width: 90px;
+      padding: 14px 16px;
+      border-radius: var(--radius-sm);
+      border: 2px solid var(--neon-border);
+      background: var(--neon-subtle);
+      color: var(--neon);
+      font-size: 14px; font-weight: 600;
       cursor: pointer;
-    }
-
-    .chart-body { flex: 1; padding: 16px; display: flex; flex-direction: column; gap: 12px; }
-
-    .chart-controls { display: flex; gap: 8px; overflow-x: auto; padding-bottom: 8px; }
-    .chart-controls::-webkit-scrollbar { display: none; }
-
-    .tf-btn {
-      padding: 8px 16px;
-      border-radius: 20px;
-      border: 1px solid var(--neon-border);
-      background: transparent;
-      color: var(--text-dim);
-      font-size: 13px; font-weight: 500;
-      cursor: pointer;
-      white-space: nowrap;
       transition: all 0.2s;
     }
+    .panel-btn:active { transform: scale(0.96); }
+    .panel-btn.primary { background: var(--warn); color: #000; border-color: var(--warn); }
+    .panel-btn.danger { background: rgba(255,85,102,0.2); color: var(--bad); border-color: var(--bad); }
 
-    .tf-btn.active { background: var(--neon); color: #000; border-color: var(--neon); }
+    /* Time controls */
+    .time-controls { display: flex; align-items: center; gap: 10px; }
+    .time-btn { width: 40px; height: 40px; border-radius: 50%; border: 2px solid var(--neon-border); background: transparent; color: var(--neon); font-size: 14px; cursor: pointer; }
+    .time-btn.play { width: 48px; height: 48px; background: var(--neon); color: #000; border: none; }
+    .time-slider-wrap { flex: 1; }
+    .time-slider { width: 100%; height: 8px; -webkit-appearance: none; background: rgba(255,255,255,0.15); border-radius: 4px; }
+    .time-slider::-webkit-slider-thumb { -webkit-appearance: none; width: 22px; height: 22px; border-radius: 50%; background: var(--neon); cursor: pointer; box-shadow: 0 0 15px var(--neon-glow); }
+    .time-readout { font-size: 12px; color: var(--muted); font-family: 'SF Mono', monospace; text-align: center; margin-top: 6px; }
 
-    .chart-canvas-wrap {
-      flex: 1;
-      border: 1px solid var(--neon-border);
-      border-radius: var(--radius);
-      overflow: hidden;
-      background: rgba(0, 20, 10, 0.5);
-    }
+    .live-badge { display: inline-flex; align-items: center; gap: 6px; padding: 6px 12px; border-radius: 12px; background: rgba(0, 255, 136, 0.15); font-size: 12px; font-weight: 700; color: var(--neon); }
+    .live-badge .dot { width: 8px; height: 8px; border-radius: 50%; background: var(--neon); animation: pulse 1.5s infinite; }
+    .live-badge.paused { background: rgba(255, 204, 0, 0.15); color: var(--warn); }
+    .live-badge.paused .dot { background: var(--warn); animation: none; }
+    @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.4; } }
 
-    .chart-canvas-wrap canvas { width: 100%; height: 100%; }
-
-    .chart-info { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; }
-
-    .chart-stat {
-      text-align: center;
-      padding: 12px 8px;
-      background: var(--bg-card);
-      border-radius: var(--radius-sm);
-      border: 1px solid var(--neon-border);
-    }
-
-    .chart-stat-label { font-size: 10px; text-transform: uppercase; color: var(--muted); margin-bottom: 4px; }
-    .chart-stat-value { font-size: 14px; font-weight: 600; color: var(--text); font-family: 'SF Mono', monospace; }
-    .chart-stat-value.up { color: var(--good); }
-    .chart-stat-value.down { color: var(--bad); }
-
-    .modal-overlay {
+    /* Modal */
+    .modal {
       position: fixed; inset: 0;
       background: rgba(0, 0, 0, 0.9);
       z-index: 1000;
@@ -383,199 +361,277 @@
       align-items: flex-end; justify-content: center;
     }
 
-    .modal-overlay.show { display: flex; }
+    .modal.show { display: flex; }
 
     .modal-sheet {
-      width: 100%; max-width: 500px; max-height: 85vh;
-      background: var(--bg);
-      border-top-left-radius: 24px; border-top-right-radius: 24px;
-      padding: 20px 20px calc(var(--safe-bottom) + 20px);
+      width: 100%; max-width: 480px; max-height: 92vh;
+      background: linear-gradient(180deg, #0d1a14 0%, #0a0f0c 100%);
+      border-top-left-radius: 28px; border-top-right-radius: 28px;
+      border: 1px solid var(--neon-border);
+      border-bottom: none;
+      padding: 0;
+      overflow: hidden;
+      animation: modalUp 0.35s ease;
+    }
+
+    @keyframes modalUp { from { transform: translateY(100%); } to { transform: translateY(0); } }
+
+    .modal-header {
+      padding: 24px 24px 0;
+      position: sticky;
+      top: 0;
+      background: linear-gradient(180deg, #0d1a14 0%, #0d1a14 80%, transparent 100%);
+      z-index: 10;
+    }
+
+    .modal-handle { width: 48px; height: 5px; background: rgba(255,255,255,0.3); border-radius: 3px; margin: 0 auto 20px; }
+    .modal-title { font-size: 26px; font-weight: 700; color: var(--text); margin-bottom: 20px; }
+
+    .modal-body {
+      padding: 0 24px calc(var(--safe-bottom) + 24px);
       overflow-y: auto;
-      animation: slideUp 0.3s ease;
+      max-height: calc(92vh - 100px);
     }
 
-    @keyframes slideUp { from { transform: translateY(100%); } to { transform: translateY(0); } }
-
-    .modal-handle { width: 40px; height: 4px; background: var(--neon-border); border-radius: 2px; margin: 0 auto 20px; }
-    .modal-title { font-size: 20px; font-weight: 700; color: var(--neon); margin-bottom: 24px; }
-
-    .form-group { margin-bottom: 20px; }
-    .form-label { display: block; font-size: 12px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; color: var(--muted); margin-bottom: 8px; }
-
-    .form-input, .form-select {
-      width: 100%;
-      padding: 14px 16px;
-      border-radius: var(--radius-sm);
-      border: 1px solid var(--neon-border);
-      background: var(--bg-card);
-      color: var(--text);
-      font-size: 16px;
-      outline: none;
-      font-family: inherit;
+    /* Tabs */
+    .tabs {
+      display: flex;
+      gap: 6px;
+      padding: 6px;
+      background: rgba(0,0,0,0.3);
+      border-radius: 16px;
+      margin-bottom: 24px;
     }
 
-    .form-input:focus, .form-select:focus { border-color: var(--neon-dim); }
-
-    .form-select {
-      appearance: none;
-      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%2300ff88' d='M6 8L1 3h10z'/%3E%3C/svg%3E");
-      background-repeat: no-repeat;
-      background-position: right 16px center;
-      padding-right: 40px;
-    }
-
-    .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
-
-    .btn { width: 100%; padding: 16px; border-radius: var(--radius); border: none; font-size: 16px; font-weight: 600; cursor: pointer; transition: all 0.2s; }
-    .btn-primary { background: var(--neon); color: #000; }
-    .btn-secondary { background: var(--neon-subtle); color: var(--neon); border: 1px solid var(--neon-border); }
-    .btn-row { display: flex; gap: 12px; margin-top: 24px; }
-    .btn-row .btn { flex: 1; }
-
-    .time-travel {
-      position: fixed;
-      top: calc(var(--safe-top) + 70px);
-      left: 12px; right: 12px;
-      padding: 12px 16px;
-      background: rgba(0, 0, 0, 0.9);
-      border: 1px solid var(--neon-border);
-      border-radius: var(--radius);
-      backdrop-filter: blur(20px);
-      z-index: 200;
-      display: none;
-      flex-direction: column;
-      gap: 10px;
-      animation: slideDown 0.3s ease;
-    }
-
-    .time-travel.show { display: flex; }
-
-    @keyframes slideDown { from { opacity: 0; transform: translateY(-20px); } to { opacity: 1; transform: translateY(0); } }
-
-    .time-travel-header { display: flex; align-items: center; justify-content: space-between; }
-    .time-travel-title { font-size: 12px; font-weight: 600; color: var(--neon); text-transform: uppercase; letter-spacing: 0.5px; }
-
-    .time-travel-close {
-      width: 28px; height: 28px;
-      border-radius: 50%;
+    .tab {
+      flex: 1;
+      padding: 14px 8px;
+      border-radius: 12px;
       border: none;
-      background: var(--neon-subtle);
-      color: var(--text);
-      font-size: 16px;
+      background: transparent;
+      color: var(--muted);
+      font-size: 14px;
+      font-weight: 600;
       cursor: pointer;
+      transition: all 0.2s;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 4px;
     }
 
-    .time-travel-controls { display: flex; align-items: center; gap: 10px; }
+    .tab-icon { font-size: 20px; }
+    .tab.active { background: var(--neon); color: #000; }
 
-    .time-btn {
-      width: 36px; height: 36px;
-      border-radius: 50%;
-      border: 1px solid var(--neon-border);
-      background: var(--neon-subtle);
-      color: var(--neon);
+    .tab-content { display: none; }
+    .tab-content.active { display: block; }
+
+    /* Form */
+    .form-section {
+      background: rgba(0,0,0,0.25);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: var(--radius);
+      padding: 20px;
+      margin-bottom: 20px;
+    }
+
+    .form-section-title {
+      font-size: 16px;
+      font-weight: 700;
+      color: var(--text);
+      margin-bottom: 16px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .form-group { margin-bottom: 18px; }
+    .form-group:last-child { margin-bottom: 0; }
+
+    .form-label {
+      display: flex;
+      align-items: center;
+      gap: 8px;
       font-size: 14px;
-      cursor: pointer;
-      display: flex; align-items: center; justify-content: center;
+      font-weight: 600;
+      color: var(--text-dim);
+      margin-bottom: 10px;
+    }
+
+    .form-hint { font-size: 12px; color: var(--muted); margin-top: 8px; line-height: 1.4; }
+
+    .form-input, .form-select, .form-textarea {
+      width: 100%;
+      padding: 16px 18px;
+      border-radius: var(--radius-sm);
+      border: 2px solid rgba(255,255,255,0.12);
+      background: var(--bg-input);
+      color: var(--text);
+      font-size: 16px;
+      font-family: inherit;
       transition: all 0.2s;
     }
 
-    .time-btn:active { transform: scale(0.95); background: rgba(0, 255, 136, 0.2); }
-    .time-btn.play { width: 44px; height: 44px; background: var(--neon); color: #000; border: none; font-size: 16px; }
-
-    .time-slider-wrap { flex: 1; display: flex; flex-direction: column; gap: 4px; }
-
-    .time-slider {
-      width: 100%; height: 6px;
-      -webkit-appearance: none; appearance: none;
-      background: var(--neon-border);
-      border-radius: 3px;
+    .form-input:focus, .form-select:focus, .form-textarea:focus {
       outline: none;
+      border-color: var(--neon);
+      box-shadow: 0 0 20px rgba(0, 255, 136, 0.1);
     }
 
-    .time-slider::-webkit-slider-thumb { -webkit-appearance: none; width: 18px; height: 18px; border-radius: 50%; background: var(--neon); cursor: pointer; box-shadow: 0 0 10px var(--neon-glow); }
-    .time-slider::-moz-range-thumb { width: 18px; height: 18px; border-radius: 50%; background: var(--neon); cursor: pointer; border: none; }
+    .form-input::placeholder, .form-textarea::placeholder { color: var(--muted); }
 
-    .time-readout { font-size: 11px; color: var(--muted); font-family: 'SF Mono', monospace; text-align: center; }
+    .form-textarea { min-height: 100px; resize: vertical; font-family: 'SF Mono', Monaco, monospace; font-size: 14px; line-height: 1.5; }
 
-    .live-badge {
-      display: inline-flex; align-items: center; gap: 5px;
-      padding: 4px 10px; border-radius: 12px;
-      background: rgba(0, 255, 136, 0.15);
-      border: 1px solid var(--neon-dim);
-      font-size: 11px; font-weight: 600;
-      color: var(--neon);
-    }
-
-    .live-badge.paused { background: rgba(255, 204, 0, 0.15); border-color: var(--warn); color: var(--warn); }
-
-    .live-badge .dot { width: 6px; height: 6px; border-radius: 50%; background: var(--neon); animation: pulse 1.5s infinite; }
-    .live-badge.paused .dot { background: var(--warn); animation: none; }
-
-    .time-fab {
-      position: fixed;
-      bottom: calc(var(--safe-bottom) + 80px);
-      left: 16px;
-      width: 48px; height: 48px;
-      border-radius: 50%;
-      border: 1px solid var(--neon-border);
-      background: var(--bg);
-      color: var(--neon);
-      font-size: 18px;
-      display: flex; align-items: center; justify-content: center;
+    .form-select {
+      appearance: none;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 16 16'%3E%3Cpath fill='%2300ff88' d='M8 11L3 5h10z'/%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right 16px center;
+      padding-right: 48px;
       cursor: pointer;
-      z-index: 99;
-      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
-      transition: all 0.3s;
     }
 
-    .time-fab:active { transform: scale(0.95); }
-    .time-fab.has-history { border-color: var(--neon-dim); box-shadow: 0 0 15px var(--neon-glow); }
+    .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
 
-    .toast-container {
-      position: fixed;
-      top: calc(var(--safe-top) + 70px);
-      left: 12px; right: 12px;
-      z-index: 2000;
+    /* Key badge */
+    .key-badge {
+      font-size: 11px;
+      font-weight: 700;
+      padding: 4px 10px;
+      border-radius: 6px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+    .key-badge.set { background: rgba(0, 255, 136, 0.2); color: var(--good); }
+    .key-badge.unset { background: rgba(255, 85, 102, 0.2); color: var(--bad); }
+
+    /* Toggle */
+    .toggle-row {
       display: flex;
-      flex-direction: column;
-      gap: 8px;
-      pointer-events: none;
+      align-items: center;
+      justify-content: space-between;
+      padding: 16px 0;
+      border-bottom: 1px solid rgba(255,255,255,0.08);
     }
+    .toggle-row:last-child { border-bottom: none; }
+    .toggle-label { font-size: 15px; font-weight: 500; color: var(--text); }
 
-    .toast {
-      padding: 14px 16px;
+    .toggle {
+      width: 56px; height: 32px;
+      background: rgba(255,255,255,0.15);
+      border-radius: 16px;
+      position: relative;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+    .toggle.active { background: var(--neon); }
+    .toggle::after {
+      content: '';
+      position: absolute;
+      width: 26px; height: 26px;
+      background: white;
+      border-radius: 50%;
+      top: 3px; left: 3px;
+      transition: transform 0.2s;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+    }
+    .toggle.active::after { transform: translateX(24px); }
+
+    /* Buttons */
+    .btn {
+      width: 100%;
+      padding: 18px 24px;
       border-radius: var(--radius-sm);
-      background: var(--bg-card);
-      border: 1px solid var(--neon-border);
-      backdrop-filter: blur(10px);
-      display: flex; align-items: center; gap: 10px;
-      font-size: 14px;
-      animation: toastIn 0.3s ease, toastOut 0.3s ease 2.7s forwards;
-      pointer-events: auto;
+      border: none;
+      font-size: 16px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.2s;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
     }
 
+    .btn:active { transform: scale(0.98); }
+
+    .btn-primary { background: linear-gradient(135deg, var(--neon) 0%, #00cc66 100%); color: #000; box-shadow: 0 4px 20px var(--neon-glow); }
+    .btn-secondary { background: rgba(255,255,255,0.1); color: var(--text); border: 2px solid rgba(255,255,255,0.15); }
+    .btn-danger { background: rgba(255,85,102,0.2); color: var(--bad); border: 2px solid var(--bad); }
+    .btn-sm { padding: 12px 16px; font-size: 14px; }
+
+    .btn-row { display: flex; gap: 12px; margin-top: 24px; }
+    .btn-row .btn { flex: 1; }
+
+    /* Export section */
+    .export-card {
+      background: linear-gradient(135deg, rgba(0,255,136,0.08) 0%, rgba(0,255,136,0.02) 100%);
+      border: 2px solid var(--neon-border);
+      border-radius: var(--radius);
+      padding: 20px;
+      margin-bottom: 20px;
+    }
+
+    .export-title { font-size: 16px; font-weight: 700; color: var(--neon); margin-bottom: 12px; }
+
+    /* Chart Modal */
+    .chart-modal {
+      position: fixed; inset: 0;
+      background: rgba(0, 0, 0, 0.98);
+      z-index: 1000;
+      display: none;
+      flex-direction: column;
+    }
+    .chart-modal.show { display: flex; }
+
+    .chart-header {
+      padding: calc(var(--safe-top) + 16px) 20px 16px;
+      display: flex; justify-content: space-between; align-items: center;
+      border-bottom: 1px solid var(--neon-border);
+    }
+    .chart-title { font-size: 20px; font-weight: 700; color: var(--neon); }
+    .chart-meta { font-size: 13px; color: var(--muted); margin-top: 4px; }
+    .chart-close { width: 44px; height: 44px; border-radius: 50%; border: 2px solid var(--neon-border); background: transparent; color: var(--text); font-size: 24px; cursor: pointer; }
+
+    .chart-body { flex: 1; padding: 20px; display: flex; flex-direction: column; gap: 16px; }
+
+    .chart-controls { display: flex; gap: 10px; overflow-x: auto; padding-bottom: 8px; }
+    .tf-btn { padding: 12px 20px; border-radius: 25px; border: 2px solid var(--neon-border); background: transparent; color: var(--text-dim); font-size: 14px; font-weight: 600; cursor: pointer; }
+    .tf-btn.active { background: var(--neon); color: #000; border-color: var(--neon); }
+
+    .chart-canvas-wrap { flex: 1; border: 1px solid var(--neon-border); border-radius: var(--radius); overflow: hidden; background: rgba(0, 20, 10, 0.5); min-height: 200px; }
+    .chart-canvas-wrap canvas { width: 100%; height: 100%; }
+
+    .chart-stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; }
+    .chart-stat { text-align: center; padding: 14px 10px; background: var(--bg-card); border-radius: var(--radius-sm); }
+    .chart-stat-label { font-size: 11px; text-transform: uppercase; color: var(--muted); margin-bottom: 6px; letter-spacing: 0.5px; }
+    .chart-stat-value { font-size: 16px; font-weight: 700; color: var(--text); font-family: 'SF Mono', monospace; }
+    .chart-stat-value.up { color: var(--good); }
+    .chart-stat-value.down { color: var(--bad); }
+
+    /* Toast */
+    .toast-container { position: fixed; top: calc(var(--safe-top) + 80px); left: 16px; right: 16px; z-index: 2000; display: flex; flex-direction: column; gap: 10px; pointer-events: none; }
+    .toast { padding: 16px 20px; border-radius: var(--radius-sm); background: var(--bg-card); border: 2px solid var(--neon-border); backdrop-filter: blur(20px); display: flex; align-items: center; gap: 12px; font-size: 15px; font-weight: 500; animation: toastIn 0.3s ease, toastOut 0.3s ease 2.7s forwards; pointer-events: auto; }
     .toast.success { border-color: var(--good); }
     .toast.error { border-color: var(--bad); }
     .toast.warning { border-color: var(--warn); }
-
-    .toast-icon { font-size: 18px; }
-
+    .toast-icon { font-size: 20px; }
     @keyframes toastIn { from { opacity: 0; transform: translateY(-20px); } to { opacity: 1; transform: translateY(0); } }
-    @keyframes toastOut { from { opacity: 1; } to { opacity: 0; transform: translateY(-10px); } }
+    @keyframes toastOut { from { opacity: 1; } to { opacity: 0; } }
 
-    .empty-state { text-align: center; padding: 60px 20px; color: var(--muted); }
-    .empty-state-icon { font-size: 48px; margin-bottom: 16px; opacity: 0.5; }
-    .empty-state-text { font-size: 15px; line-height: 1.5; }
+    .empty-state { text-align: center; padding: 80px 24px; color: var(--muted); }
+    .empty-state-icon { font-size: 64px; margin-bottom: 20px; opacity: 0.6; }
+    .empty-state-text { font-size: 17px; line-height: 1.6; }
+    .empty-state-text span { color: var(--neon); font-weight: 600; }
 
-    ::-webkit-scrollbar { width: 4px; height: 4px; }
+    ::-webkit-scrollbar { width: 6px; height: 6px; }
     ::-webkit-scrollbar-track { background: transparent; }
-    ::-webkit-scrollbar-thumb { background: var(--neon-border); border-radius: 2px; }
+    ::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.15); border-radius: 3px; }
 
     @media (min-width: 768px) {
-      .timeline-container { padding: 0 24px 140px; }
-      .input-area { padding: 16px 24px calc(var(--safe-bottom) + 16px); }
+      .timeline-container { padding: 0 32px 160px; }
       .message { max-width: 70%; }
-      .modal-sheet { border-radius: 24px; margin-bottom: 20px; }
+      .modal-sheet { border-radius: 28px; margin: 20px; max-height: 85vh; border: 1px solid var(--neon-border); }
     }
   </style>
 </head>
@@ -583,7 +639,7 @@
   <div class="app">
     <header>
       <div class="brand">
-        <div class="logo"></div>
+        <div class="logo">&nbsp;</div>
         <div class="brand-text">
           <h1>HashTrade</h1>
           <div class="status">
@@ -593,7 +649,7 @@
         </div>
       </div>
       <div class="header-actions">
-        <button class="icon-btn" id="btnClear" title="Clear">🗑</button>
+        <button class="icon-btn" id="btnClear" title="Clear">🗑️</button>
         <button class="icon-btn" id="btnSettings" title="Settings">⚙️</button>
       </div>
     </header>
@@ -601,51 +657,77 @@
     <div class="timeline-container" id="timelineContainer">
       <div class="timeline" id="timeline">
         <div class="empty-state" id="emptyState">
-          <div class="empty-state-icon">📊</div>
+          <div class="empty-state-icon">🚀</div>
           <div class="empty-state-text">
-            Start trading with AI<br>
-            <span style="color: var(--neon);">Try: "buy 10 USDT of BTC"</span>
+            Your AI trading assistant is ready<br><br>
+            <span>Try: "What's the price of BTC?"</span>
           </div>
         </div>
       </div>
     </div>
 
-    <button class="time-fab" id="timeFab" title="Time Travel">⏱</button>
-    <button class="chart-fab" id="chartFab">📈</button>
+    <button class="fab auto-fab" id="autoFab" title="Auto-Trigger">
+      <span>⏰</span>
+      <span class="auto-fab-timer" id="autoFabTimer">--</span>
+    </button>
+    <button class="fab time-fab" id="timeFab" title="Time Travel">⏱️</button>
+    <button class="fab chart-fab" id="chartFab">📈</button>
 
-    <div class="time-travel" id="timeTravel">
-      <div class="time-travel-header">
-        <span class="time-travel-title">⏱ Time Travel</span>
+    <!-- Auto Panel -->
+    <div class="panel warn" id="autoPanel">
+      <div class="panel-header">
+        <span class="panel-title" style="color: var(--warn);">⏰ Auto-Trigger</span>
+        <button class="panel-close" id="autoPanelClose">×</button>
+      </div>
+      <div class="panel-grid">
+        <div class="panel-stat"><div class="panel-stat-label">Status</div><div class="panel-stat-value" id="autoStatusText">Off</div></div>
+        <div class="panel-stat"><div class="panel-stat-label">Next</div><div class="panel-stat-value warn" id="autoNextIn">--:--</div></div>
+        <div class="panel-stat"><div class="panel-stat-label">Count</div><div class="panel-stat-value" id="autoTriggerCount">0</div></div>
+        <div class="panel-stat"><div class="panel-stat-label">Interval</div><div class="panel-stat-value" id="autoCurrentInterval">5m</div></div>
+      </div>
+      <div class="snooze-pills" id="snoozePattern">
+        <span class="snooze-pill active">5m</span>
+        <span class="snooze-pill">10m</span>
+        <span class="snooze-pill">20m</span>
+        <span class="snooze-pill">25m</span>
+      </div>
+      <div class="panel-buttons">
+        <button class="panel-btn primary" id="btnAutoToggle">Enable</button>
+        <button class="panel-btn" id="btnAutoTriggerNow">Now</button>
+        <button class="panel-btn" id="btnAutoPause30">Pause</button>
+      </div>
+    </div>
+
+    <!-- Time Panel -->
+    <div class="panel" id="timeTravel">
+      <div class="panel-header">
+        <span class="panel-title">Time Travel</span>
         <div style="display: flex; align-items: center; gap: 10px;">
-          <div class="live-badge" id="liveBadge">
-            <span class="dot"></span>
-            <span id="liveText">LIVE</span>
-          </div>
-          <button class="time-travel-close" id="timeTravelClose">×</button>
+          <div class="live-badge" id="liveBadge"><span class="dot"></span><span id="liveText">LIVE</span></div>
+          <button class="panel-close" id="timeTravelClose">×</button>
         </div>
       </div>
-      <div class="time-travel-controls">
-        <button class="time-btn" id="btnPrev">⟨</button>
+      <div class="time-controls">
+        <button class="time-btn" id="btnPrev">◀</button>
         <button class="time-btn play" id="btnPlay">▶</button>
-        <button class="time-btn" id="btnNext">⟩</button>
+        <button class="time-btn" id="btnNext">▶</button>
         <div class="time-slider-wrap">
           <input type="range" class="time-slider" id="timeSlider" min="0" max="0" value="0" />
-          <div class="time-readout" id="timeReadout">No events yet</div>
+          <div class="time-readout" id="timeReadout">No events</div>
         </div>
-        <button class="time-btn" id="btnLive" title="Go to Live">⟲</button>
+        <button class="time-btn" id="btnLive">⟲</button>
       </div>
     </div>
 
     <div class="input-area">
       <div class="input-row">
-        <div class="input-wrap">
-          <textarea class="chat-input" id="chatInput" placeholder="Ask anything... buy BTC, check balance, change theme" rows="1"></textarea>
-        </div>
+        <textarea class="chat-input" id="chatInput" placeholder="Ask anything..." rows="1"></textarea>
         <button class="send-btn" id="btnSend">↑</button>
       </div>
     </div>
   </div>
 
+  <!-- Chart Modal -->
   <div class="chart-modal" id="chartModal">
     <div class="chart-header">
       <div>
@@ -663,10 +745,8 @@
         <button class="tf-btn" data-tf="4h">4H</button>
         <button class="tf-btn" data-tf="1d">1D</button>
       </div>
-      <div class="chart-canvas-wrap">
-        <canvas id="chartCanvas"></canvas>
-      </div>
-      <div class="chart-info">
+      <div class="chart-canvas-wrap"><canvas id="chartCanvas"></canvas></div>
+      <div class="chart-stats">
         <div class="chart-stat"><div class="chart-stat-label">Price</div><div class="chart-stat-value" id="statPrice">--</div></div>
         <div class="chart-stat"><div class="chart-stat-label">24h</div><div class="chart-stat-value" id="stat24h">--</div></div>
         <div class="chart-stat"><div class="chart-stat-label">High</div><div class="chart-stat-value" id="statHigh">--</div></div>
@@ -675,21 +755,200 @@
     </div>
   </div>
 
-  <div class="modal-overlay" id="settingsModal">
+  <!-- Settings Modal -->
+  <div class="modal" id="settingsModal">
     <div class="modal-sheet">
-      <div class="modal-handle"></div>
-      <div class="modal-title">⚙️ Settings</div>
-      <div class="form-group"><label class="form-label">WebSocket Server</label><input type="text" class="form-input" id="settingsWsUrl" value="ws://127.0.0.1:8090" /></div>
-      <div class="form-group"><label class="form-label">Exchange</label><select class="form-select" id="settingsExchange"><option value="bybit">Bybit</option><option value="binance">Binance</option><option value="okx">OKX</option><option value="kucoin">KuCoin</option><option value="kraken">Kraken</option></select></div>
-      <div class="form-group"><label class="form-label">API Key</label><input type="text" class="form-input" id="settingsApiKey" placeholder="Optional" autocomplete="off" /></div>
-      <div class="form-group"><label class="form-label">API Secret</label><input type="password" class="form-input" id="settingsApiSecret" placeholder="Optional" autocomplete="off" /></div>
-      <div class="form-row">
-        <div class="form-group"><label class="form-label">Symbol</label><input type="text" class="form-input" id="settingsSymbol" value="BTC/USDT" /></div>
-        <div class="form-group"><label class="form-label">Timeframe</label><select class="form-select" id="settingsTimeframe"><option value="1m">1m</option><option value="5m">5m</option><option value="15m">15m</option><option value="1h">1h</option></select></div>
+      <div class="modal-header">
+        <div class="modal-handle"></div>
+        <div class="modal-title">⚙️ Settings</div>
+        
+        <div class="tabs">
+          <button class="tab active" data-tab="connection"><span class="tab-icon">🔌</span>Connect</button>
+          <button class="tab" data-tab="agent"><span class="tab-icon">🤖</span>Agent</button>
+          <button class="tab" data-tab="exchange"><span class="tab-icon">💱</span>Exchange</button>
+          <button class="tab" data-tab="export"><span class="tab-icon">📤</span>Share</button>
+        </div>
       </div>
-      <div class="btn-row">
-        <button class="btn btn-secondary" id="btnSettingsCancel">Cancel</button>
-        <button class="btn btn-primary" id="btnSettingsSave">Save & Connect</button>
+
+      <div class="modal-body">
+        <!-- Connection Tab -->
+        <div class="tab-content active" id="tab-connection">
+          <div class="form-section">
+            <div class="form-section-title">🌐 Server</div>
+            <div class="form-group">
+              <label class="form-label">WebSocket URL</label>
+              <input type="text" class="form-input" id="settingsWsUrl" value="ws://127.0.0.1:8090" />
+            </div>
+          </div>
+          
+          <div class="form-section">
+            <div class="form-section-title">🤖 AI Model</div>
+            <div class="form-group">
+              <label class="form-label">Provider</label>
+              <select class="form-select" id="settingsProvider">
+                <option value="bedrock">AWS Bedrock</option>
+                <option value="anthropic">Anthropic Claude</option>
+                <option value="openai">OpenAI GPT</option>
+                <option value="ollama">Ollama (Local)</option>
+              </select>
+            </div>
+            
+            <div class="form-group" id="anthropicKeyGroup" style="display:none;">
+              <label class="form-label">Anthropic API Key <span class="key-badge unset" id="anthropicKeyStatus">Not Set</span></label>
+              <input type="password" class="form-input" id="settingsAnthropicKey" placeholder="sk-ant-..." />
+            </div>
+            
+            <div class="form-group" id="openaiKeyGroup" style="display:none;">
+              <label class="form-label">OpenAI API Key <span class="key-badge unset" id="openaiKeyStatus">Not Set</span></label>
+              <input type="password" class="form-input" id="settingsOpenaiKey" placeholder="sk-..." />
+            </div>
+            
+            <div class="form-group" id="ollamaGroup" style="display:none;">
+              <label class="form-label">Ollama Host</label>
+              <input type="text" class="form-input" id="settingsOllamaHost" value="http://localhost:11434" />
+            </div>
+            
+            <div class="form-group">
+              <label class="form-label">Model ID (Optional)</label>
+              <input type="text" class="form-input" id="settingsModelId" placeholder="Leave empty for default" />
+              <div class="form-hint">e.g. claude-sonnet-4-20250514, gpt-4o</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Agent Tab -->
+        <div class="tab-content" id="tab-agent">
+          <div class="form-section">
+            <div class="form-section-title">📝 Custom Instructions</div>
+            <div class="form-group">
+              <label class="form-label">System Prompt</label>
+              <textarea class="form-textarea" id="settingsSystemPrompt" rows="5" placeholder="Add custom trading rules, preferences, or instructions..."></textarea>
+              <div class="form-hint">These instructions are added to the base trading agent prompt.</div>
+            </div>
+          </div>
+          
+          <div class="form-section">
+            <div class="form-section-title">⏰ Auto-Trigger</div>
+            <div class="toggle-row">
+              <span class="toggle-label">Enable Auto Market Checks</span>
+              <div class="toggle" id="toggleAutoTrigger"></div>
+            </div>
+            <div class="form-group" style="margin-top: 16px;">
+              <label class="form-label">Watch Symbols</label>
+              <input type="text" class="form-input" id="settingsSymbols" value="BTC/USDT,ETH/USDT" />
+              <div class="form-hint">Comma-separated list. Agent will check these periodically.</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Exchange Tab -->
+        <div class="tab-content" id="tab-exchange">
+          <div class="form-section">
+            <div class="form-section-title">💱 Exchange API</div>
+            <div class="form-group">
+              <label class="form-label">Exchange</label>
+              <select class="form-select" id="settingsExchange">
+                <option value="bybit">Bybit</option>
+                <option value="binance">Binance</option>
+                <option value="okx">OKX</option>
+                <option value="kucoin">KuCoin</option>
+                <option value="kraken">Kraken</option>
+              </select>
+            </div>
+            
+            <div class="form-group">
+              <label class="form-label">API Key <span class="key-badge unset" id="ccxtKeyStatus">Not Set</span></label>
+              <input type="text" class="form-input" id="settingsApiKey" placeholder="Your exchange API key" autocomplete="off" />
+            </div>
+            
+            <div class="form-group">
+              <label class="form-label">API Secret</label>
+              <input type="password" class="form-input" id="settingsApiSecret" placeholder="Your exchange API secret" autocomplete="off" />
+            </div>
+          </div>
+          
+          <div class="form-section">
+            <div class="form-section-title">📊 Chart Settings</div>
+            <div class="form-row">
+              <div class="form-group">
+                <label class="form-label">Default Symbol</label>
+                <input type="text" class="form-input" id="settingsSymbol" value="BTC/USDT" />
+              </div>
+              <div class="form-group">
+                <label class="form-label">Timeframe</label>
+                <select class="form-select" id="settingsTimeframe">
+                  <option value="1m">1 minute</option>
+                  <option value="5m">5 minutes</option>
+                  <option value="15m">15 minutes</option>
+                  <option value="1h">1 hour</option>
+                </select>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Export Tab -->
+        <div class="tab-content" id="tab-export">
+          <div class="export-card">
+            <div class="export-title">🔗 Share Your Config</div>
+            <p style="font-size: 14px; color: var(--text-dim); margin-bottom: 16px; line-height: 1.5;">
+              Generate a secure link to share your settings with another device or backup.
+            </p>
+            
+            <div class="toggle-row">
+              <span class="toggle-label">Include API Keys</span>
+              <div class="toggle" id="toggleIncludeKeys"></div>
+            </div>
+            
+            <div class="toggle-row">
+              <span class="toggle-label">🔐 Encrypt with Password</span>
+              <div class="toggle active" id="toggleEncrypt"></div>
+            </div>
+            
+            <div class="form-group" id="encryptPasswordGroup" style="margin-top: 16px;">
+              <label class="form-label">Password</label>
+              <div style="display: flex; gap: 10px;">
+                <input type="password" class="form-input" id="exportPassword" placeholder="Enter password" style="flex: 1;" />
+                <button class="btn btn-secondary btn-sm" onclick="generatePassword()" style="width: auto; padding: 16px 20px;">🎲</button>
+              </div>
+            </div>
+            
+            <button class="btn btn-primary" onclick="generateShareLink()" style="margin-top: 16px;">📤 Generate Link</button>
+            
+            <div id="shareLinkContainer" style="display: none; margin-top: 16px;">
+              <div class="form-group">
+                <label class="form-label">Your Link</label>
+                <div style="display: flex; gap: 10px;">
+                  <input type="text" class="form-input" id="shareLinkInput" readonly style="font-size: 12px;" />
+                  <button class="btn btn-secondary btn-sm" onclick="copyShareLink()" style="width: auto; padding: 16px 20px;">📋</button>
+                </div>
+              </div>
+            </div>
+          </div>
+          
+          <div class="form-section">
+            <div class="form-section-title">📥 Import Config</div>
+            <div class="form-group">
+              <label class="form-label">Paste Link or Config</label>
+              <textarea class="form-textarea" id="importConfig" rows="3" placeholder="Paste URL or encrypted config..."></textarea>
+            </div>
+            <div class="form-group" id="importPasswordGroup" style="display: none;">
+              <label class="form-label">Decryption Password</label>
+              <input type="password" class="form-input" id="importPassword" placeholder="Enter password" />
+            </div>
+            <button class="btn btn-secondary" onclick="importConfig()">📥 Import</button>
+          </div>
+          
+          <div class="form-section">
+            <div class="form-section-title">🗑️ Reset</div>
+            <button class="btn btn-danger" onclick="clearAllData()">Clear All Local Data</button>
+          </div>
+        </div>
+
+        <div class="btn-row">
+          <button class="btn btn-secondary" id="btnSettingsCancel">Cancel</button>
+          <button class="btn btn-primary" id="btnSettingsSave">💾 Save</button>
+        </div>
       </div>
     </div>
   </div>
@@ -697,20 +956,15 @@
   <div class="toast-container" id="toastContainer"></div>
 
   <script>
-    marked.setOptions({
-      highlight: (code, lang) => {
-        try { if (lang && hljs.getLanguage(lang)) return hljs.highlight(code, {language: lang}).value; return hljs.highlightAuto(code).value; } catch { return code; }
-      },
-      breaks: true, gfm: true
-    });
+    marked.setOptions({ highlight: (code, lang) => { try { return lang && hljs.getLanguage(lang) ? hljs.highlight(code, {language: lang}).value : hljs.highlightAuto(code).value; } catch { return code; } }, breaks: true, gfm: true });
 
     const state = {
       ws: null, connected: false,
-      settings: { wsUrl: 'ws://127.0.0.1:8090', exchange: 'bybit', apiKey: '', apiSecret: '', symbol: 'BTC/USDT', timeframe: '1m' },
+      settings: { wsUrl: 'ws://127.0.0.1:8090', provider: 'bedrock', anthropicKey: '', openaiKey: '', ollamaHost: 'http://localhost:11434', modelId: '', systemPrompt: '', autoTrigger: true, symbols: 'BTC/USDT,ETH/USDT', exchange: 'bybit', apiKey: '', apiSecret: '', symbol: 'BTC/USDT', timeframe: '1m' },
       chart: { ohlcv: [], symbol: 'BTC/USDT', timeframe: '1m' },
-      turns: new Map(),
-      historyItems: [],
-      streamEvents: [], streamSnaps: [], nowIndex: 0, playing: false, playTimer: null, isLive: true
+      turns: new Map(), historyItems: [],
+      streamEvents: [], streamSnaps: [], nowIndex: 0, playing: false, playTimer: null, isLive: true,
+      autoTrigger: { enabled: false, nextTriggerIn: 0, triggerCount: 0, currentInterval: 5, snoozeIndex: 0, snoozePattern: [5, 10, 20, 25], paused: false }
     };
 
     const els = {
@@ -729,143 +983,143 @@
       timeSlider: document.getElementById('timeSlider'),
       timeReadout: document.getElementById('timeReadout'),
       liveBadge: document.getElementById('liveBadge'),
-      liveText: document.getElementById('liveText')
+      liveText: document.getElementById('liveText'),
+      autoFab: document.getElementById('autoFab'),
+      autoFabTimer: document.getElementById('autoFabTimer'),
+      autoPanel: document.getElementById('autoPanel'),
+      autoStatusText: document.getElementById('autoStatusText'),
+      autoNextIn: document.getElementById('autoNextIn'),
+      autoTriggerCount: document.getElementById('autoTriggerCount'),
+      autoCurrentInterval: document.getElementById('autoCurrentInterval'),
+      snoozePattern: document.getElementById('snoozePattern')
     };
 
+    // Encryption
+    async function deriveKey(password, salt) { const km = await crypto.subtle.importKey('raw', new TextEncoder().encode(password), 'PBKDF2', false, ['deriveBits', 'deriveKey']); return crypto.subtle.deriveKey({ name: 'PBKDF2', salt, iterations: 100000, hash: 'SHA-256' }, km, { name: 'AES-GCM', length: 256 }, false, ['encrypt', 'decrypt']); }
+    async function encryptData(text, password) { const salt = crypto.getRandomValues(new Uint8Array(16)), iv = crypto.getRandomValues(new Uint8Array(12)); const key = await deriveKey(password, salt); const ct = await crypto.subtle.encrypt({ name: 'AES-GCM', iv }, key, new TextEncoder().encode(text)); const combined = new Uint8Array(salt.length + iv.length + ct.byteLength); combined.set(salt, 0); combined.set(iv, 16); combined.set(new Uint8Array(ct), 28); return btoa(String.fromCharCode(...combined)); }
+    async function decryptData(b64, password) { const combined = Uint8Array.from(atob(b64), c => c.charCodeAt(0)); const key = await deriveKey(password, combined.slice(0, 16)); const dec = await crypto.subtle.decrypt({ name: 'AES-GCM', iv: combined.slice(16, 28) }, key, combined.slice(28)); return new TextDecoder().decode(dec); }
+    function generatePassword() { const chars = 'ABCDEFGHJKMNPQRSTUVWXYZabcdefghjkmnpqrstuvwxyz23456789!@#$%'; let pw = ''; const arr = new Uint32Array(16); crypto.getRandomValues(arr); for (let i = 0; i < 16; i++) pw += chars[arr[i] % chars.length]; const inp = document.getElementById('exportPassword'); inp.type = 'text'; inp.value = pw; navigator.clipboard.writeText(pw); showToast('Password copied!', 'success'); setTimeout(() => inp.type = 'password', 3000); }
+
+    // Settings
     function loadSettings() {
-      try { const s = localStorage.getItem('hashtradeSettings'); if (s) Object.assign(state.settings, JSON.parse(s)); } catch {}
+      try { const s = localStorage.getItem('hashtradeConfig'); if (s) Object.assign(state.settings, JSON.parse(s)); } catch {}
       document.getElementById('settingsWsUrl').value = state.settings.wsUrl;
+      document.getElementById('settingsProvider').value = state.settings.provider;
+      document.getElementById('settingsAnthropicKey').value = state.settings.anthropicKey;
+      document.getElementById('settingsOpenaiKey').value = state.settings.openaiKey;
+      document.getElementById('settingsOllamaHost').value = state.settings.ollamaHost;
+      document.getElementById('settingsModelId').value = state.settings.modelId;
+      document.getElementById('settingsSystemPrompt').value = state.settings.systemPrompt;
+      document.getElementById('settingsSymbols').value = state.settings.symbols;
       document.getElementById('settingsExchange').value = state.settings.exchange;
       document.getElementById('settingsApiKey').value = state.settings.apiKey;
       document.getElementById('settingsApiSecret').value = state.settings.apiSecret;
       document.getElementById('settingsSymbol').value = state.settings.symbol;
       document.getElementById('settingsTimeframe').value = state.settings.timeframe;
-      state.chart.symbol = state.settings.symbol;
-      state.chart.timeframe = state.settings.timeframe;
+      if (state.settings.autoTrigger) document.getElementById('toggleAutoTrigger').classList.add('active');
+      updateKeyStatus(); updateProviderFields();
+      state.chart.symbol = state.settings.symbol; state.chart.timeframe = state.settings.timeframe;
     }
 
     function saveSettings() {
       state.settings.wsUrl = document.getElementById('settingsWsUrl').value;
+      state.settings.provider = document.getElementById('settingsProvider').value;
+      state.settings.anthropicKey = document.getElementById('settingsAnthropicKey').value;
+      state.settings.openaiKey = document.getElementById('settingsOpenaiKey').value;
+      state.settings.ollamaHost = document.getElementById('settingsOllamaHost').value;
+      state.settings.modelId = document.getElementById('settingsModelId').value;
+      state.settings.systemPrompt = document.getElementById('settingsSystemPrompt').value;
+      state.settings.autoTrigger = document.getElementById('toggleAutoTrigger').classList.contains('active');
+      state.settings.symbols = document.getElementById('settingsSymbols').value;
       state.settings.exchange = document.getElementById('settingsExchange').value;
       state.settings.apiKey = document.getElementById('settingsApiKey').value;
       state.settings.apiSecret = document.getElementById('settingsApiSecret').value;
       state.settings.symbol = document.getElementById('settingsSymbol').value;
       state.settings.timeframe = document.getElementById('settingsTimeframe').value;
-      localStorage.setItem('hashtradeSettings', JSON.stringify(state.settings));
-      state.chart.symbol = state.settings.symbol;
-      state.chart.timeframe = state.settings.timeframe;
-      closeSettings();
-      connect();
+      localStorage.setItem('hashtradeConfig', JSON.stringify(state.settings));
+      state.chart.symbol = state.settings.symbol; state.chart.timeframe = state.settings.timeframe;
+      closeSettings(); connect();
     }
 
-    function showToast(message, type = 'info') {
-      const icons = { success: '✓', error: '✗', warning: '⚠', info: 'ℹ' };
-      const toast = document.createElement('div');
-      toast.className = `toast ${type}`;
-      toast.innerHTML = `<span class="toast-icon">${icons[type] || '•'}</span><span>${message}</span>`;
-      els.toastContainer.appendChild(toast);
-      setTimeout(() => toast.remove(), 3000);
+    function updateKeyStatus() {
+      const as = document.getElementById('anthropicKeyStatus'), os = document.getElementById('openaiKeyStatus'), cs = document.getElementById('ccxtKeyStatus');
+      as.className = 'key-badge ' + (state.settings.anthropicKey ? 'set' : 'unset'); as.textContent = state.settings.anthropicKey ? '✓ Set' : 'Not Set';
+      os.className = 'key-badge ' + (state.settings.openaiKey ? 'set' : 'unset'); os.textContent = state.settings.openaiKey ? '✓ Set' : 'Not Set';
+      cs.className = 'key-badge ' + (state.settings.apiKey ? 'set' : 'unset'); cs.textContent = state.settings.apiKey ? '✓ Set' : 'Not Set';
     }
 
-    function isoNow() { return new Date().toISOString(); }
-
-    function addStreamEvent(type, msg) {
-      state.streamEvents.push({ ts: isoNow(), type, msg });
-      buildStreamSnaps();
-      els.timeFab.classList.add('has-history');
-      if (state.isLive) {
-        state.nowIndex = state.streamEvents.length - 1;
-        els.timeSlider.value = state.nowIndex;
-        updateTimeReadout();
-      }
+    function updateProviderFields() {
+      const p = document.getElementById('settingsProvider').value;
+      document.getElementById('anthropicKeyGroup').style.display = p === 'anthropic' ? 'block' : 'none';
+      document.getElementById('openaiKeyGroup').style.display = p === 'openai' ? 'block' : 'none';
+      document.getElementById('ollamaGroup').style.display = p === 'ollama' ? 'block' : 'none';
     }
 
-    function buildStreamSnaps() {
-      const snaps = [];
-      let chart = null, historyUpToNow = [];
-      for (let i = 0; i < state.streamEvents.length; i++) {
-        const e = state.streamEvents[i];
-        if (e.type === 'ohlcv') chart = e.msg.data;
-        if (e.type === 'history') historyUpToNow = [...historyUpToNow, e.msg.data];
-        if (e.type === 'history_sync') historyUpToNow = Array.isArray(e.msg.data) ? [...e.msg.data] : [];
-        if (e.type === 'history_cleared') historyUpToNow = [];
-        snaps.push({ i, ts: e.ts, chart, history: [...historyUpToNow], events: state.streamEvents.slice(0, i + 1) });
-      }
-      state.streamSnaps = snaps;
-      els.timeSlider.max = Math.max(0, snaps.length - 1);
+    // Export/Import
+    async function generateShareLink() {
+      const inclKeys = document.getElementById('toggleIncludeKeys').classList.contains('active');
+      const encrypt = document.getElementById('toggleEncrypt').classList.contains('active');
+      const pw = document.getElementById('exportPassword').value;
+      if (encrypt && (!pw || pw.length < 4)) { showToast('Password must be 4+ characters', 'error'); return; }
+      const data = { v: 1, wsUrl: state.settings.wsUrl, provider: state.settings.provider, modelId: state.settings.modelId, systemPrompt: state.settings.systemPrompt, symbols: state.settings.symbols, exchange: state.settings.exchange, symbol: state.settings.symbol, timeframe: state.settings.timeframe, autoTrigger: state.settings.autoTrigger };
+      if (inclKeys) { data.anthropicKey = state.settings.anthropicKey; data.openaiKey = state.settings.openaiKey; data.ollamaHost = state.settings.ollamaHost; data.apiKey = state.settings.apiKey; data.apiSecret = state.settings.apiSecret; }
+      let enc, param;
+      if (encrypt) { try { enc = await encryptData(JSON.stringify(data), pw); param = 'cfge'; } catch (e) { showToast('Encryption failed', 'error'); return; } }
+      else { enc = btoa(unescape(encodeURIComponent(JSON.stringify(data)))); param = 'cfg'; }
+      const url = new URL(window.location.href); url.search = ''; url.searchParams.set(param, enc);
+      document.getElementById('shareLinkContainer').style.display = 'block';
+      document.getElementById('shareLinkInput').value = url.toString();
+      showToast('Link generated!', 'success');
     }
 
-    function setTimeIndex(i) {
-      state.nowIndex = Math.max(0, Math.min(i, state.streamSnaps.length - 1));
-      state.isLive = state.nowIndex >= state.streamSnaps.length - 1;
-      els.timeSlider.value = state.nowIndex;
-      updateTimeReadout();
-      updateLiveBadge();
-      renderFromSnapshot();
+    function copyShareLink() { navigator.clipboard.writeText(document.getElementById('shareLinkInput').value); showToast('Copied!', 'success'); }
+
+    async function importConfig() {
+      const inp = document.getElementById('importConfig').value.trim();
+      if (!inp) { showToast('Paste config first', 'error'); return; }
+      let configStr;
+      try {
+        if (inp.startsWith('http')) {
+          const url = new URL(inp);
+          const enc = url.searchParams.get('cfge'), plain = url.searchParams.get('cfg');
+          if (enc) { const pw = document.getElementById('importPassword').value; if (!pw) { document.getElementById('importPasswordGroup').style.display = 'block'; showToast('Enter password', 'warning'); return; } configStr = await decryptData(enc, pw); }
+          else if (plain) configStr = decodeURIComponent(escape(atob(plain)));
+        } else { const pw = document.getElementById('importPassword').value; if (!pw) { document.getElementById('importPasswordGroup').style.display = 'block'; showToast('Enter password', 'warning'); return; } configStr = await decryptData(inp, pw); }
+        Object.assign(state.settings, JSON.parse(configStr));
+        localStorage.setItem('hashtradeConfig', JSON.stringify(state.settings));
+        loadSettings(); showToast('Imported!', 'success');
+        document.getElementById('importConfig').value = ''; document.getElementById('importPassword').value = ''; document.getElementById('importPasswordGroup').style.display = 'none';
+      } catch (e) { showToast('Import failed: ' + e.message, 'error'); }
     }
 
-    function updateTimeReadout() {
-      const snap = state.streamSnaps[state.nowIndex];
-      if (!snap) { els.timeReadout.textContent = 'No events yet'; return; }
-      const total = state.streamSnaps.length;
-      const timeStr = snap.ts ? snap.ts.split('T')[1]?.split('.')[0] || '' : '';
-      els.timeReadout.textContent = `${state.nowIndex + 1} / ${total} • ${timeStr}`;
+    function checkUrlForConfig() {
+      const params = new URLSearchParams(window.location.search);
+      if (params.get('cfge')) { document.getElementById('importConfig').value = params.get('cfge'); document.getElementById('importPasswordGroup').style.display = 'block'; openSettings(); document.querySelector('[data-tab="export"]').click(); showToast('Enter password to import', 'info'); }
+      else if (params.get('cfg')) { try { Object.assign(state.settings, JSON.parse(decodeURIComponent(escape(atob(params.get('cfg')))))); localStorage.setItem('hashtradeConfig', JSON.stringify(state.settings)); loadSettings(); showToast('Imported from URL!', 'success'); window.history.replaceState({}, '', window.location.pathname); } catch {} }
     }
 
-    function updateLiveBadge() {
-      if (state.isLive) { els.liveBadge.classList.remove('paused'); els.liveText.textContent = 'LIVE'; }
-      else { els.liveBadge.classList.add('paused'); els.liveText.textContent = 'PAUSED'; }
-    }
+    function clearAllData() { if (confirm('Clear all data including API keys?')) { localStorage.clear(); location.reload(); } }
 
-    function goToLive() { state.isLive = true; setTimeIndex(state.streamSnaps.length - 1); }
+    // UI
+    function showToast(msg, type = 'info') { const icons = { success: '✓', error: '✗', warning: '⚠', info: 'ℹ' }; const t = document.createElement('div'); t.className = `toast ${type}`; t.innerHTML = `<span class="toast-icon">${icons[type]}</span><span>${msg}</span>`; els.toastContainer.appendChild(t); setTimeout(() => t.remove(), 3000); }
+    function openSettings() { els.settingsModal.classList.add('show'); updateKeyStatus(); }
+    function closeSettings() { els.settingsModal.classList.remove('show'); }
 
-    function togglePlay() {
-      state.playing = !state.playing;
-      const btn = document.getElementById('btnPlay');
-      if (state.playing) {
-        btn.textContent = '⏸';
-        state.playTimer = setInterval(() => {
-          if (state.nowIndex >= state.streamSnaps.length - 1) { state.playing = false; btn.textContent = '▶'; clearInterval(state.playTimer); state.isLive = true; updateLiveBadge(); return; }
-          setTimeIndex(state.nowIndex + 1);
-        }, 300);
-      } else { btn.textContent = '▶'; clearInterval(state.playTimer); }
-    }
+    // Tabs
+    document.querySelectorAll('.tab').forEach(t => t.addEventListener('click', () => { document.querySelectorAll('.tab').forEach(b => b.classList.remove('active')); document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active')); t.classList.add('active'); document.getElementById('tab-' + t.dataset.tab).classList.add('active'); }));
+    document.querySelectorAll('.toggle').forEach(t => t.addEventListener('click', () => t.classList.toggle('active')));
+    document.getElementById('toggleEncrypt').addEventListener('click', () => { document.getElementById('encryptPasswordGroup').style.display = document.getElementById('toggleEncrypt').classList.contains('active') ? 'block' : 'none'; });
+    document.getElementById('settingsProvider').addEventListener('change', updateProviderFields);
 
-    function renderFromSnapshot() {
-      const snap = state.streamSnaps[state.nowIndex];
-      if (!snap) return;
-      clearTimelineKeepEmpty();
-      state.turns.clear();
-      for (const e of snap.events) {
-        const msg = e.msg || {};
-        switch (e.type) {
-          case 'turn_start': createTurn(msg.turn_id, msg.data || '', true); break;
-          case 'chunk': appendToTurn(msg.turn_id, msg.data || ''); break;
-          case 'tool_start': addToolIndicator(msg.turn_id, msg.data || 'tool', 'running'); break;
-          case 'tool_end': updateToolIndicator(msg.turn_id, !!msg.success); break;
-          case 'turn_end': finalizeTurn(msg.turn_id); break;
-          case 'history': if (msg.data) addHistoryItem(msg.data, true); break;
-          case 'ui_render': renderDynamicUI(msg, true); break;
-        }
-      }
-      if (snap.chart) { state.chart = snap.chart; if (els.chartModal.classList.contains('show')) { updateChartStats(); drawChart(); } }
-      scrollToBottom();
-    }
-
-    function clearTimelineKeepEmpty() { els.timeline.innerHTML = ''; if (els.emptyState) els.timeline.appendChild(els.emptyState); }
-    function openTimeTravel() { els.timeTravel.classList.add('show'); }
-    function closeTimeTravel() { els.timeTravel.classList.remove('show'); }
-
+    // WebSocket
     function connect() {
       if (state.ws) state.ws.close();
       state.ws = new WebSocket(state.settings.wsUrl);
       els.statusText.textContent = 'Connecting...';
       state.ws.onopen = () => {
-        state.connected = true;
-        els.statusDot.classList.add('connected');
-        els.statusText.textContent = 'Connected';
-        showToast('Connected to server', 'success');
-        state.ws.send(JSON.stringify({ type: 'credentials', exchange: state.settings.exchange, apiKey: state.settings.apiKey, apiSecret: state.settings.apiSecret }));
+        state.connected = true; els.statusDot.classList.add('connected'); els.statusText.textContent = 'Connected';
+        showToast('Connected!', 'success');
+        state.ws.send(JSON.stringify({ type: 'config', provider: state.settings.provider, anthropicKey: state.settings.anthropicKey, openaiKey: state.settings.openaiKey, ollamaHost: state.settings.ollamaHost, modelId: state.settings.modelId, systemPrompt: state.settings.systemPrompt, symbols: state.settings.symbols, exchange: state.settings.exchange, apiKey: state.settings.apiKey, apiSecret: state.settings.apiSecret, autoTrigger: state.settings.autoTrigger }));
         requestChart();
       };
       state.ws.onclose = () => { state.connected = false; els.statusDot.classList.remove('connected'); els.statusText.textContent = 'Disconnected'; };
@@ -876,17 +1130,11 @@
     function handleMessage(ev) {
       let msg; try { msg = JSON.parse(ev.data); } catch { return; }
       const t = msg.type;
-
-      // Track all events for time travel
-      if (['turn_start', 'chunk', 'tool_start', 'tool_end', 'turn_end', 'history', 'history_sync', 'history_cleared', 'ohlcv', 'theme_update', 'ui_alert', 'ui_render'].includes(t)) {
-        addStreamEvent(t, msg);
-      }
-
+      if (t === 'auto_trigger_status') { const d = msg.data || {}; state.autoTrigger.enabled = d.enabled; state.autoTrigger.nextTriggerIn = d.next_trigger_in_secs || 0; state.autoTrigger.triggerCount = d.trigger_count || 0; state.autoTrigger.currentInterval = d.current_interval_mins || 5; state.autoTrigger.snoozeIndex = d.snooze_index || 0; state.autoTrigger.snoozePattern = d.snooze_pattern || [5, 10, 20, 25]; state.autoTrigger.paused = d.paused || false; updateAutoTriggerUI(); return; }
+      if (['turn_start', 'chunk', 'tool_start', 'tool_end', 'turn_end', 'history', 'history_sync', 'history_cleared', 'ohlcv', 'theme_update', 'ui_alert', 'ui_render'].includes(t)) addStreamEvent(t, msg);
       if (!state.isLive && !['history_sync', 'ohlcv'].includes(t)) return;
-
       switch (t) {
-        case 'connected': break;
-        case 'turn_start': createTurn(msg.turn_id, msg.data); break;
+        case 'turn_start': createTurn(msg.turn_id, msg.data, false, msg.auto_trigger); break;
         case 'chunk': appendToTurn(msg.turn_id, msg.data); break;
         case 'tool_start': addToolIndicator(msg.turn_id, msg.data, 'running'); break;
         case 'tool_end': updateToolIndicator(msg.turn_id, msg.success); break;
@@ -901,281 +1149,45 @@
       }
     }
 
-    function renderDynamicUI(msg, isReplay = false) {
-      hideEmptyState();
-      const el = document.createElement('div');
-      el.className = 'message history';
-      const renderType = msg.render_type || 'widget';
-      const title = msg.title || renderType;
-      const html = msg.html || '';
-      const ts = msg.timestamp ? new Date(msg.timestamp * 1000).toLocaleTimeString() : '';
-      el.innerHTML = `
-        <div class="event-card" style="border-left: 3px solid var(--neon);">
-          <div class="event-header"><span class="event-type">${renderType}</span><span class="event-time">${ts}</span></div>
-          <div class="event-content"><strong>${title}</strong></div>
-          <div class="dynamic-html">${html}</div>
-        </div>
-      `;
-      els.timeline.appendChild(el);
-      if (!isReplay) scrollToBottom();
-    }
-
+    // Timeline
+    function isoNow() { return new Date().toISOString(); }
+    function addStreamEvent(type, msg) { state.streamEvents.push({ ts: isoNow(), type, msg }); buildStreamSnaps(); els.timeFab.classList.add('has-history'); if (state.isLive) { state.nowIndex = state.streamEvents.length - 1; els.timeSlider.value = state.nowIndex; updateTimeReadout(); } }
+    function buildStreamSnaps() { const snaps = []; let chart = null, hist = []; for (let i = 0; i < state.streamEvents.length; i++) { const e = state.streamEvents[i]; if (e.type === 'ohlcv') chart = e.msg.data; if (e.type === 'history') hist = [...hist, e.msg.data]; if (e.type === 'history_sync') hist = Array.isArray(e.msg.data) ? [...e.msg.data] : []; if (e.type === 'history_cleared') hist = []; snaps.push({ i, ts: e.ts, chart, history: [...hist], events: state.streamEvents.slice(0, i + 1) }); } state.streamSnaps = snaps; els.timeSlider.max = Math.max(0, snaps.length - 1); }
+    function setTimeIndex(i) { state.nowIndex = Math.max(0, Math.min(i, state.streamSnaps.length - 1)); state.isLive = state.nowIndex >= state.streamSnaps.length - 1; els.timeSlider.value = state.nowIndex; updateTimeReadout(); updateLiveBadge(); renderFromSnapshot(); }
+    function updateTimeReadout() { const snap = state.streamSnaps[state.nowIndex]; if (!snap) { els.timeReadout.textContent = 'No events'; return; } const timeStr = snap.ts ? snap.ts.split('T')[1]?.split('.')[0] || '' : ''; els.timeReadout.textContent = `${state.nowIndex + 1} / ${state.streamSnaps.length} • ${timeStr}`; }
+    function updateLiveBadge() { if (state.isLive) { els.liveBadge.classList.remove('paused'); els.liveText.textContent = 'LIVE'; } else { els.liveBadge.classList.add('paused'); els.liveText.textContent = 'PAUSED'; } }
+    function goToLive() { state.isLive = true; setTimeIndex(state.streamSnaps.length - 1); }
+    function togglePlay() { state.playing = !state.playing; const btn = document.getElementById('btnPlay'); if (state.playing) { btn.textContent = '⏸'; state.playTimer = setInterval(() => { if (state.nowIndex >= state.streamSnaps.length - 1) { state.playing = false; btn.textContent = '▶'; clearInterval(state.playTimer); state.isLive = true; updateLiveBadge(); return; } setTimeIndex(state.nowIndex + 1); }, 300); } else { btn.textContent = '▶'; clearInterval(state.playTimer); } }
+    function renderFromSnapshot() { const snap = state.streamSnaps[state.nowIndex]; if (!snap) return; clearTimelineKeepEmpty(); state.turns.clear(); for (const e of snap.events) { const msg = e.msg || {}; switch (e.type) { case 'turn_start': createTurn(msg.turn_id, msg.data || '', true, msg.auto_trigger); break; case 'chunk': appendToTurn(msg.turn_id, msg.data || ''); break; case 'tool_start': addToolIndicator(msg.turn_id, msg.data || 'tool', 'running'); break; case 'tool_end': updateToolIndicator(msg.turn_id, !!msg.success); break; case 'turn_end': finalizeTurn(msg.turn_id); break; case 'history': if (msg.data) addHistoryItem(msg.data, true); break; case 'ui_render': renderDynamicUI(msg, true); break; } } if (snap.chart) { state.chart = snap.chart; if (els.chartModal.classList.contains('show')) { updateChartStats(); drawChart(); } } scrollToBottom(); }
+    function clearTimelineKeepEmpty() { els.timeline.innerHTML = ''; if (els.emptyState) els.timeline.appendChild(els.emptyState); }
     function hideEmptyState() { if (els.emptyState) els.emptyState.style.display = 'none'; }
     function clearTimeline() { els.timeline.innerHTML = ''; state.turns.clear(); els.emptyState.style.display = 'block'; els.timeline.appendChild(els.emptyState); }
-
-    function createTurn(turnId, userMessage, isReplay = false) {
-      hideEmptyState();
-      const userEl = document.createElement('div');
-      userEl.className = 'message user';
-      userEl.innerHTML = `<div class="bubble">${escapeHtml(userMessage)}</div>`;
-      els.timeline.appendChild(userEl);
-      const assistantEl = document.createElement('div');
-      assistantEl.className = 'message assistant';
-      assistantEl.dataset.turnId = turnId;
-      const bubble = document.createElement('div');
-      bubble.className = 'bubble';
-      const content = document.createElement('div');
-      content.className = 'content';
-      const typing = document.createElement('div');
-      typing.className = 'typing-indicator';
-      typing.innerHTML = '<span></span><span></span><span></span>';
-      bubble.appendChild(content);
-      if (!isReplay) bubble.appendChild(typing);
-      assistantEl.appendChild(bubble);
-      els.timeline.appendChild(assistantEl);
-      state.turns.set(turnId, { el: assistantEl, content, typing, bubble, text: '', tools: [] });
-      if (!isReplay) scrollToBottom();
-    }
-
-    function appendToTurn(turnId, text) {
-      const turn = state.turns.get(turnId);
-      if (!turn) return;
-      turn.text += (text || '');
-      turn.content.innerHTML = marked.parse(turn.text);
-      turn.content.querySelectorAll('pre code').forEach(block => hljs.highlightElement(block));
-      scrollToBottom();
-    }
-
-    function addToolIndicator(turnId, toolName, status) {
-      const turn = state.turns.get(turnId);
-      if (!turn) return;
-      const indicator = document.createElement('div');
-      indicator.className = `tool-indicator ${status}`;
-      indicator.innerHTML = `<div class="tool-spinner"></div><span>${toolName}</span>`;
-      turn.bubble.insertBefore(indicator, turn.content);
-      turn.tools.push(indicator);
-    }
-
-    function updateToolIndicator(turnId, success) {
-      const turn = state.turns.get(turnId);
-      if (!turn || !turn.tools.length) return;
-      const last = turn.tools[turn.tools.length - 1];
-      last.className = `tool-indicator ${success ? 'success' : 'error'}`;
-      last.innerHTML = `<span>${success ? '✓' : '✗'}</span>${last.querySelector('span:last-child').textContent}`;
-    }
-
-    function finalizeTurn(turnId) {
-      const turn = state.turns.get(turnId);
-      if (!turn) return;
-      if (turn.typing && turn.typing.parentNode) turn.typing.remove();
-    }
-
-    function addHistoryItem(item, isReplay = false) {
-      hideEmptyState();
-      const type = item.type || 'note';
-      const data = item.data || {};
-      const ts = item.ts ? new Date(item.ts * 1000).toLocaleTimeString() : '';
-      
-      // Skip meta events
-      if (['tool_start', 'tool_end', 'ui', 'balance', 'raw'].includes(type)) return;
-      // Skip ui_ prefixed types (those are rendered by renderDynamicUI)
-      if (type.startsWith('ui_')) return;
-
-      const el = document.createElement('div');
-      el.className = 'message history';
-      
-      let content = '', symbol = '', exchange = '';
-      if (typeof data === 'string') { content = data; }
-      else if (data.html) { content = data.html; }
-      else if (data.message) { content = data.message; }
-      else if (data.symbol) {
-        symbol = data.symbol;
-        exchange = data.exchange || state.settings.exchange;
-        content = `<strong>${(data.side || type).toUpperCase()}</strong> ${data.amount || ''} ${data.symbol} ${data.price ? '@ $' + data.price : ''}`;
-      } else { content = JSON.stringify(data); }
-
-      el.innerHTML = `
-        <div class="event-card ${type}" data-symbol="${symbol}" data-exchange="${exchange}">
-          <div class="event-header"><span class="event-type">${type}</span><span class="event-time">${ts}</span></div>
-          <div class="event-content">${content}</div>
-        </div>
-      `;
-
-      // Make clickable if has symbol
-      if (symbol) {
-        const card = el.querySelector('.event-card');
-        card.onclick = () => {
-          state.settings.symbol = symbol;
-          state.chart.symbol = symbol;
-          if (exchange) state.settings.exchange = exchange;
-          document.getElementById('settingsSymbol').value = symbol;
-          document.getElementById('chartSymbol').textContent = symbol;
-          localStorage.setItem('hashtradeSettings', JSON.stringify(state.settings));
-          openChart();
-          requestChart();
-        };
-      }
-      
-      els.timeline.appendChild(el);
-      if (!isReplay) scrollToBottom();
-    }
-
-    function renderHistory() {
-      const SKIP = new Set(['tool_start', 'tool_end', 'ui', 'balance', 'raw']);
-      for (const item of state.historyItems.slice(-100)) {
-        if (!SKIP.has(item.type) && !item.type?.startsWith('ui_')) {
-          addHistoryItem(item, true);
-        }
-      }
-      scrollToBottom();
-    }
-
+    function createTurn(turnId, userMessage, isReplay = false, isAuto = false) { hideEmptyState(); const userEl = document.createElement('div'); userEl.className = 'message user' + (isAuto ? ' auto-trigger' : ''); let content = escapeHtml(userMessage); if (isAuto) content = `<div class="auto-badge">⏰ AUTO</div>${content}`; userEl.innerHTML = `<div class="bubble">${content}</div>`; els.timeline.appendChild(userEl); const assistantEl = document.createElement('div'); assistantEl.className = 'message assistant' + (isAuto ? ' auto-trigger' : ''); assistantEl.dataset.turnId = turnId; const bubble = document.createElement('div'); bubble.className = 'bubble'; const contentDiv = document.createElement('div'); contentDiv.className = 'content'; const typing = document.createElement('div'); typing.className = 'typing-indicator'; typing.innerHTML = '<span></span><span></span><span></span>'; bubble.appendChild(contentDiv); if (!isReplay) bubble.appendChild(typing); assistantEl.appendChild(bubble); els.timeline.appendChild(assistantEl); state.turns.set(turnId, { el: assistantEl, content: contentDiv, typing, bubble, text: '', tools: [], isAuto }); if (!isReplay) scrollToBottom(); }
+    function appendToTurn(turnId, text) { const turn = state.turns.get(turnId); if (!turn) return; turn.text += (text || ''); turn.content.innerHTML = marked.parse(turn.text); turn.content.querySelectorAll('pre code').forEach(block => hljs.highlightElement(block)); scrollToBottom(); }
+    function addToolIndicator(turnId, toolName, status) { const turn = state.turns.get(turnId); if (!turn) return; const ind = document.createElement('div'); ind.className = `tool-indicator ${status}`; ind.innerHTML = `<div class="tool-spinner"></div><span>${toolName}</span>`; turn.bubble.insertBefore(ind, turn.content); turn.tools.push(ind); }
+    function updateToolIndicator(turnId, success) { const turn = state.turns.get(turnId); if (!turn || !turn.tools.length) return; const last = turn.tools[turn.tools.length - 1]; last.className = `tool-indicator ${success ? 'success' : 'error'}`; last.innerHTML = `<span>${success ? '✓' : '✗'}</span><span>${last.querySelector('span:last-child')?.textContent || ''}</span>`; }
+    function finalizeTurn(turnId) { const turn = state.turns.get(turnId); if (!turn) return; if (turn.typing && turn.typing.parentNode) turn.typing.remove(); }
+    function addHistoryItem(item, isReplay = false) { hideEmptyState(); const type = item.type || 'note'; const data = item.data || {}; const ts = item.ts ? new Date(item.ts * 1000).toLocaleTimeString() : ''; if (['tool_start', 'tool_end', 'ui', 'balance', 'raw'].includes(type) || type.startsWith('ui_')) return; const el = document.createElement('div'); el.className = 'message history'; let content = '', symbol = '', exchange = ''; if (typeof data === 'string') content = data; else if (data.html) content = data.html; else if (data.message) content = data.message; else if (data.symbol) { symbol = data.symbol; exchange = data.exchange || state.settings.exchange; content = `<strong>${(data.side || type).toUpperCase()}</strong> ${data.amount || ''} ${data.symbol} ${data.price ? '@ $' + data.price : ''}`; } else content = JSON.stringify(data); el.innerHTML = `<div class="event-card ${type}"><div class="event-header"><span class="event-type">${type}</span><span class="event-time">${ts}</span></div><div class="event-content">${content}</div></div>`; if (symbol) { el.querySelector('.event-card').onclick = () => { state.settings.symbol = symbol; state.chart.symbol = symbol; document.getElementById('settingsSymbol').value = symbol; document.getElementById('chartSymbol').textContent = symbol; localStorage.setItem('hashtradeConfig', JSON.stringify(state.settings)); openChart(); requestChart(); }; } els.timeline.appendChild(el); if (!isReplay) scrollToBottom(); }
+    function renderHistory() { const SKIP = new Set(['tool_start', 'tool_end', 'ui', 'balance', 'raw']); for (const item of state.historyItems.slice(-100)) { if (!SKIP.has(item.type) && !item.type?.startsWith('ui_')) addHistoryItem(item, true); } scrollToBottom(); }
+    function renderDynamicUI(msg, isReplay = false) { hideEmptyState(); const el = document.createElement('div'); el.className = 'message history'; const title = msg.title || msg.render_type || 'widget'; const html = msg.html || ''; const ts = msg.timestamp ? new Date(msg.timestamp * 1000).toLocaleTimeString() : ''; el.innerHTML = `<div class="event-card"><div class="event-header"><span class="event-type">${msg.render_type || 'ui'}</span><span class="event-time">${ts}</span></div><div class="event-content"><strong>${title}</strong></div><div>${html}</div></div>`; els.timeline.appendChild(el); if (!isReplay) scrollToBottom(); }
     function scrollToBottom() { requestAnimationFrame(() => { els.timelineContainer.scrollTop = els.timelineContainer.scrollHeight; }); }
-
-    function send() {
-      const text = els.chatInput.value.trim();
-      if (!text || !state.connected) return;
-      els.chatInput.value = '';
-      els.chatInput.style.height = 'auto';
-      state.ws.send(text);
-    }
-
-    function requestChart() {
-      if (!state.ws || state.ws.readyState !== 1) return;
-      state.ws.send(JSON.stringify({ type: 'ui', action: 'fetch_ohlcv', exchange: state.settings.exchange, symbol: state.settings.symbol, timeframe: state.settings.timeframe, limit: 200 }));
-    }
-
-    function openChart() {
-      els.chartModal.classList.add('show');
-      document.getElementById('chartSymbol').textContent = state.chart.symbol || state.settings.symbol;
-      requestChart();
-      setTimeout(drawChart, 100);
-    }
-
-    function closeChart() { els.chartModal.classList.remove('show'); }
-
-    function updateChartStats() {
-      const ohlcv = state.chart.ohlcv || [];
-      if (!ohlcv.length) return;
-      const last = ohlcv[ohlcv.length - 1], first = ohlcv[0];
-      const price = last[4], open = first[1];
-      const change = ((price - open) / open * 100).toFixed(2);
-      const high = Math.max(...ohlcv.map(c => c[2])), low = Math.min(...ohlcv.map(c => c[3]));
-      document.getElementById('statPrice').textContent = '$' + price.toLocaleString();
-      const changeEl = document.getElementById('stat24h');
-      changeEl.textContent = (change >= 0 ? '+' : '') + change + '%';
-      changeEl.className = 'chart-stat-value ' + (change >= 0 ? 'up' : 'down');
-      document.getElementById('statHigh').textContent = '$' + high.toLocaleString();
-      document.getElementById('statLow').textContent = '$' + low.toLocaleString();
-      document.getElementById('chartMeta').textContent = `${state.chart.timeframe || state.settings.timeframe} • ${ohlcv.length} candles`;
-    }
-
-    function drawChart() {
-      const canvas = els.chartCanvas;
-      const wrap = canvas.parentElement;
-      const dpr = window.devicePixelRatio || 1;
-      const w = wrap.clientWidth, h = wrap.clientHeight;
-      canvas.width = w * dpr; canvas.height = h * dpr;
-      canvas.style.width = w + 'px'; canvas.style.height = h + 'px';
-      const ctx = canvas.getContext('2d');
-      ctx.scale(dpr, dpr);
-      ctx.clearRect(0, 0, w, h);
-
-      const ohlcv = state.chart.ohlcv || [];
-      if (!ohlcv.length) { ctx.fillStyle = 'rgba(0, 255, 136, 0.3)'; ctx.font = '14px system-ui'; ctx.fillText('No data', w/2 - 30, h/2); return; }
-
-      // Grid
-      ctx.strokeStyle = 'rgba(0, 255, 136, 0.1)';
-      ctx.lineWidth = 1;
-      for (let i = 0; i <= 5; i++) { const y = (h / 5) * i; ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(w, y); ctx.stroke(); }
-
-      const closes = ohlcv.map(c => c[4]);
-      const timestamps = ohlcv.map(c => c[0]);
-      const minY = Math.min(...closes), maxY = Math.max(...closes);
-      const pad = (maxY - minY) * 0.1 || 1;
-      const lo = minY - pad, hi = maxY + pad;
-      const x0 = timestamps[0], x1 = timestamps[timestamps.length - 1];
-
-      const xScale = (t) => ((t - x0) / (x1 - x0)) * (w - 20) + 10;
-      const xScaleIdx = (i) => (i / (ohlcv.length - 1)) * (w - 20) + 10;
-      const yScale = (v) => h - ((v - lo) / (hi - lo) * (h - 20) + 10);
-
-      // Gradient fill
-      const gradient = ctx.createLinearGradient(0, 0, 0, h);
-      gradient.addColorStop(0, 'rgba(0, 255, 136, 0.25)');
-      gradient.addColorStop(1, 'rgba(0, 255, 136, 0)');
-      ctx.beginPath();
-      ctx.moveTo(xScaleIdx(0), h);
-      for (let i = 0; i < ohlcv.length; i++) ctx.lineTo(xScaleIdx(i), yScale(closes[i]));
-      ctx.lineTo(xScaleIdx(ohlcv.length - 1), h);
-      ctx.closePath();
-      ctx.fillStyle = gradient;
-      ctx.fill();
-
-      // Line
-      ctx.strokeStyle = '#00ff88';
-      ctx.lineWidth = 2;
-      ctx.shadowColor = 'rgba(0, 255, 136, 0.5)';
-      ctx.shadowBlur = 8;
-      ctx.beginPath();
-      for (let i = 0; i < ohlcv.length; i++) { const x = xScaleIdx(i), y = yScale(closes[i]); if (i === 0) ctx.moveTo(x, y); else ctx.lineTo(x, y); }
-      ctx.stroke();
-      ctx.shadowBlur = 0;
-
-      // Draw order dots from history
-      const orders = state.historyItems.filter(r => ['order', 'trade', 'buy', 'sell'].includes(r.type) && r.data?.symbol === state.chart.symbol);
-      for (const order of orders) {
-        const data = order.data || {};
-        const orderTs = (order.ts || 0) * 1000;
-        const orderPrice = parseFloat(data.price) || 0;
-        const side = (data.side || '').toLowerCase();
-        if (!orderPrice || orderTs < x0 || orderTs > x1) continue;
-        const dotX = xScale(orderTs);
-        const dotY = yScale(orderPrice);
-        ctx.beginPath();
-        ctx.arc(dotX, dotY, 6, 0, Math.PI * 2);
-        if (side === 'buy') { ctx.fillStyle = '#00ccff'; ctx.shadowColor = 'rgba(0, 204, 255, 0.8)'; }
-        else if (side === 'sell' || side === 'short') { ctx.fillStyle = '#ff3366'; ctx.shadowColor = 'rgba(255, 51, 102, 0.8)'; }
-        else { ctx.fillStyle = '#ffcc00'; ctx.shadowColor = 'rgba(255, 204, 0, 0.8)'; }
-        ctx.shadowBlur = 10;
-        ctx.fill();
-        ctx.shadowBlur = 0;
-        ctx.strokeStyle = ctx.fillStyle;
-        ctx.lineWidth = 2;
-        ctx.beginPath();
-        ctx.arc(dotX, dotY, 10, 0, Math.PI * 2);
-        ctx.stroke();
-      }
-
-      // Price label
-      ctx.fillStyle = '#00ff88';
-      ctx.font = 'bold 14px SF Mono, monospace';
-      ctx.fillText('$' + closes[closes.length - 1].toLocaleString(), 12, 24);
-    }
-
-    function applyTheme(theme) {
-      if (!theme) return;
-      const root = document.documentElement;
-      const map = { 'neon': '--neon', 'neon_dim': '--neon-dim', 'neon_glow': '--neon-glow', 'neon_subtle': '--neon-subtle', 'neon_border': '--neon-border', 'bg': '--bg', 'text': '--text', 'text_dim': '--text-dim', 'muted': '--muted', 'good': '--good', 'bad': '--bad', 'warn': '--warn' };
-      for (const [key, cssVar] of Object.entries(map)) if (theme[key]) root.style.setProperty(cssVar, theme[key]);
-      localStorage.setItem('hashtradeTheme', JSON.stringify(theme));
-    }
-
     function escapeHtml(s) { return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
-    function openSettings() { els.settingsModal.classList.add('show'); }
-    function closeSettings() { els.settingsModal.classList.remove('show'); }
 
-    els.chatInput.addEventListener('input', function() { this.style.height = 'auto'; this.style.height = Math.min(this.scrollHeight, 120) + 'px'; });
+    // Auto-Trigger
+    function updateAutoTriggerUI() { const at = state.autoTrigger; if (at.enabled && !at.paused) { els.autoFab.classList.add('enabled'); } else els.autoFab.classList.remove('enabled'); if (at.enabled && !at.paused && at.nextTriggerIn > 0) { const m = Math.floor(at.nextTriggerIn / 60), s = at.nextTriggerIn % 60; els.autoFabTimer.textContent = m > 0 ? `${m}m` : `${s}s`; } else els.autoFabTimer.textContent = at.paused ? '⏸' : '--'; els.autoStatusText.textContent = at.paused ? 'Paused' : (at.enabled ? 'Active' : 'Off'); els.autoStatusText.style.color = at.paused ? 'var(--warn)' : (at.enabled ? 'var(--good)' : 'var(--muted)'); if (at.nextTriggerIn > 0) { const m = Math.floor(at.nextTriggerIn / 60), s = at.nextTriggerIn % 60; els.autoNextIn.textContent = `${m}:${s.toString().padStart(2, '0')}`; } else els.autoNextIn.textContent = '--:--'; els.autoTriggerCount.textContent = at.triggerCount; els.autoCurrentInterval.textContent = `${at.currentInterval}m`; const steps = els.snoozePattern.querySelectorAll('.snooze-pill'); steps.forEach((step, i) => step.classList.toggle('active', i === at.snoozeIndex % at.snoozePattern.length)); const toggleBtn = document.getElementById('btnAutoToggle'); if (at.enabled) { toggleBtn.textContent = 'Disable'; toggleBtn.classList.remove('primary'); toggleBtn.classList.add('danger'); } else { toggleBtn.textContent = 'Enable'; toggleBtn.classList.add('primary'); toggleBtn.classList.remove('danger'); } }
+    function sendAutoTriggerCommand(action, extra = {}) { if (state.ws && state.ws.readyState === 1) state.ws.send(JSON.stringify({ type: 'auto_trigger', action, ...extra })); }
+
+    // Chart
+    function send() { const text = els.chatInput.value.trim(); if (!text || !state.connected) return; els.chatInput.value = ''; els.chatInput.style.height = 'auto'; state.ws.send(text); }
+    function requestChart() { if (!state.ws || state.ws.readyState !== 1) return; state.ws.send(JSON.stringify({ type: 'ui', action: 'fetch_ohlcv', exchange: state.settings.exchange, symbol: state.settings.symbol, timeframe: state.settings.timeframe, limit: 200 })); }
+    function openChart() { els.chartModal.classList.add('show'); document.getElementById('chartSymbol').textContent = state.chart.symbol || state.settings.symbol; requestChart(); setTimeout(drawChart, 100); }
+    function closeChart() { els.chartModal.classList.remove('show'); }
+    function updateChartStats() { const ohlcv = state.chart.ohlcv || []; if (!ohlcv.length) return; const last = ohlcv[ohlcv.length - 1], first = ohlcv[0]; const price = last[4], open = first[1]; const change = ((price - open) / open * 100).toFixed(2); const high = Math.max(...ohlcv.map(c => c[2])), low = Math.min(...ohlcv.map(c => c[3])); document.getElementById('statPrice').textContent = '$' + price.toLocaleString(); const changeEl = document.getElementById('stat24h'); changeEl.textContent = (change >= 0 ? '+' : '') + change + '%'; changeEl.className = 'chart-stat-value ' + (change >= 0 ? 'up' : 'down'); document.getElementById('statHigh').textContent = '$' + high.toLocaleString(); document.getElementById('statLow').textContent = '$' + low.toLocaleString(); document.getElementById('chartMeta').textContent = `${state.chart.timeframe || state.settings.timeframe} • ${ohlcv.length} candles`; }
+    function drawChart() { const canvas = els.chartCanvas; const wrap = canvas.parentElement; const dpr = window.devicePixelRatio || 1; const w = wrap.clientWidth, h = wrap.clientHeight; canvas.width = w * dpr; canvas.height = h * dpr; canvas.style.width = w + 'px'; canvas.style.height = h + 'px'; const ctx = canvas.getContext('2d'); ctx.scale(dpr, dpr); ctx.clearRect(0, 0, w, h); const ohlcv = state.chart.ohlcv || []; if (!ohlcv.length) { ctx.fillStyle = 'rgba(0, 255, 136, 0.4)'; ctx.font = '16px system-ui'; ctx.fillText('No data', w/2 - 35, h/2); return; } ctx.strokeStyle = 'rgba(0, 255, 136, 0.1)'; ctx.lineWidth = 1; for (let i = 0; i <= 5; i++) { const y = (h / 5) * i; ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(w, y); ctx.stroke(); } const closes = ohlcv.map(c => c[4]); const minY = Math.min(...closes), maxY = Math.max(...closes); const pad = (maxY - minY) * 0.1 || 1; const lo = minY - pad, hi = maxY + pad; const xScaleIdx = (i) => (i / (ohlcv.length - 1)) * (w - 20) + 10; const yScale = (v) => h - ((v - lo) / (hi - lo) * (h - 20) + 10); const gradient = ctx.createLinearGradient(0, 0, 0, h); gradient.addColorStop(0, 'rgba(0, 255, 136, 0.3)'); gradient.addColorStop(1, 'rgba(0, 255, 136, 0)'); ctx.beginPath(); ctx.moveTo(xScaleIdx(0), h); for (let i = 0; i < ohlcv.length; i++) ctx.lineTo(xScaleIdx(i), yScale(closes[i])); ctx.lineTo(xScaleIdx(ohlcv.length - 1), h); ctx.closePath(); ctx.fillStyle = gradient; ctx.fill(); ctx.strokeStyle = '#00ff88'; ctx.lineWidth = 2.5; ctx.shadowColor = 'rgba(0, 255, 136, 0.6)'; ctx.shadowBlur = 10; ctx.beginPath(); for (let i = 0; i < ohlcv.length; i++) { const x = xScaleIdx(i), y = yScale(closes[i]); if (i === 0) ctx.moveTo(x, y); else ctx.lineTo(x, y); } ctx.stroke(); ctx.shadowBlur = 0; ctx.fillStyle = '#00ff88'; ctx.font = 'bold 16px SF Mono, monospace'; ctx.fillText('$' + closes[closes.length - 1].toLocaleString(), 14, 28); }
+    function applyTheme(theme) { if (!theme) return; const root = document.documentElement; const map = { 'neon': '--neon', 'neon_dim': '--neon-dim', 'neon_glow': '--neon-glow', 'neon_subtle': '--neon-subtle', 'neon_border': '--neon-border', 'bg': '--bg', 'text': '--text', 'text_dim': '--text-dim', 'muted': '--muted', 'good': '--good', 'bad': '--bad', 'warn': '--warn' }; for (const [key, cssVar] of Object.entries(map)) if (theme[key]) root.style.setProperty(cssVar, theme[key]); localStorage.setItem('hashtradeTheme', JSON.stringify(theme)); }
+
+    // Events
+    els.chatInput.addEventListener('input', function() { this.style.height = 'auto'; this.style.height = Math.min(this.scrollHeight, 140) + 'px'; });
     document.getElementById('btnSend').addEventListener('click', send);
     els.chatInput.addEventListener('keydown', e => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); send(); } });
     document.getElementById('btnSettings').addEventListener('click', openSettings);
@@ -1184,36 +1196,28 @@
     els.settingsModal.addEventListener('click', e => { if (e.target === els.settingsModal) closeSettings(); });
     document.getElementById('chartFab').addEventListener('click', openChart);
     document.getElementById('chartClose').addEventListener('click', closeChart);
-    document.getElementById('chartControls').addEventListener('click', e => {
-      if (e.target.classList.contains('tf-btn')) {
-        document.querySelectorAll('.tf-btn').forEach(b => b.classList.remove('active'));
-        e.target.classList.add('active');
-        state.settings.timeframe = e.target.dataset.tf;
-        state.chart.timeframe = e.target.dataset.tf;
-        requestChart();
-      }
-    });
-    document.getElementById('btnClear').addEventListener('click', () => {
-      if (state.ws && state.ws.readyState === 1) state.ws.send(JSON.stringify({ type: 'history', action: 'clear' }));
-      clearTimeline();
-      state.streamEvents = []; state.streamSnaps = []; state.nowIndex = 0; state.isLive = true;
-      state.historyItems = [];
-      els.timeFab.classList.remove('has-history');
-      els.timeSlider.max = 0; els.timeSlider.value = 0;
-      updateTimeReadout(); updateLiveBadge();
-    });
-    els.timeFab.addEventListener('click', openTimeTravel);
-    document.getElementById('timeTravelClose').addEventListener('click', closeTimeTravel);
+    document.getElementById('chartControls').addEventListener('click', e => { if (e.target.classList.contains('tf-btn')) { document.querySelectorAll('.tf-btn').forEach(b => b.classList.remove('active')); e.target.classList.add('active'); state.settings.timeframe = e.target.dataset.tf; state.chart.timeframe = e.target.dataset.tf; requestChart(); } });
+    document.getElementById('btnClear').addEventListener('click', () => { if (state.ws && state.ws.readyState === 1) state.ws.send(JSON.stringify({ type: 'history', action: 'clear' })); clearTimeline(); state.streamEvents = []; state.streamSnaps = []; state.nowIndex = 0; state.isLive = true; state.historyItems = []; els.timeFab.classList.remove('has-history'); els.timeSlider.max = 0; els.timeSlider.value = 0; updateTimeReadout(); updateLiveBadge(); });
+    els.timeFab.addEventListener('click', () => els.timeTravel.classList.toggle('show'));
+    document.getElementById('timeTravelClose').addEventListener('click', () => els.timeTravel.classList.remove('show'));
     document.getElementById('btnPlay').addEventListener('click', togglePlay);
     document.getElementById('btnPrev').addEventListener('click', () => setTimeIndex(state.nowIndex - 1));
     document.getElementById('btnNext').addEventListener('click', () => setTimeIndex(state.nowIndex + 1));
     document.getElementById('btnLive').addEventListener('click', goToLive);
     els.timeSlider.addEventListener('input', e => { state.isLive = false; setTimeIndex(parseInt(e.target.value, 10)); });
+    els.autoFab.addEventListener('click', () => els.autoPanel.classList.toggle('show'));
+    document.getElementById('autoPanelClose').addEventListener('click', () => els.autoPanel.classList.remove('show'));
+    document.getElementById('btnAutoToggle').addEventListener('click', () => sendAutoTriggerCommand(state.autoTrigger.enabled ? 'disable' : 'enable'));
+    document.getElementById('btnAutoTriggerNow').addEventListener('click', () => { sendAutoTriggerCommand('trigger_now'); showToast('Triggering...', 'info'); });
+    document.getElementById('btnAutoPause30').addEventListener('click', () => { sendAutoTriggerCommand('pause', { minutes: 30 }); showToast('Paused 30min', 'warning'); });
     window.addEventListener('resize', () => { if (els.chartModal.classList.contains('show')) drawChart(); });
 
+    // Init
     loadSettings();
-    try { const savedTheme = localStorage.getItem('hashtradeTheme'); if (savedTheme) applyTheme(JSON.parse(savedTheme)); } catch {}
+    checkUrlForConfig();
+    try { const t = localStorage.getItem('hashtradeTheme'); if (t) applyTheme(JSON.parse(t)); } catch {}
     connect();
+    updateAutoTriggerUI();
     if ('serviceWorker' in navigator) navigator.serviceWorker.register('sw.js').catch(() => {});
   </script>
 </body>

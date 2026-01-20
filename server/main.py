@@ -4,6 +4,10 @@ HashTrade Dashboard - Standalone Trading Agent Server
 
 A minimal WebSocket server with real-time streaming for a trading dashboard.
 Uses Strands Agent with CCXT and history tools only.
+
+Features:
+- Auto-trigger: Agent wakes up periodically when idle (snooze pattern: 5, 10, 20, 25 mins)
+- Cron support: Schedule regular market analysis
 """
 
 import traceback
@@ -13,8 +17,8 @@ import time
 import uuid
 import os
 import sys
-from typing import Any, Dict, Optional
-from dataclasses import dataclass
+from typing import Any, Dict, Optional, List
+from dataclasses import dataclass, field
 from concurrent.futures import ThreadPoolExecutor
 
 import websockets
@@ -39,6 +43,125 @@ os.environ["BYPASS_TOOL_CONSENT"] = "true"
 
 # Global thread pool - reuse across turns for performance
 _executor = ThreadPoolExecutor(max_workers=4)
+
+
+# ============================================================================
+# Auto-Trigger Configuration
+# ============================================================================
+
+# Snooze intervals in seconds (5, 10, 20, 25 minutes - then repeats)
+SNOOZE_INTERVALS = [5 * 60, 10 * 60, 20 * 60, 25 * 60]
+
+# Autonomous agent prompt - agent decides its own goals AND executes trades
+AUTONOMOUS_PROMPT = """[AUTONOMOUS MODE - Wake #{count}]
+
+You are running autonomously with FULL TRADING AUTHORITY.
+
+## Your Process:
+1. Check history(action="tail", limit=30) - review your memory and open positions
+2. Fetch current prices for watched symbols
+3. Analyze: Compare to your previous notes, spot opportunities
+4. DECIDE: Hold, Buy, Sell, or adjust positions
+5. EXECUTE: If you see a good trade, TAKE IT with use_ccxt
+6. Log everything to history for continuity
+
+## Watched Symbols: {symbols}
+
+## Trading Authority:
+- You CAN and SHOULD execute trades when you see opportunity
+- Use use_ccxt(action="create_order") to buy/sell
+- Start with small positions (e.g., $10-50 USDT worth)
+- Scale in/out based on conviction
+- Always log your reasoning BEFORE trading
+
+## Decision Framework:
+- **BUY** when: Support holds, momentum turning up, oversold
+- **SELL** when: Resistance rejection, momentum fading, overbought  
+- **HOLD** when: No clear signal, wait for better setup
+- **SCALE** when: Position going well, add on dips
+
+## Risk Rules:
+- Never go all-in - keep reserves
+- Use limit orders when possible for better fills
+- Log your entry price and reasoning
+- Set mental stop-loss levels in notes
+- If unsure, smaller position or skip
+
+## Memory is Critical:
+- Log BEFORE trade: "Planning to buy 0.001 BTC at $67,400 because..."
+- Log AFTER trade: "Executed: bought 0.001 BTC at $67,412"
+- Track P&L in notes: "Position now +2.3%"
+- Review past trades: Learn from wins AND losses
+
+## Example Flow:
+1. history(tail) → See: "Watching BTC $67,000 support"
+2. use_ccxt(fetch_ticker, BTC/USDT) → Price: $67,050
+3. Think: "Bouncing off support, volume picking up"
+4. history(add, note) → "Going long BTC, support holding"
+5. use_ccxt(create_order, buy, 0.001, BTC/USDT) → EXECUTE
+6. history(add, trade) → Log the fill
+
+Now wake up, check your memory, analyze the market, and TRADE if you see opportunity."""
+
+
+@dataclass
+class AutoTriggerState:
+    """Tracks auto-trigger state per client."""
+
+    enabled: bool = True
+    last_interaction: float = field(default_factory=time.time)
+    snooze_index: int = 0  # Current position in SNOOZE_INTERVALS
+    next_trigger: float = 0
+    trigger_count: int = 0
+    paused_until: float = 0  # Manual pause
+    symbols: List[str] = field(default_factory=lambda: ["BTC/USDT", "ETH/USDT"])
+
+    def get_next_interval(self) -> int:
+        """Get next snooze interval, cycling through the pattern."""
+        interval = SNOOZE_INTERVALS[self.snooze_index % len(SNOOZE_INTERVALS)]
+        return interval
+
+    def advance_snooze(self):
+        """Move to next snooze interval."""
+        self.snooze_index += 1
+        self.trigger_count += 1
+
+    def reset_snooze(self):
+        """Reset snooze back to first interval (user interacted)."""
+        self.snooze_index = 0
+        self.last_interaction = time.time()
+
+    def schedule_next(self):
+        """Schedule the next auto-trigger."""
+        interval = self.get_next_interval()
+        self.next_trigger = time.time() + interval
+        return interval
+
+    def should_trigger(self) -> bool:
+        """Check if we should auto-trigger now."""
+        if not self.enabled:
+            return False
+        if time.time() < self.paused_until:
+            return False
+        if self.next_trigger == 0:
+            return False
+        return time.time() >= self.next_trigger
+
+    def get_status(self) -> dict:
+        """Get current status for UI."""
+        now = time.time()
+        time_until_next = max(0, self.next_trigger - now) if self.next_trigger > 0 else 0
+        return {
+            "enabled": self.enabled,
+            "snooze_index": self.snooze_index,
+            "snooze_pattern": [s // 60 for s in SNOOZE_INTERVALS],  # in minutes
+            "current_interval_mins": self.get_next_interval() // 60,
+            "next_trigger_in_secs": int(time_until_next),
+            "trigger_count": self.trigger_count,
+            "paused": now < self.paused_until,
+            "paused_until": self.paused_until if now < self.paused_until else 0,
+            "symbols": self.symbols,
+        }
 
 
 # ============================================================================
@@ -76,10 +199,11 @@ class StreamMsg:
 class WSCallback:
     """Strands callback handler that streams to WebSocket in real-time."""
 
-    def __init__(self, websocket, loop, turn_id: str):
+    def __init__(self, websocket, loop, turn_id: str, is_auto: bool = False):
         self.ws = websocket
         self.loop = loop
         self.turn_id = turn_id
+        self.is_auto = is_auto  # Track if this is an auto-trigger
         self.tool_count = 0
         self.previous_tool_use = None
         self.actions: list[dict] = []
@@ -92,6 +216,10 @@ class WSCallback:
         if self._closed:
             return
         try:
+            if meta is None:
+                meta = {}
+            if self.is_auto:
+                meta["auto_trigger"] = True
             await self.ws.send(
                 StreamMsg(msg_type, self.turn_id, time.time(), data, meta).dumps()
             )
@@ -217,11 +345,22 @@ class WSCallback:
 # ============================================================================
 
 
-def create_trading_agent() -> Agent:
-    """Create a trading agent with CCXT and history tools."""
+def create_trading_agent(client_config: dict = None) -> Agent:
+    """Create a trading agent with CCXT and history tools.
 
-    # Model selection (same logic as devduck)
-    provider = os.getenv("MODEL_PROVIDER")
+    Args:
+        client_config: Optional dict with keys:
+            - provider: Model provider (bedrock, anthropic, openai, ollama)
+            - anthropicKey: Anthropic API key
+            - openaiKey: OpenAI API key
+            - ollamaHost: Ollama host URL
+            - modelId: Specific model ID
+            - systemPrompt: Custom system prompt to append
+    """
+    client_config = client_config or {}
+
+    # Model selection - prefer client config, then env, then auto-detect
+    provider = client_config.get("provider") or os.getenv("MODEL_PROVIDER")
 
     if not provider:
         # Auto-detect
@@ -234,24 +373,48 @@ def create_trading_agent() -> Agent:
                 boto3.client("sts").get_caller_identity()
                 provider = "bedrock"
         except:
-            if os.getenv("ANTHROPIC_API_KEY"):
+            if client_config.get("anthropicKey") or os.getenv("ANTHROPIC_API_KEY"):
                 provider = "anthropic"
-            elif os.getenv("OPENAI_API_KEY"):
+            elif client_config.get("openaiKey") or os.getenv("OPENAI_API_KEY"):
                 provider = "openai"
             else:
                 provider = "ollama"
 
-    # Create model
+    print(f"[AGENT] Creating agent with provider: {provider}")
+
+    # Create model based on provider
+    model_id = client_config.get("modelId") or os.getenv("STRANDS_MODEL_ID", "")
+
     if provider == "ollama":
         from strands.models.ollama import OllamaModel
 
+        ollama_host = client_config.get("ollamaHost") or os.getenv(
+            "OLLAMA_HOST", "http://localhost:11434"
+        )
         model = OllamaModel(
-            host=os.getenv("OLLAMA_HOST", "http://localhost:11434"),
-            model_id=os.getenv("STRANDS_MODEL_ID", "qwen3:1.7b"),
+            host=ollama_host,
+            model_id=model_id or "qwen3:1.7b",
             temperature=1,
             keep_alive="5m",
         )
+    elif provider == "anthropic":
+        from strands.models.anthropic import AnthropicModel
+
+        api_key = client_config.get("anthropicKey") or os.getenv("ANTHROPIC_API_KEY")
+        model = AnthropicModel(
+            client_args={"api_key": api_key} if api_key else {},
+            model_id=model_id or "claude-sonnet-4-20250514",
+        )
+    elif provider == "openai":
+        from strands.models.openai import OpenAIModel
+
+        api_key = client_config.get("openaiKey") or os.getenv("OPENAI_API_KEY")
+        model = OpenAIModel(
+            client_args={"api_key": api_key} if api_key else {},
+            model_id=model_id or "gpt-4o",
+        )
     else:
+        # Default to bedrock or use strands_tools utility
         try:
             from strands_tools.utils.models.model import create_model
 
@@ -261,59 +424,77 @@ def create_trading_agent() -> Agent:
 
             model = OllamaModel(
                 host=os.getenv("OLLAMA_HOST", "http://localhost:11434"),
-                model_id=os.getenv("STRANDS_MODEL_ID", "qwen3:1.7b"),
+                model_id=model_id or "qwen3:1.7b",
                 temperature=1,
                 keep_alive="5m",
             )
 
-    system_prompt = """You are a cryptocurrency trading assistant with real-time market access.
+    system_prompt = """You are an AUTONOMOUS cryptocurrency trading agent with FULL TRADING AUTHORITY.
 
-## Available Tools:
-1. **use_ccxt** - Unified crypto exchange interface
-   - fetch_ticker, fetch_ohlcv, fetch_balance
-   - create_order, cancel_order, fetch_orders
-   - Supports: Bybit, Binance, OKX, etc.
+## Core Identity:
+You are not an assistant - you are an autonomous trading agent that:
+- Monitors markets and EXECUTES trades independently
+- Remembers everything through history (your memory)
+- Makes trading decisions based on analysis
+- Manages positions over time
+- Operates like a professional trader 24/7
 
-2. **history** - Action logging for dashboard
-   - action="add" to log trades, signals, notes
-   - action="tail" to view recent history
+## Your Memory System (CRITICAL):
+The `history` tool is your persistent memory:
+- **Read**: history(action="tail", limit=30) - Review recent notes/trades
+- **Note**: history(action="add", type="note", data={"message": "..."})
+- **Signal**: history(action="add", type="signal", data={"symbol": "...", "action": "buy/sell"})
+- **Trade**: history(action="add", type="trade", data={"symbol": "...", "side": "buy", "amount": ..., "price": ...})
 
-3. **interface** - Dynamic UI & Theme control
-   Theme Actions:
-   - action="set_theme", preset="cyberpunk" (or: ocean_blue, sunset_orange, gold_luxury, matrix_green, dark_minimal, neon_green)
-   - action="update_color", color_name="neon", color_value="#ff00ff"
-   - action="list_presets" to see all themes
-   - action="reset_theme" for default neon green
+## Tools:
+1. **use_ccxt** - TRADING & DATA
+   - fetch_ticker: Get current price
+   - fetch_ohlcv: Get candles for analysis
+   - fetch_balance: Check your funds
+   - create_order: EXECUTE BUY/SELL orders
+   - cancel_order: Cancel open orders
    
-   UI Render Actions:
-   - action="render_card", title="...", content="...", target="timeline"
-   - action="render_table", title="...", data=[{...}]
-   - action="render_chart", title="...", data=[{"label": "BTC", "value": 100}]
-   - action="render_alert", content="Order filled!", style={"type": "success"}
-   - action="render_html", html="<div>Custom HTML</div>"
-   - action="render_progress", title="Loading...", data={"value": 75, "max": 100}
-   - action="clear_ui" to remove dynamic components
+2. **history** - YOUR MEMORY (use it!)
+   
+3. **interface** - Dashboard UI
 
-## Trading Commands:
-- "buy 0.001 BTC" → Create market buy order
-- "sell 100 USDT worth of ETH" → Market sell
-- "limit buy BTC at 50000" → Limit order
-- "check balance" → Show account balances
-- "price of ETH" → Get current ticker
+## Trading Authority:
+YOU ARE AUTHORIZED TO:
+- Execute market and limit orders
+- Buy and sell any watched symbol
+- Scale in and out of positions
+- Manage your own risk
 
-## Theme Customization:
-Users can ask to change colors/themes:
-- "change to cyberpunk theme" → interface(action="set_theme", preset="cyberpunk")
-- "make it blue" → interface(action="set_theme", preset="ocean_blue")
-- "I want gold colors" → interface(action="set_theme", preset="gold_luxury")
-- "change accent color to purple" → interface(action="update_color", color_name="neon", color_value="#9933ff")
+## Trading Rules:
+- Always check balance before trading
+- Start small ($10-50 per trade)
+- Log reasoning BEFORE executing
+- Log fill details AFTER executing
+- Track P&L in your notes
+- Never risk more than 10% on one trade
+
+## Decision Framework:
+- **BUY**: Support holds, oversold, momentum reversal
+- **SELL**: Resistance hit, overbought, momentum fading
+- **HOLD**: Unclear setup, wait for confirmation
+- **EXIT**: Hit target, stop-loss, thesis broken
+
+## Example Trade Flow:
+```
+1. history(tail) → Check memory
+2. use_ccxt(fetch_balance) → Have 100 USDT
+3. use_ccxt(fetch_ticker, BTC/USDT) → $67,050
+4. Analyze: "Support at $67k holding, RSI oversold"
+5. history(add, note) → "Going long BTC - support bounce"
+6. use_ccxt(create_order, buy, market, BTC/USDT, 0.0007) → BUY!
+7. history(add, trade) → Log entry
+```
 
 ## Important:
-- Always confirm order details before executing
-- Log all trades to history for the dashboard
-- Be concise but informative
-- Use use_ccxt for all exchange operations
-- Use interface for UI rendering and theme changes
+- You MAKE the trading decisions
+- Log everything to history
+- Be disciplined - follow your rules
+- Learn from past trades in your memory
 """
     # Add custom prompt from environment or file
     custom_prompt = ""
@@ -369,6 +550,12 @@ Users can ask to change colors/themes:
         print(f"Warning: Could not load history context: {e}")
 
     full_prompt = system_prompt + custom_prompt + history_context
+
+    # Add client custom system prompt (if provided)
+    client_custom_prompt = client_config.get("systemPrompt", "")
+    if client_custom_prompt:
+        full_prompt += f"\n\n## User Custom Instructions:\n{client_custom_prompt}\n"
+        print(f"[AGENT] Added custom system prompt ({len(client_custom_prompt)} chars)")
 
     return Agent(
         model=model,
@@ -552,16 +739,24 @@ async def handle_ui_action(agent, websocket, payload: dict, client_creds: dict):
 # ============================================================================
 
 
-async def run_turn(agent, websocket, loop, user_text: str, turn_id: str):
+async def run_turn(
+    agent, websocket, loop, user_text: str, turn_id: str, is_auto: bool = False
+):
     """Process a user message with streaming."""
     try:
         await websocket.send(
-            StreamMsg("turn_start", turn_id, time.time(), user_text).dumps()
+            StreamMsg(
+                "turn_start",
+                turn_id,
+                time.time(),
+                user_text,
+                {"auto_trigger": is_auto} if is_auto else None,
+            ).dumps()
         )
     except websockets.exceptions.ConnectionClosed:
         return
 
-    cb = WSCallback(websocket, loop, turn_id)
+    cb = WSCallback(websocket, loop, turn_id, is_auto=is_auto)
     agent.callback_handler = cb
 
     # Run agent in global thread pool (not creating new one each time!)
@@ -576,9 +771,80 @@ async def run_turn(agent, websocket, loop, user_text: str, turn_id: str):
             pass
 
     try:
-        await websocket.send(StreamMsg("turn_end", turn_id, time.time()).dumps())
+        await websocket.send(
+            StreamMsg(
+                "turn_end",
+                turn_id,
+                time.time(),
+                "",
+                {"auto_trigger": is_auto} if is_auto else None,
+            ).dumps()
+        )
     except websockets.exceptions.ConnectionClosed:
         pass
+
+
+# ============================================================================
+# Auto-Trigger Loop
+# ============================================================================
+
+
+async def auto_trigger_loop(
+    agent, websocket, loop, auto_state: AutoTriggerState, client_creds: dict
+):
+    """Background task that triggers agent periodically when idle."""
+    # Schedule first trigger
+    auto_state.schedule_next()
+
+    while True:
+        try:
+            # Check every 10 seconds
+            await asyncio.sleep(10)
+
+            # Send status update to client
+            try:
+                await websocket.send(
+                    StreamMsg(
+                        "auto_trigger_status",
+                        "",
+                        time.time(),
+                        auto_state.get_status(),
+                    ).dumps()
+                )
+            except websockets.exceptions.ConnectionClosed:
+                break
+
+            # Check if we should trigger
+            if not auto_state.should_trigger():
+                continue
+
+            # Build autonomous prompt with context
+            symbols_str = ", ".join(auto_state.symbols)
+            prompt = AUTONOMOUS_PROMPT.format(
+                count=auto_state.trigger_count + 1,
+                symbols=symbols_str
+            )
+
+            print(f"[AUTO] Autonomous wake #{auto_state.trigger_count + 1}")
+
+            # Run the agent
+            turn_id = f"auto-{uuid.uuid4()}"
+            await run_turn(agent, websocket, loop, prompt, turn_id, is_auto=True)
+
+            # Advance snooze and schedule next
+            auto_state.advance_snooze()
+            interval = auto_state.schedule_next()
+            print(f"[AUTO] Next wake in {interval // 60} minutes")
+
+        except websockets.exceptions.ConnectionClosed:
+            print("[AUTO] Client disconnected, stopping auto-trigger")
+            break
+        except asyncio.CancelledError:
+            print("[AUTO] Auto-trigger cancelled")
+            break
+        except Exception as e:
+            print(f"[AUTO] Error: {e}")
+            await asyncio.sleep(30)  # Back off on error
 
 
 # ============================================================================
@@ -594,15 +860,31 @@ async def handle_client(websocket):
     proj_root = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
     os.chdir(proj_root)
 
-    # Create agent for this connection
-    agent = create_trading_agent()
+    # Client config (can be updated via 'config' message)
+    client_config = {
+        "provider": os.getenv("MODEL_PROVIDER", ""),
+        "anthropicKey": os.getenv("ANTHROPIC_API_KEY", ""),
+        "openaiKey": os.getenv("OPENAI_API_KEY", ""),
+        "ollamaHost": os.getenv("OLLAMA_HOST", "http://localhost:11434"),
+        "modelId": os.getenv("STRANDS_MODEL_ID", ""),
+        "systemPrompt": "",  # Custom system prompt from client
+    }
 
     # Client credentials
     client_creds = {
         "exchange": os.getenv("DASH_EXCHANGE", "bybit"),
-        "apiKey": "",
-        "apiSecret": "",
+        "apiKey": os.getenv("CCXT_API_KEY", ""),
+        "apiSecret": os.getenv("CCXT_SECRET", ""),
     }
+
+    # Auto-trigger state for this client
+    auto_state = AutoTriggerState(
+        enabled=os.getenv("DASH_AUTO_TRIGGER", "true").lower() == "true",
+        symbols=os.getenv("DASH_SYMBOLS", "BTC/USDT,ETH/USDT").split(","),
+    )
+
+    # Create agent for this connection (will be recreated if config changes)
+    agent = create_trading_agent(client_config)
 
     # Send connected message
     try:
@@ -622,7 +904,23 @@ async def handle_client(websocket):
     except Exception:
         pass
 
+    # Send initial auto-trigger status
+    try:
+        await websocket.send(
+            StreamMsg(
+                "auto_trigger_status", "", time.time(), auto_state.get_status()
+            ).dumps()
+        )
+    except:
+        pass
+
     active_tasks = set()
+
+    # Start auto-trigger background task
+    auto_trigger_task = asyncio.create_task(
+        auto_trigger_loop(agent, websocket, loop, auto_state, client_creds)
+    )
+    active_tasks.add(auto_trigger_task)
 
     try:
         async for raw in websocket:
@@ -630,12 +928,75 @@ async def handle_client(websocket):
             if not raw:
                 continue
 
+            # User interacted - reset snooze pattern
+            auto_state.reset_snooze()
+            auto_state.schedule_next()
+
             # Handle JSON messages
             if raw.startswith("{"):
                 try:
                     payload = json.loads(raw)
 
-                    # Credentials update
+                    # Full config update from client UI
+                    if isinstance(payload, dict) and payload.get("type") == "config":
+                        print("[CONFIG] Received client configuration")
+
+                        # Update model config
+                        if payload.get("provider"):
+                            client_config["provider"] = payload["provider"]
+                        if payload.get("anthropicKey"):
+                            client_config["anthropicKey"] = payload["anthropicKey"]
+                            os.environ["ANTHROPIC_API_KEY"] = payload["anthropicKey"]
+                        if payload.get("openaiKey"):
+                            client_config["openaiKey"] = payload["openaiKey"]
+                            os.environ["OPENAI_API_KEY"] = payload["openaiKey"]
+                        if payload.get("ollamaHost"):
+                            client_config["ollamaHost"] = payload["ollamaHost"]
+                            os.environ["OLLAMA_HOST"] = payload["ollamaHost"]
+                        if payload.get("modelId"):
+                            client_config["modelId"] = payload["modelId"]
+                            os.environ["STRANDS_MODEL_ID"] = payload["modelId"]
+                        if "systemPrompt" in payload:
+                            client_config["systemPrompt"] = payload["systemPrompt"]
+
+                        # Update exchange credentials
+                        if payload.get("exchange"):
+                            client_creds["exchange"] = payload["exchange"]
+                        if payload.get("apiKey"):
+                            client_creds["apiKey"] = payload["apiKey"]
+                            os.environ["CCXT_API_KEY"] = payload["apiKey"]
+                        if payload.get("apiSecret"):
+                            client_creds["apiSecret"] = payload["apiSecret"]
+                            os.environ["CCXT_SECRET"] = payload["apiSecret"]
+
+                        # Update auto-trigger settings
+                        if "autoTrigger" in payload:
+                            auto_state.enabled = payload["autoTrigger"]
+                        if payload.get("symbols"):
+                            symbols = payload["symbols"]
+                            if isinstance(symbols, str):
+                                symbols = [s.strip() for s in symbols.split(",")]
+                            auto_state.symbols = symbols
+
+                        # Recreate agent with new config
+                        print(f"[CONFIG] Recreating agent with provider: {client_config['provider']}")
+                        agent = create_trading_agent(client_config)
+
+                        await websocket.send(
+                            StreamMsg(
+                                "config_updated",
+                                "",
+                                time.time(),
+                                {
+                                    "provider": client_config["provider"],
+                                    "exchange": client_creds["exchange"],
+                                    "hasSystemPrompt": bool(client_config["systemPrompt"]),
+                                },
+                            ).dumps()
+                        )
+                        continue
+
+                    # Credentials update (legacy, kept for compatibility)
                     if (
                         isinstance(payload, dict)
                         and payload.get("type") == "credentials"
@@ -651,6 +1012,43 @@ async def handle_client(websocket):
                                 "",
                                 time.time(),
                                 {"exchange": client_creds["exchange"]},
+                            ).dumps()
+                        )
+                        continue
+
+                    # Auto-trigger control
+                    if (
+                        isinstance(payload, dict)
+                        and payload.get("type") == "auto_trigger"
+                    ):
+                        action = payload.get("action")
+                        if action == "enable":
+                            auto_state.enabled = True
+                            auto_state.schedule_next()
+                        elif action == "disable":
+                            auto_state.enabled = False
+                        elif action == "pause":
+                            # Pause for N minutes
+                            mins = int(payload.get("minutes", 30))
+                            auto_state.paused_until = time.time() + mins * 60
+                        elif action == "resume":
+                            auto_state.paused_until = 0
+                        elif action == "trigger_now":
+                            # Manual trigger
+                            auto_state.next_trigger = time.time()
+                        elif action == "set_symbols":
+                            symbols = payload.get("symbols", [])
+                            if symbols:
+                                auto_state.symbols = symbols
+                        elif action == "status":
+                            pass  # Just send status below
+
+                        await websocket.send(
+                            StreamMsg(
+                                "auto_trigger_status",
+                                "",
+                                time.time(),
+                                auto_state.get_status(),
                             ).dumps()
                         )
                         continue
@@ -678,7 +1076,8 @@ async def handle_client(websocket):
                     pass
                 except websockets.exceptions.ConnectionClosed:
                     break
-                except Exception:
+                except Exception as e:
+                    print(f"[ERROR] Message handling error: {e}")
                     pass
 
             # Exit command
@@ -717,12 +1116,14 @@ async def handle_client(websocket):
 
 
 async def amain():
-    host = os.getenv("DASH_HOST", "127.0.0.1")
+    host = os.getenv("DASH_HOST", "0.0.0.0")
     port = int(os.getenv("DASH_PORT", "8090"))
 
     async with websockets.serve(handle_client, host, port):
         print(f"🚀 HashTrade Server running: ws://{host}:{port}")
         print(f"📊 Open web/index.html and click Connect")
+        print(f"⏰ Auto-trigger: {os.getenv('DASH_AUTO_TRIGGER', 'true')}")
+        print(f"📈 Symbols: {os.getenv('DASH_SYMBOLS', 'BTC/USDT,ETH/USDT')}")
         await asyncio.Future()
 
 
