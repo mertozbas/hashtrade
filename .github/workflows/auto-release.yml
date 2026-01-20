@@ -21,6 +21,11 @@ jobs:
         fetch-depth: 0
         token: ${{ secrets.GITHUB_TOKEN }}
 
+    - name: Fetch all tags
+      run: |
+        git fetch --tags --force
+        git describe --tags --always
+
     - name: Set up Python
       uses: actions/setup-python@v4
       with:
@@ -39,6 +44,8 @@ jobs:
         echo "Version: $VERSION"
 
     - name: Build package
+      env:
+        SETUPTOOLS_SCM_PRETEND_VERSION: ${{ steps.get_version.outputs.version }}
       run: |
         python -m build
 
