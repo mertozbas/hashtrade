@@ -73,6 +73,35 @@
     }
 
     .brand { display: flex; align-items: center; gap: 14px; }
+    
+    .header-left { display: flex; align-items: center; gap: 16px; }
+    
+    .quick-links { display: flex; gap: 8px; }
+    .quick-link {
+      width: 36px; height: 36px;
+      border-radius: 10px;
+      border: 1px solid var(--neon-border);
+      background: var(--bg-card);
+      color: var(--text-dim);
+      font-size: 16px;
+      display: flex; align-items: center; justify-content: center;
+      cursor: pointer;
+      transition: all 0.2s;
+      text-decoration: none;
+    }
+    .quick-link:hover, .quick-link:active { border-color: var(--neon); color: var(--neon); }
+    
+    .balance-display {
+      display: flex; align-items: center; gap: 8px;
+      padding: 8px 14px;
+      background: var(--bg-card);
+      border: 1px solid var(--neon-border);
+      border-radius: 12px;
+      font-size: 13px;
+      font-family: 'SF Mono', monospace;
+    }
+    .balance-label { color: var(--muted); }
+    .balance-value { color: var(--neon); font-weight: 600; }
 
     .logo {
       width: 44px; height: 44px;
@@ -92,16 +121,17 @@
     .header-actions { display: flex; gap: 10px; }
 
     .icon-btn {
-      width: 48px; height: 48px;
-      border-radius: var(--radius-sm);
-      border: 2px solid var(--neon-border);
+      width: 36px; height: 36px;
+      border-radius: 10px;
+      border: 1px solid var(--neon-border);
       background: var(--bg-card);
       color: var(--text);
-      font-size: 20px;
       display: flex; align-items: center; justify-content: center;
       cursor: pointer;
       transition: all 0.2s;
     }
+
+    .icon-btn svg { width: 18px; height: 18px; }
 
     .icon-btn:active { transform: scale(0.95); background: var(--neon-subtle); }
 
@@ -207,17 +237,24 @@
       z-index: 100;
     }
 
-    .input-row { display: flex; gap: 12px; align-items: flex-end; }
+    .input-row { display: flex; gap: 12px; align-items: flex-end; position: relative; }
+
+    .input-wrapper {
+      flex: 1;
+      position: relative;
+      display: flex;
+      align-items: flex-end;
+    }
 
     .chat-input {
-      flex: 1;
-      min-height: 56px; max-height: 140px;
-      padding: 18px 20px;
+      width: 100%;
+      min-height: 48px; max-height: 140px;
+      padding: 14px 56px 14px 18px;
       border-radius: var(--radius);
       border: 2px solid var(--neon-border);
       background: var(--bg-card);
       color: var(--text);
-      font-size: 17px; line-height: 1.4;
+      font-size: 16px; line-height: 1.4;
       resize: none; outline: none;
       font-family: inherit;
       transition: all 0.2s;
@@ -227,19 +264,76 @@
     .chat-input::placeholder { color: var(--muted); }
 
     .send-btn {
-      width: 56px; height: 56px;
-      border-radius: var(--radius);
+      position: absolute;
+      right: 6px;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 36px; height: 36px;
+      border-radius: 10px;
       border: none;
       background: linear-gradient(135deg, var(--neon) 0%, #00cc66 100%);
       color: #000;
-      font-size: 24px; font-weight: 700;
+      font-size: 18px; font-weight: 700;
       cursor: pointer;
       display: flex; align-items: center; justify-content: center;
       transition: all 0.2s;
-      box-shadow: 0 4px 20px var(--neon-glow);
+      box-shadow: 0 2px 10px var(--neon-glow);
     }
 
-    .send-btn:active { transform: scale(0.95); }
+    .send-btn:active { transform: scale(0.9); }
+
+    /* Inline Time Travel */
+    .time-travel-inline {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 0;
+    }
+    .time-travel-inline .time-btn-sm {
+      width: 32px; height: 32px;
+      border-radius: 50%;
+      border: 1px solid var(--neon-border);
+      background: rgba(0,0,0,0.3);
+      color: var(--text-dim);
+      font-size: 12px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.2s;
+    }
+    .time-travel-inline .time-btn-sm:hover { border-color: var(--neon); color: var(--neon); }
+    .time-travel-inline .time-btn-sm.play { background: var(--neon); color: #000; border: none; }
+    .time-travel-inline .time-slider-sm {
+      flex: 1;
+      height: 6px;
+      -webkit-appearance: none;
+      background: rgba(255,255,255,0.1);
+      border-radius: 3px;
+      min-width: 80px;
+    }
+    .time-travel-inline .time-slider-sm::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      width: 16px; height: 16px;
+      border-radius: 50%;
+      background: var(--neon);
+      cursor: pointer;
+      box-shadow: 0 0 10px var(--neon-glow);
+    }
+    .time-travel-inline .time-readout-sm {
+      font-size: 10px;
+      color: var(--muted);
+      font-family: 'SF Mono', monospace;
+      min-width: 60px;
+      text-align: center;
+    }
+    .time-travel-inline .live-dot {
+      width: 8px; height: 8px;
+      border-radius: 50%;
+      background: var(--neon);
+      animation: pulse 1.5s infinite;
+    }
+    .time-travel-inline .live-dot.paused { background: var(--warn); animation: none; }
 
     /* FABs */
     .fab {
@@ -264,12 +358,77 @@
       font-size: 28px;
       border-color: var(--neon);
       box-shadow: 0 4px 25px rgba(0, 0, 0, 0.5), 0 0 40px var(--neon-glow);
+      display: none; /* Hidden - replaced by mini chart */
     }
+
+    /* Mini Chart Widget */
+    .mini-chart {
+      position: fixed;
+      bottom: calc(var(--safe-bottom) + 160px);
+      right: 16px;
+      width: 220px;
+      height: 120px;
+      border-radius: 16px;
+      border: 1px solid var(--neon-border);
+      background: rgba(10, 20, 15, 0.7);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      cursor: pointer;
+      z-index: 99;
+      overflow: hidden;
+      transition: all 0.3s ease;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4), 0 0 30px rgba(0, 255, 136, 0.1);
+    }
+    .mini-chart:hover {
+      transform: scale(1.05);
+      border-color: var(--neon);
+      box-shadow: 0 4px 25px rgba(0, 0, 0, 0.5), 0 0 40px var(--neon-glow);
+    }
+    .mini-chart canvas { width: 100%; height: 100%; }
+    .mini-chart-overlay {
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      padding: 6px 10px;
+      background: linear-gradient(180deg, rgba(0,0,0,0.6) 0%, transparent 100%);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .mini-chart-symbol { font-size: 10px; font-weight: 700; color: var(--neon); }
+    .mini-chart-price { font-size: 10px; font-weight: 600; color: var(--text); font-family: 'SF Mono', monospace; }
+
+    /* Auto Timer Widget */
+    .auto-timer-widget {
+      position: fixed;
+      bottom: calc(var(--safe-bottom) + 160px);
+      left: 16px;
+      padding: 10px 14px;
+      border-radius: 14px;
+      border: 1px solid var(--neon-border);
+      background: rgba(10, 20, 15, 0.7);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      cursor: pointer;
+      z-index: 99;
+      transition: all 0.3s ease;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .auto-timer-widget:hover { border-color: var(--warn); }
+    .auto-timer-widget.enabled { border-color: var(--warn); box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4), 0 0 20px rgba(255, 204, 0, 0.2); }
+    .auto-timer-widget.paused { opacity: 0.6; }
+    .auto-timer-label { font-size: 10px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.5px; }
+    .auto-timer-value { font-size: 18px; font-weight: 700; font-family: 'SF Mono', monospace; color: var(--text); }
+    .auto-timer-widget.enabled .auto-timer-value { color: var(--warn); }
+    .auto-timer-status { font-size: 9px; color: var(--muted); }
 
     .time-fab {
       bottom: calc(var(--safe-bottom) + 90px); left: 20px;
       width: 56px; height: 56px;
       font-size: 22px;
+      display: none; /* Hidden - replaced by inline controls */
     }
 
     .auto-fab {
@@ -278,6 +437,7 @@
       font-size: 20px;
       flex-direction: column;
       color: var(--muted);
+      display: none; /* Hidden - replaced by timer widget */
     }
 
     .auto-fab.enabled { border-color: var(--warn); color: var(--warn); box-shadow: 0 0 25px rgba(255, 204, 0, 0.3); }
@@ -370,8 +530,11 @@
       border: 1px solid var(--neon-border);
       border-bottom: none;
       padding: 0;
-      overflow: hidden;
+      overflow-x: hidden;
+      overflow-y: auto;
       animation: modalUp 0.35s ease;
+      display: flex;
+      flex-direction: column;
     }
 
     @keyframes modalUp { from { transform: translateY(100%); } to { transform: translateY(0); } }
@@ -382,6 +545,7 @@
       top: 0;
       background: linear-gradient(180deg, #0d1a14 0%, #0d1a14 80%, transparent 100%);
       z-index: 10;
+      overflow: visible;
     }
 
     .modal-handle { width: 48px; height: 5px; background: rgba(255,255,255,0.3); border-radius: 3px; margin: 0 auto 20px; }
@@ -390,37 +554,53 @@
     .modal-body {
       padding: 0 24px calc(var(--safe-bottom) + 24px);
       overflow-y: auto;
-      max-height: calc(92vh - 100px);
+      -webkit-overflow-scrolling: touch;
+      flex: 1;
+      min-height: 0;
     }
 
-    /* Tabs */
+    /* Tabs - Clean Scrollable Implementation */
+    .tabs-wrapper {
+      width: 100%;
+      overflow: hidden;
+      margin-bottom: 20px;
+    }
+    
     .tabs {
       display: flex;
       gap: 6px;
       padding: 6px;
       background: rgba(0,0,0,0.3);
-      border-radius: 16px;
-      margin-bottom: 24px;
+      border-radius: 12px;
+      overflow-x: auto;
+      overflow-y: hidden;
+      -webkit-overflow-scrolling: touch;
+      scroll-behavior: smooth;
+      scrollbar-width: none;
     }
+    .tabs::-webkit-scrollbar { display: none; }
 
     .tab {
-      flex: 1;
-      padding: 14px 8px;
-      border-radius: 12px;
+      flex-shrink: 0;
+      padding: 10px 14px;
+      border-radius: 10px;
       border: none;
       background: transparent;
       color: var(--muted);
-      font-size: 14px;
+      font-size: 11px;
       font-weight: 600;
       cursor: pointer;
       transition: all 0.2s;
       display: flex;
       flex-direction: column;
       align-items: center;
-      gap: 4px;
+      gap: 3px;
+      white-space: nowrap;
+      -webkit-tap-highlight-color: transparent;
+      touch-action: manipulation;
     }
 
-    .tab-icon { font-size: 20px; }
+    .tab-icon { font-size: 16px; }
     .tab.active { background: var(--neon); color: #000; }
 
     .tab-content { display: none; }
@@ -633,24 +813,47 @@
       .message { max-width: 70%; }
       .modal-sheet { border-radius: 28px; margin: 20px; max-height: 85vh; border: 1px solid var(--neon-border); }
     }
+    
+    @media (max-width: 767px) {
+      /* Mobile: hide brand text, keep only logo */
+      .brand-text { display: none; }
+    }
   </style>
 </head>
 <body>
   <div class="app">
     <header>
-      <div class="brand">
-        <div class="logo">&nbsp;</div>
-        <div class="brand-text">
-          <h1>HashTrade</h1>
-          <div class="status">
-            <span class="status-dot" id="statusDot"></span>
-            <span id="statusText">Disconnected</span>
+      <div class="header-left">
+        <div class="brand">
+          <div class="logo">&nbsp;</div>
+          <div class="brand-text">
+            <h1>HashTrade</h1>
+            <div class="status">
+              <span class="status-dot" id="statusDot"></span>
+              <span id="statusText">Disconnected</span>
+            </div>
           </div>
+        </div>
+        <div class="balance-display">
+          <span class="balance-label">BAL</span>
+          <span class="balance-value" id="balanceValue">$0.00</span>
+        </div>
+        <div class="quick-links">
+          <a href="https://github.com/cagataycali/hashtrade" target="_blank" class="quick-link" title="GitHub">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/></svg>
+          </a>
+          <a href="https://pypi.org/project/hashtrade/" target="_blank" class="quick-link" title="PyPI">
+            <svg width="18" height="18" viewBox="0 0 256 255" fill="currentColor"><path d="M126.916.072c-64.832 0-60.784 28.115-60.784 28.115l.072 29.128h61.868v8.745H41.631S.145 61.355.145 126.77c0 65.417 36.21 63.097 36.21 63.097h21.61v-30.356s-1.165-36.21 35.632-36.21h61.362s34.475.557 34.475-33.319V33.97S194.67.072 126.916.072zM92.802 19.66a11.12 11.12 0 0 1 11.13 11.13 11.12 11.12 0 0 1-11.13 11.13 11.12 11.12 0 0 1-11.13-11.13 11.12 11.12 0 0 1 11.13-11.13z"/><path d="M128.757 254.126c64.832 0 60.784-28.115 60.784-28.115l-.072-29.127H127.6v-8.745h86.441s41.486 4.705 41.486-60.712c0-65.416-36.21-63.096-36.21-63.096h-21.61v30.355s1.165 36.21-35.632 36.21h-61.362s-34.475-.557-34.475 33.32v56.013s-5.235 33.897 62.518 33.897zm34.114-19.586a11.12 11.12 0 0 1-11.13-11.13 11.12 11.12 0 0 1 11.13-11.131 11.12 11.12 0 0 1 11.13 11.13 11.12 11.12 0 0 1-11.13 11.13z"/></svg>
+          </a>
         </div>
       </div>
       <div class="header-actions">
-        <button class="icon-btn" id="btnClear" title="Clear">🗑️</button>
-        <button class="icon-btn" id="btnSettings" title="Settings">⚙️</button>
+        <button class="icon-btn" id="btnClear" title="Clear">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18"/><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"/><line x1="10" y1="11" x2="10" y2="17"/><line x1="14" y1="11" x2="14" y2="17"/></svg>
+        </button>
+        <button class="icon-btn" id="btnSettings" title="Settings">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+        </button>
       </div>
     </header>
 
@@ -719,10 +922,39 @@
       </div>
     </div>
 
+    <!-- Auto Timer Widget -->
+    <div class="auto-timer-widget" id="autoTimerWidget" title="Click to configure">
+      <div>
+        <div class="auto-timer-label">Next Check</div>
+        <div class="auto-timer-value" id="autoTimerValue">--:--</div>
+      </div>
+      <div class="auto-timer-status" id="autoTimerStatus">OFF</div>
+    </div>
+
+    <!-- Mini Chart Widget -->
+    <div class="mini-chart" id="miniChart" title="Click to expand">
+      <canvas id="miniChartCanvas"></canvas>
+      <div class="mini-chart-overlay">
+        <span class="mini-chart-symbol" id="miniChartSymbol">BTC/USDT</span>
+        <span class="mini-chart-price" id="miniChartPrice">--</span>
+      </div>
+    </div>
+
     <div class="input-area">
+      <div class="time-travel-inline" id="timeTravelInline">
+        <div class="live-dot" id="liveDotInline"></div>
+        <button class="time-btn-sm" id="btnPrevInline">◀</button>
+        <button class="time-btn-sm play" id="btnPlayInline">▶</button>
+        <button class="time-btn-sm" id="btnNextInline">▶</button>
+        <input type="range" class="time-slider-sm" id="timeSliderInline" min="0" max="0" value="0" />
+        <span class="time-readout-sm" id="timeReadoutInline">LIVE</span>
+        <button class="time-btn-sm" id="btnLiveInline">⟲</button>
+      </div>
       <div class="input-row">
-        <textarea class="chat-input" id="chatInput" placeholder="Ask anything..." rows="1"></textarea>
-        <button class="send-btn" id="btnSend">↑</button>
+        <div class="input-wrapper">
+          <textarea class="chat-input" id="chatInput" placeholder="Ask anything..." rows="1"></textarea>
+          <button class="send-btn" id="btnSend">↑</button>
+        </div>
       </div>
     </div>
   </div>
@@ -762,11 +994,14 @@
         <div class="modal-handle"></div>
         <div class="modal-title">⚙️ Settings</div>
         
-        <div class="tabs">
-          <button class="tab active" data-tab="connection"><span class="tab-icon">🔌</span>Connect</button>
-          <button class="tab" data-tab="agent"><span class="tab-icon">🤖</span>Agent</button>
-          <button class="tab" data-tab="exchange"><span class="tab-icon">💱</span>Exchange</button>
-          <button class="tab" data-tab="export"><span class="tab-icon">📤</span>Share</button>
+        <div class="tabs-wrapper">
+          <div class="tabs">
+            <button class="tab active" data-tab="connection"><span class="tab-icon">🔌</span>Connect</button>
+            <button class="tab" data-tab="agent"><span class="tab-icon">🤖</span>Agent</button>
+            <button class="tab" data-tab="exchange"><span class="tab-icon">💱</span>Exchange</button>
+            <button class="tab" data-tab="messages"><span class="tab-icon">💬</span>Chat</button>
+            <button class="tab" data-tab="export"><span class="tab-icon">📤</span>Share</button>
+          </div>
         </div>
       </div>
 
@@ -884,6 +1119,38 @@
                 </select>
               </div>
             </div>
+          </div>
+        </div>
+
+        <!-- Messages Tab -->
+        <div class="tab-content" id="tab-messages">
+          <div class="export-card">
+            <div class="export-title">📤 Export Messages</div>
+            <p style="font-size: 14px; color: var(--text-dim); margin-bottom: 16px; line-height: 1.5;">
+              Export your conversation history to a JSON file for backup or analysis.
+            </p>
+            <div class="panel-grid" style="margin-bottom: 16px;">
+              <div class="panel-stat"><div class="panel-stat-label">Messages</div><div class="panel-stat-value" id="msgCount">0</div></div>
+              <div class="panel-stat"><div class="panel-stat-label">Events</div><div class="panel-stat-value" id="eventCount">0</div></div>
+            </div>
+            <button class="btn btn-primary" onclick="exportMessages()">📥 Download JSON</button>
+          </div>
+          
+          <div class="form-section">
+            <div class="form-section-title">📥 Import Messages</div>
+            <div class="form-group">
+              <label class="form-label">Load from JSON File</label>
+              <input type="file" class="form-input" id="importMessagesFile" accept=".json" style="padding: 12px;" />
+            </div>
+            <div class="form-group">
+              <label class="form-label">Or paste JSON</label>
+              <textarea class="form-textarea" id="importMessagesText" rows="4" placeholder='{"messages": [...], "events": [...]}'></textarea>
+            </div>
+            <div class="toggle-row">
+              <span class="toggle-label">Merge with existing</span>
+              <div class="toggle" id="toggleMergeMessages"></div>
+            </div>
+            <button class="btn btn-secondary" onclick="importMessages()" style="margin-top: 16px;">📤 Import Messages</button>
           </div>
         </div>
 
@@ -1106,7 +1373,7 @@
     function closeSettings() { els.settingsModal.classList.remove('show'); }
 
     // Tabs
-    document.querySelectorAll('.tab').forEach(t => t.addEventListener('click', () => { document.querySelectorAll('.tab').forEach(b => b.classList.remove('active')); document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active')); t.classList.add('active'); document.getElementById('tab-' + t.dataset.tab).classList.add('active'); }));
+    document.querySelectorAll('.tabs .tab').forEach(t => t.addEventListener('click', () => { document.querySelectorAll('.tabs .tab').forEach(b => b.classList.remove('active')); document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active')); t.classList.add('active'); document.getElementById('tab-' + t.dataset.tab).classList.add('active'); }));
     document.querySelectorAll('.toggle').forEach(t => t.addEventListener('click', () => t.classList.toggle('active')));
     document.getElementById('toggleEncrypt').addEventListener('click', () => { document.getElementById('encryptPasswordGroup').style.display = document.getElementById('toggleEncrypt').classList.contains('active') ? 'block' : 'none'; });
     document.getElementById('settingsProvider').addEventListener('change', updateProviderFields);
@@ -1121,6 +1388,7 @@
         showToast('Connected!', 'success');
         state.ws.send(JSON.stringify({ type: 'config', provider: state.settings.provider, anthropicKey: state.settings.anthropicKey, openaiKey: state.settings.openaiKey, ollamaHost: state.settings.ollamaHost, modelId: state.settings.modelId, systemPrompt: state.settings.systemPrompt, symbols: state.settings.symbols, exchange: state.settings.exchange, apiKey: state.settings.apiKey, apiSecret: state.settings.apiSecret, autoTrigger: state.settings.autoTrigger }));
         requestChart();
+        requestBalance();
       };
       state.ws.onclose = () => { state.connected = false; els.statusDot.classList.remove('connected'); els.statusText.textContent = 'Disconnected'; };
       state.ws.onerror = () => showToast('Connection error', 'error');
@@ -1143,6 +1411,7 @@
         case 'history': if (msg.data) { state.historyItems.push(msg.data); addHistoryItem(msg.data); } break;
         case 'history_cleared': state.historyItems = []; clearTimeline(); break;
         case 'ohlcv': if (msg.data) { state.chart = msg.data; updateChartStats(); if (els.chartModal.classList.contains('show')) drawChart(); } break;
+        case 'balance': if (msg.data !== undefined) updateBalance(msg.data); break;
         case 'theme_update': applyTheme(msg.data); break;
         case 'ui_alert': showToast(msg.content, msg.alert_type || 'info'); break;
         case 'ui_render': renderDynamicUI(msg); break;
@@ -1174,16 +1443,119 @@
     function escapeHtml(s) { return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
 
     // Auto-Trigger
-    function updateAutoTriggerUI() { const at = state.autoTrigger; if (at.enabled && !at.paused) { els.autoFab.classList.add('enabled'); } else els.autoFab.classList.remove('enabled'); if (at.enabled && !at.paused && at.nextTriggerIn > 0) { const m = Math.floor(at.nextTriggerIn / 60), s = at.nextTriggerIn % 60; els.autoFabTimer.textContent = m > 0 ? `${m}m` : `${s}s`; } else els.autoFabTimer.textContent = at.paused ? '⏸' : '--'; els.autoStatusText.textContent = at.paused ? 'Paused' : (at.enabled ? 'Active' : 'Off'); els.autoStatusText.style.color = at.paused ? 'var(--warn)' : (at.enabled ? 'var(--good)' : 'var(--muted)'); if (at.nextTriggerIn > 0) { const m = Math.floor(at.nextTriggerIn / 60), s = at.nextTriggerIn % 60; els.autoNextIn.textContent = `${m}:${s.toString().padStart(2, '0')}`; } else els.autoNextIn.textContent = '--:--'; els.autoTriggerCount.textContent = at.triggerCount; els.autoCurrentInterval.textContent = `${at.currentInterval}m`; const steps = els.snoozePattern.querySelectorAll('.snooze-pill'); steps.forEach((step, i) => step.classList.toggle('active', i === at.snoozeIndex % at.snoozePattern.length)); const toggleBtn = document.getElementById('btnAutoToggle'); if (at.enabled) { toggleBtn.textContent = 'Disable'; toggleBtn.classList.remove('primary'); toggleBtn.classList.add('danger'); } else { toggleBtn.textContent = 'Enable'; toggleBtn.classList.add('primary'); toggleBtn.classList.remove('danger'); } }
+    function updateAutoTriggerUI() { 
+      const at = state.autoTrigger; 
+      // Old FAB update
+      if (at.enabled && !at.paused) { els.autoFab.classList.add('enabled'); } else els.autoFab.classList.remove('enabled'); 
+      if (at.enabled && !at.paused && at.nextTriggerIn > 0) { const m = Math.floor(at.nextTriggerIn / 60), s = at.nextTriggerIn % 60; els.autoFabTimer.textContent = m > 0 ? `${m}m` : `${s}s`; } else els.autoFabTimer.textContent = at.paused ? '⏸' : '--'; 
+      els.autoStatusText.textContent = at.paused ? 'Paused' : (at.enabled ? 'Active' : 'Off'); 
+      els.autoStatusText.style.color = at.paused ? 'var(--warn)' : (at.enabled ? 'var(--good)' : 'var(--muted)'); 
+      if (at.nextTriggerIn > 0) { const m = Math.floor(at.nextTriggerIn / 60), s = at.nextTriggerIn % 60; els.autoNextIn.textContent = `${m}:${s.toString().padStart(2, '0')}`; } else els.autoNextIn.textContent = '--:--'; 
+      els.autoTriggerCount.textContent = at.triggerCount; 
+      els.autoCurrentInterval.textContent = `${at.currentInterval}m`; 
+      const steps = els.snoozePattern.querySelectorAll('.snooze-pill'); 
+      steps.forEach((step, i) => step.classList.toggle('active', i === at.snoozeIndex % at.snoozePattern.length)); 
+      const toggleBtn = document.getElementById('btnAutoToggle'); 
+      if (at.enabled) { toggleBtn.textContent = 'Disable'; toggleBtn.classList.remove('primary'); toggleBtn.classList.add('danger'); } else { toggleBtn.textContent = 'Enable'; toggleBtn.classList.add('primary'); toggleBtn.classList.remove('danger'); }
+      
+      // New timer widget update
+      const widget = document.getElementById('autoTimerWidget');
+      const timerValue = document.getElementById('autoTimerValue');
+      const timerStatus = document.getElementById('autoTimerStatus');
+      if (widget && timerValue && timerStatus) {
+        widget.classList.toggle('enabled', at.enabled && !at.paused);
+        widget.classList.toggle('paused', at.paused);
+        if (at.enabled && !at.paused && at.nextTriggerIn > 0) {
+          const m = Math.floor(at.nextTriggerIn / 60), s = at.nextTriggerIn % 60;
+          timerValue.textContent = `${m}:${s.toString().padStart(2, '0')}`;
+        } else {
+          timerValue.textContent = '--:--';
+        }
+        timerStatus.textContent = at.paused ? 'PAUSED' : (at.enabled ? `#${at.triggerCount}` : 'OFF');
+      }
+    }
     function sendAutoTriggerCommand(action, extra = {}) { if (state.ws && state.ws.readyState === 1) state.ws.send(JSON.stringify({ type: 'auto_trigger', action, ...extra })); }
 
     // Chart
     function send() { const text = els.chatInput.value.trim(); if (!text || !state.connected) return; els.chatInput.value = ''; els.chatInput.style.height = 'auto'; state.ws.send(text); }
     function requestChart() { if (!state.ws || state.ws.readyState !== 1) return; state.ws.send(JSON.stringify({ type: 'ui', action: 'fetch_ohlcv', exchange: state.settings.exchange, symbol: state.settings.symbol, timeframe: state.settings.timeframe, limit: 200 })); }
+    function requestBalance() { if (!state.ws || state.ws.readyState !== 1) return; state.ws.send(JSON.stringify({ type: 'ui', action: 'fetch_balance', exchange: state.settings.exchange })); }
     function openChart() { els.chartModal.classList.add('show'); document.getElementById('chartSymbol').textContent = state.chart.symbol || state.settings.symbol; requestChart(); setTimeout(drawChart, 100); }
     function closeChart() { els.chartModal.classList.remove('show'); }
-    function updateChartStats() { const ohlcv = state.chart.ohlcv || []; if (!ohlcv.length) return; const last = ohlcv[ohlcv.length - 1], first = ohlcv[0]; const price = last[4], open = first[1]; const change = ((price - open) / open * 100).toFixed(2); const high = Math.max(...ohlcv.map(c => c[2])), low = Math.min(...ohlcv.map(c => c[3])); document.getElementById('statPrice').textContent = '$' + price.toLocaleString(); const changeEl = document.getElementById('stat24h'); changeEl.textContent = (change >= 0 ? '+' : '') + change + '%'; changeEl.className = 'chart-stat-value ' + (change >= 0 ? 'up' : 'down'); document.getElementById('statHigh').textContent = '$' + high.toLocaleString(); document.getElementById('statLow').textContent = '$' + low.toLocaleString(); document.getElementById('chartMeta').textContent = `${state.chart.timeframe || state.settings.timeframe} • ${ohlcv.length} candles`; }
-    function drawChart() { const canvas = els.chartCanvas; const wrap = canvas.parentElement; const dpr = window.devicePixelRatio || 1; const w = wrap.clientWidth, h = wrap.clientHeight; canvas.width = w * dpr; canvas.height = h * dpr; canvas.style.width = w + 'px'; canvas.style.height = h + 'px'; const ctx = canvas.getContext('2d'); ctx.scale(dpr, dpr); ctx.clearRect(0, 0, w, h); const ohlcv = state.chart.ohlcv || []; if (!ohlcv.length) { ctx.fillStyle = 'rgba(0, 255, 136, 0.4)'; ctx.font = '16px system-ui'; ctx.fillText('No data', w/2 - 35, h/2); return; } ctx.strokeStyle = 'rgba(0, 255, 136, 0.1)'; ctx.lineWidth = 1; for (let i = 0; i <= 5; i++) { const y = (h / 5) * i; ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(w, y); ctx.stroke(); } const closes = ohlcv.map(c => c[4]); const minY = Math.min(...closes), maxY = Math.max(...closes); const pad = (maxY - minY) * 0.1 || 1; const lo = minY - pad, hi = maxY + pad; const xScaleIdx = (i) => (i / (ohlcv.length - 1)) * (w - 20) + 10; const yScale = (v) => h - ((v - lo) / (hi - lo) * (h - 20) + 10); const gradient = ctx.createLinearGradient(0, 0, 0, h); gradient.addColorStop(0, 'rgba(0, 255, 136, 0.3)'); gradient.addColorStop(1, 'rgba(0, 255, 136, 0)'); ctx.beginPath(); ctx.moveTo(xScaleIdx(0), h); for (let i = 0; i < ohlcv.length; i++) ctx.lineTo(xScaleIdx(i), yScale(closes[i])); ctx.lineTo(xScaleIdx(ohlcv.length - 1), h); ctx.closePath(); ctx.fillStyle = gradient; ctx.fill(); ctx.strokeStyle = '#00ff88'; ctx.lineWidth = 2.5; ctx.shadowColor = 'rgba(0, 255, 136, 0.6)'; ctx.shadowBlur = 10; ctx.beginPath(); for (let i = 0; i < ohlcv.length; i++) { const x = xScaleIdx(i), y = yScale(closes[i]); if (i === 0) ctx.moveTo(x, y); else ctx.lineTo(x, y); } ctx.stroke(); ctx.shadowBlur = 0; ctx.fillStyle = '#00ff88'; ctx.font = 'bold 16px SF Mono, monospace'; ctx.fillText('$' + closes[closes.length - 1].toLocaleString(), 14, 28); }
+    function updateChartStats() { const ohlcv = state.chart.ohlcv || []; if (!ohlcv.length) return; const last = ohlcv[ohlcv.length - 1], first = ohlcv[0]; const price = last[4], open = first[1]; const change = ((price - open) / open * 100).toFixed(2); const high = Math.max(...ohlcv.map(c => c[2])), low = Math.min(...ohlcv.map(c => c[3])); document.getElementById('statPrice').textContent = '$' + price.toLocaleString(); const changeEl = document.getElementById('stat24h'); changeEl.textContent = (change >= 0 ? '+' : '') + change + '%'; changeEl.className = 'chart-stat-value ' + (change >= 0 ? 'up' : 'down'); document.getElementById('statHigh').textContent = '$' + high.toLocaleString(); document.getElementById('statLow').textContent = '$' + low.toLocaleString(); document.getElementById('chartMeta').textContent = `${state.chart.timeframe || state.settings.timeframe} • ${ohlcv.length} candles`; drawMiniChart(); }
+    function drawChart() { const canvas = els.chartCanvas; const wrap = canvas.parentElement; const dpr = window.devicePixelRatio || 1; const w = wrap.clientWidth, h = wrap.clientHeight; canvas.width = w * dpr; canvas.height = h * dpr; canvas.style.width = w + 'px'; canvas.style.height = h + 'px'; const ctx = canvas.getContext('2d'); ctx.scale(dpr, dpr); ctx.clearRect(0, 0, w, h); const ohlcv = state.chart.ohlcv || []; if (!ohlcv.length) { ctx.fillStyle = 'rgba(0, 255, 136, 0.4)'; ctx.font = '16px system-ui'; ctx.fillText('No data', w/2 - 35, h/2); return; } ctx.strokeStyle = 'rgba(0, 255, 136, 0.1)'; ctx.lineWidth = 1; for (let i = 0; i <= 5; i++) { const y = (h / 5) * i; ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(w, y); ctx.stroke(); } const closes = ohlcv.map(c => c[4]); const minY = Math.min(...closes), maxY = Math.max(...closes); const pad = (maxY - minY) * 0.1 || 1; const lo = minY - pad, hi = maxY + pad; const xScaleIdx = (i) => (i / (ohlcv.length - 1)) * (w - 20) + 10; const yScale = (v) => h - ((v - lo) / (hi - lo) * (h - 20) + 10); const gradient = ctx.createLinearGradient(0, 0, 0, h); gradient.addColorStop(0, 'rgba(0, 255, 136, 0.3)'); gradient.addColorStop(1, 'rgba(0, 255, 136, 0)'); ctx.beginPath(); ctx.moveTo(xScaleIdx(0), h); for (let i = 0; i < ohlcv.length; i++) ctx.lineTo(xScaleIdx(i), yScale(closes[i])); ctx.lineTo(xScaleIdx(ohlcv.length - 1), h); ctx.closePath(); ctx.fillStyle = gradient; ctx.fill(); ctx.strokeStyle = '#00ff88'; ctx.lineWidth = 2.5; ctx.shadowColor = 'rgba(0, 255, 136, 0.6)'; ctx.shadowBlur = 10; ctx.beginPath(); for (let i = 0; i < ohlcv.length; i++) { const x = xScaleIdx(i), y = yScale(closes[i]); if (i === 0) ctx.moveTo(x, y); else ctx.lineTo(x, y); } ctx.stroke(); ctx.shadowBlur = 0; ctx.fillStyle = '#00ff88'; ctx.font = 'bold 16px SF Mono, monospace'; ctx.fillText('$' + closes[closes.length - 1].toLocaleString(), 14, 28); drawMiniChart(); }
+    
+    function drawMiniChart() {
+      const canvas = document.getElementById('miniChartCanvas');
+      if (!canvas) return;
+      const wrap = canvas.parentElement;
+      const dpr = window.devicePixelRatio || 1;
+      const w = wrap.clientWidth, h = wrap.clientHeight;
+      canvas.width = w * dpr; canvas.height = h * dpr;
+      canvas.style.width = w + 'px'; canvas.style.height = h + 'px';
+      const ctx = canvas.getContext('2d');
+      ctx.scale(dpr, dpr);
+      ctx.clearRect(0, 0, w, h);
+      
+      const ohlcv = state.chart.ohlcv || [];
+      if (!ohlcv.length) return;
+      
+      const closes = ohlcv.map(c => c[4]);
+      const minY = Math.min(...closes), maxY = Math.max(...closes);
+      const pad = (maxY - minY) * 0.1 || 1;
+      const lo = minY - pad, hi = maxY + pad;
+      const xScale = (i) => (i / (ohlcv.length - 1)) * w;
+      const yScale = (v) => h - ((v - lo) / (hi - lo) * h);
+      
+      // Gradient fill
+      const gradient = ctx.createLinearGradient(0, 0, 0, h);
+      gradient.addColorStop(0, 'rgba(0, 255, 136, 0.4)');
+      gradient.addColorStop(1, 'rgba(0, 255, 136, 0)');
+      ctx.beginPath();
+      ctx.moveTo(0, h);
+      for (let i = 0; i < ohlcv.length; i++) ctx.lineTo(xScale(i), yScale(closes[i]));
+      ctx.lineTo(w, h);
+      ctx.closePath();
+      ctx.fillStyle = gradient;
+      ctx.fill();
+      
+      // Line
+      ctx.strokeStyle = '#00ff88';
+      ctx.lineWidth = 1.5;
+      ctx.shadowColor = 'rgba(0, 255, 136, 0.5)';
+      ctx.shadowBlur = 5;
+      ctx.beginPath();
+      for (let i = 0; i < ohlcv.length; i++) {
+        const x = xScale(i), y = yScale(closes[i]);
+        if (i === 0) ctx.moveTo(x, y); else ctx.lineTo(x, y);
+      }
+      ctx.stroke();
+      
+      // Update overlay
+      const symbolEl = document.getElementById('miniChartSymbol');
+      const priceEl = document.getElementById('miniChartPrice');
+      if (symbolEl) symbolEl.textContent = state.chart.symbol || state.settings.symbol;
+      if (priceEl) priceEl.textContent = '$' + closes[closes.length - 1].toLocaleString();
+    }
+    
+    function updateTimeInline() {
+      const slider = document.getElementById('timeSliderInline');
+      const readout = document.getElementById('timeReadoutInline');
+      const dot = document.getElementById('liveDotInline');
+      if (!slider) return;
+      slider.max = Math.max(0, state.streamSnaps.length - 1);
+      slider.value = state.nowIndex;
+      if (state.isLive) {
+        readout.textContent = 'LIVE';
+        dot.classList.remove('paused');
+      } else {
+        const snap = state.streamSnaps[state.nowIndex];
+        const timeStr = snap?.ts ? snap.ts.split('T')[1]?.split('.')[0] || '' : '';
+        readout.textContent = `${state.nowIndex + 1}/${state.streamSnaps.length}`;
+        dot.classList.add('paused');
+      }
+    }
+    
     function applyTheme(theme) { if (!theme) return; const root = document.documentElement; const map = { 'neon': '--neon', 'neon_dim': '--neon-dim', 'neon_glow': '--neon-glow', 'neon_subtle': '--neon-subtle', 'neon_border': '--neon-border', 'bg': '--bg', 'text': '--text', 'text_dim': '--text-dim', 'muted': '--muted', 'good': '--good', 'bad': '--bad', 'warn': '--warn' }; for (const [key, cssVar] of Object.entries(map)) if (theme[key]) root.style.setProperty(cssVar, theme[key]); localStorage.setItem('hashtradeTheme', JSON.stringify(theme)); }
 
     // Events
@@ -1206,11 +1578,126 @@
     document.getElementById('btnLive').addEventListener('click', goToLive);
     els.timeSlider.addEventListener('input', e => { state.isLive = false; setTimeIndex(parseInt(e.target.value, 10)); });
     els.autoFab.addEventListener('click', () => els.autoPanel.classList.toggle('show'));
+    document.getElementById('autoTimerWidget')?.addEventListener('click', () => els.autoPanel.classList.toggle('show'));
     document.getElementById('autoPanelClose').addEventListener('click', () => els.autoPanel.classList.remove('show'));
     document.getElementById('btnAutoToggle').addEventListener('click', () => sendAutoTriggerCommand(state.autoTrigger.enabled ? 'disable' : 'enable'));
     document.getElementById('btnAutoTriggerNow').addEventListener('click', () => { sendAutoTriggerCommand('trigger_now'); showToast('Triggering...', 'info'); });
     document.getElementById('btnAutoPause30').addEventListener('click', () => { sendAutoTriggerCommand('pause', { minutes: 30 }); showToast('Paused 30min', 'warning'); });
-    window.addEventListener('resize', () => { if (els.chartModal.classList.contains('show')) drawChart(); });
+    window.addEventListener('resize', () => { if (els.chartModal.classList.contains('show')) drawChart(); drawMiniChart(); });
+
+    // Mini Chart click to expand
+    document.getElementById('miniChart')?.addEventListener('click', openChart);
+
+    // Inline Time Travel Controls
+    document.getElementById('btnPrevInline')?.addEventListener('click', () => { setTimeIndex(state.nowIndex - 1); updateTimeInline(); });
+    document.getElementById('btnNextInline')?.addEventListener('click', () => { setTimeIndex(state.nowIndex + 1); updateTimeInline(); });
+    document.getElementById('btnPlayInline')?.addEventListener('click', () => { togglePlay(); const btn = document.getElementById('btnPlayInline'); btn.textContent = state.playing ? '⏸' : '▶'; });
+    document.getElementById('btnLiveInline')?.addEventListener('click', () => { goToLive(); updateTimeInline(); });
+    document.getElementById('timeSliderInline')?.addEventListener('input', e => { state.isLive = false; setTimeIndex(parseInt(e.target.value, 10)); updateTimeInline(); });
+
+    // Sync inline time travel with main time travel
+    const origSetTimeIndex = setTimeIndex;
+    setTimeIndex = function(i) { origSetTimeIndex(i); updateTimeInline(); };
+    const origBuildStreamSnaps = buildStreamSnaps;
+    buildStreamSnaps = function() { origBuildStreamSnaps(); updateTimeInline(); };
+
+    // Messages Export/Import
+    function exportMessages() {
+      const data = {
+        version: 1,
+        exportedAt: new Date().toISOString(),
+        messages: state.historyItems,
+        events: state.streamEvents,
+        settings: { symbol: state.settings.symbol, exchange: state.settings.exchange }
+      };
+      const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `hashtrade-messages-${new Date().toISOString().split('T')[0]}.json`;
+      a.click();
+      URL.revokeObjectURL(url);
+      showToast('Messages exported!', 'success');
+    }
+
+    function importMessages() {
+      const fileInput = document.getElementById('importMessagesFile');
+      const textInput = document.getElementById('importMessagesText').value.trim();
+      const merge = document.getElementById('toggleMergeMessages').classList.contains('active');
+
+      const processData = (jsonStr) => {
+        try {
+          const data = JSON.parse(jsonStr);
+          if (merge) {
+            if (data.messages) state.historyItems.push(...data.messages);
+            if (data.events) state.streamEvents.push(...data.events);
+          } else {
+            if (data.messages) state.historyItems = data.messages;
+            if (data.events) state.streamEvents = data.events;
+          }
+          buildStreamSnaps();
+          clearTimeline();
+          renderHistory();
+          updateMsgCounts();
+          showToast(`Imported ${data.messages?.length || 0} messages!`, 'success');
+          document.getElementById('importMessagesText').value = '';
+          fileInput.value = '';
+        } catch (e) {
+          showToast('Invalid JSON: ' + e.message, 'error');
+        }
+      };
+
+      if (fileInput.files.length > 0) {
+        const reader = new FileReader();
+        reader.onload = (e) => processData(e.target.result);
+        reader.readAsText(fileInput.files[0]);
+      } else if (textInput) {
+        processData(textInput);
+      } else {
+        showToast('Select a file or paste JSON', 'error');
+      }
+    }
+
+    function updateMsgCounts() {
+      const msgEl = document.getElementById('msgCount');
+      const evtEl = document.getElementById('eventCount');
+      if (msgEl) msgEl.textContent = state.historyItems.length;
+      if (evtEl) evtEl.textContent = state.streamEvents.length;
+    }
+
+    function updateBalance(balance) {
+      const el = document.getElementById('balanceValue');
+      if (!el) return;
+      
+      // Handle object format from server: {status, total: {USDT: 100}, free: {}}
+      if (balance && typeof balance === 'object') {
+        if (balance.status === 'no_credentials') {
+          el.textContent = 'No API';
+          el.style.color = 'var(--muted)';
+          return;
+        }
+        if (balance.status === 'error') {
+          el.textContent = 'Error';
+          el.style.color = 'var(--bad)';
+          return;
+        }
+        // Sum up USDT equivalent (prioritize USDT, then USD, then sum all)
+        const total = balance.total || {};
+        let sum = total.USDT || total.USD || 0;
+        if (!sum) {
+          // Try to sum any values
+          sum = Object.values(total).reduce((a, b) => a + (parseFloat(b) || 0), 0);
+        }
+        el.textContent = '$' + parseFloat(sum).toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2});
+        el.style.color = 'var(--neon)';
+      } else if (typeof balance === 'number') {
+        el.textContent = '$' + balance.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2});
+        el.style.color = 'var(--neon)';
+      }
+    }
+
+    // Update counts when opening messages tab
+    document.querySelector('[data-tab="messages"]')?.addEventListener('click', updateMsgCounts);
 
     // Init
     loadSettings();
