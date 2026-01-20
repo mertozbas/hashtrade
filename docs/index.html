@@ -733,6 +733,198 @@
       flex: 1;
     }
 
+    /* Time travel overlay */
+    .time-travel {
+      position: fixed;
+      top: calc(var(--safe-top) + 70px);
+      left: 12px;
+      right: 12px;
+      padding: 12px 16px;
+      background: rgba(0, 0, 0, 0.9);
+      border: 1px solid var(--neon-border);
+      border-radius: var(--radius);
+      backdrop-filter: blur(20px);
+      z-index: 200;
+      display: none;
+      flex-direction: column;
+      gap: 10px;
+      animation: slideDown 0.3s ease;
+    }
+
+    .time-travel.show {
+      display: flex;
+    }
+
+    @keyframes slideDown {
+      from { opacity: 0; transform: translateY(-20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .time-travel-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .time-travel-title {
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--neon);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .time-travel-close {
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      border: none;
+      background: var(--neon-subtle);
+      color: var(--text);
+      font-size: 16px;
+      cursor: pointer;
+    }
+
+    .time-travel-controls {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .time-btn {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      border: 1px solid var(--neon-border);
+      background: var(--neon-subtle);
+      color: var(--neon);
+      font-size: 14px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.2s;
+    }
+
+    .time-btn:active {
+      transform: scale(0.95);
+      background: rgba(0, 255, 136, 0.2);
+    }
+
+    .time-btn.play {
+      width: 44px;
+      height: 44px;
+      background: var(--neon);
+      color: #000;
+      border: none;
+      font-size: 16px;
+    }
+
+    .time-slider-wrap {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .time-slider {
+      width: 100%;
+      height: 6px;
+      -webkit-appearance: none;
+      appearance: none;
+      background: var(--neon-border);
+      border-radius: 3px;
+      outline: none;
+    }
+
+    .time-slider::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      background: var(--neon);
+      cursor: pointer;
+      box-shadow: 0 0 10px var(--neon-glow);
+    }
+
+    .time-slider::-moz-range-thumb {
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      background: var(--neon);
+      cursor: pointer;
+      border: none;
+    }
+
+    .time-readout {
+      font-size: 11px;
+      color: var(--muted);
+      font-family: 'SF Mono', monospace;
+      text-align: center;
+    }
+
+    .live-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      padding: 4px 10px;
+      border-radius: 12px;
+      background: rgba(0, 255, 136, 0.15);
+      border: 1px solid var(--neon-dim);
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--neon);
+    }
+
+    .live-badge.paused {
+      background: rgba(255, 204, 0, 0.15);
+      border-color: var(--warn);
+      color: var(--warn);
+    }
+
+    .live-badge .dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--neon);
+      animation: pulse 1.5s infinite;
+    }
+
+    .live-badge.paused .dot {
+      background: var(--warn);
+      animation: none;
+    }
+
+    /* Time travel FAB */
+    .time-fab {
+      position: fixed;
+      bottom: calc(var(--safe-bottom) + 80px);
+      left: 16px;
+      width: 48px;
+      height: 48px;
+      border-radius: 50%;
+      border: 1px solid var(--neon-border);
+      background: var(--bg);
+      color: var(--neon);
+      font-size: 18px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      z-index: 99;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+      transition: all 0.3s;
+    }
+
+    .time-fab:active {
+      transform: scale(0.95);
+    }
+
+    .time-fab.has-history {
+      border-color: var(--neon-dim);
+      box-shadow: 0 0 15px var(--neon-glow);
+    }
+
     /* Toast notifications */
     .toast-container {
       position: fixed;
@@ -843,11 +1035,38 @@
       </div>
     </div>
 
+    <!-- Time Travel FAB -->
+    <button class="time-fab" id="timeFab" title="Time Travel">⏱</button>
+
     <!-- Chart FAB -->
     <button class="chart-fab" id="chartFab">
       📈
       <span class="badge" id="chartBadge" style="display: none;">!</span>
     </button>
+
+    <!-- Time Travel Overlay -->
+    <div class="time-travel" id="timeTravel">
+      <div class="time-travel-header">
+        <span class="time-travel-title">⏱ Time Travel</span>
+        <div style="display: flex; align-items: center; gap: 10px;">
+          <div class="live-badge" id="liveBadge">
+            <span class="dot"></span>
+            <span id="liveText">LIVE</span>
+          </div>
+          <button class="time-travel-close" id="timeTravelClose">×</button>
+        </div>
+      </div>
+      <div class="time-travel-controls">
+        <button class="time-btn" id="btnPrev">⟨</button>
+        <button class="time-btn play" id="btnPlay">▶</button>
+        <button class="time-btn" id="btnNext">⟩</button>
+        <div class="time-slider-wrap">
+          <input type="range" class="time-slider" id="timeSlider" min="0" max="0" value="0" />
+          <div class="time-readout" id="timeReadout">No events yet</div>
+        </div>
+        <button class="time-btn" id="btnLive" title="Go to Live">⟲</button>
+      </div>
+    </div>
 
     <!-- Input area -->
     <div class="input-area">
@@ -992,7 +1211,14 @@
       },
       chart: { ohlcv: [], symbol: 'BTC/USDT', timeframe: '1m' },
       turns: new Map(),
-      historyItems: []
+      historyItems: [],
+      // Time travel state
+      streamEvents: [],
+      streamSnaps: [],
+      nowIndex: 0,
+      playing: false,
+      playTimer: null,
+      isLive: true
     };
 
     // Elements
@@ -1007,7 +1233,14 @@
       chartModal: document.getElementById('chartModal'),
       chartCanvas: document.getElementById('chartCanvas'),
       settingsModal: document.getElementById('settingsModal'),
-      toastContainer: document.getElementById('toastContainer')
+      toastContainer: document.getElementById('toastContainer'),
+      // Time travel elements
+      timeTravel: document.getElementById('timeTravel'),
+      timeFab: document.getElementById('timeFab'),
+      timeSlider: document.getElementById('timeSlider'),
+      timeReadout: document.getElementById('timeReadout'),
+      liveBadge: document.getElementById('liveBadge'),
+      liveText: document.getElementById('liveText')
     };
 
     // Load settings
@@ -1051,6 +1284,171 @@
       toast.innerHTML = `<span class="toast-icon">${icons[type] || '•'}</span><span>${message}</span>`;
       els.toastContainer.appendChild(toast);
       setTimeout(() => toast.remove(), 3000);
+    }
+
+    // ========== TIME TRAVEL ==========
+    
+    function isoNow() { return new Date().toISOString(); }
+
+    function addStreamEvent(type, msg) {
+      state.streamEvents.push({ ts: isoNow(), type, msg });
+      buildStreamSnaps();
+      
+      // Update FAB to show history exists
+      els.timeFab.classList.add('has-history');
+      
+      // If we're live, follow along
+      if (state.isLive) {
+        state.nowIndex = state.streamEvents.length - 1;
+        els.timeSlider.value = state.nowIndex;
+        updateTimeReadout();
+      }
+    }
+
+    function buildStreamSnaps() {
+      const snaps = [];
+      let chart = null;
+      let historyUpToNow = [];
+      
+      for (let i = 0; i < state.streamEvents.length; i++) {
+        const e = state.streamEvents[i];
+        if (e.type === 'ohlcv') chart = e.msg.data;
+        if (e.type === 'history') historyUpToNow = [...historyUpToNow, e.msg.data];
+        if (e.type === 'history_sync') historyUpToNow = Array.isArray(e.msg.data) ? [...e.msg.data] : [];
+        if (e.type === 'history_cleared') historyUpToNow = [];
+        
+        snaps.push({
+          i,
+          ts: e.ts,
+          chart,
+          history: [...historyUpToNow],
+          events: state.streamEvents.slice(0, i + 1)
+        });
+      }
+      
+      state.streamSnaps = snaps;
+      els.timeSlider.max = Math.max(0, snaps.length - 1);
+    }
+
+    function setTimeIndex(i) {
+      state.nowIndex = Math.max(0, Math.min(i, state.streamSnaps.length - 1));
+      state.isLive = state.nowIndex >= state.streamSnaps.length - 1;
+      
+      els.timeSlider.value = state.nowIndex;
+      updateTimeReadout();
+      updateLiveBadge();
+      renderFromSnapshot();
+    }
+
+    function updateTimeReadout() {
+      const snap = state.streamSnaps[state.nowIndex];
+      if (!snap) {
+        els.timeReadout.textContent = 'No events yet';
+        return;
+      }
+      
+      const total = state.streamSnaps.length;
+      const timeStr = snap.ts ? snap.ts.split('T')[1]?.split('.')[0] || '' : '';
+      els.timeReadout.textContent = `${state.nowIndex + 1} / ${total} • ${timeStr}`;
+    }
+
+    function updateLiveBadge() {
+      if (state.isLive) {
+        els.liveBadge.classList.remove('paused');
+        els.liveText.textContent = 'LIVE';
+      } else {
+        els.liveBadge.classList.add('paused');
+        els.liveText.textContent = 'PAUSED';
+      }
+    }
+
+    function goToLive() {
+      state.isLive = true;
+      setTimeIndex(state.streamSnaps.length - 1);
+    }
+
+    function togglePlay() {
+      state.playing = !state.playing;
+      const btn = document.getElementById('btnPlay');
+      
+      if (state.playing) {
+        btn.textContent = '⏸';
+        state.playTimer = setInterval(() => {
+          if (state.nowIndex >= state.streamSnaps.length - 1) {
+            state.playing = false;
+            btn.textContent = '▶';
+            clearInterval(state.playTimer);
+            state.isLive = true;
+            updateLiveBadge();
+            return;
+          }
+          setTimeIndex(state.nowIndex + 1);
+        }, 300);
+      } else {
+        btn.textContent = '▶';
+        clearInterval(state.playTimer);
+      }
+    }
+
+    function renderFromSnapshot() {
+      const snap = state.streamSnaps[state.nowIndex];
+      if (!snap) return;
+
+      // Clear and rebuild timeline from snapshot
+      clearTimelineKeepEmpty();
+      state.turns.clear();
+
+      // Replay events up to this point
+      for (const e of snap.events) {
+        const msg = e.msg || {};
+        
+        switch (e.type) {
+          case 'turn_start':
+            createTurn(msg.turn_id, msg.data || '', true);
+            break;
+          case 'chunk':
+            appendToTurn(msg.turn_id, msg.data || '');
+            break;
+          case 'tool_start':
+            addToolIndicator(msg.turn_id, msg.data || 'tool', 'running');
+            break;
+          case 'tool_end':
+            updateToolIndicator(msg.turn_id, !!msg.success);
+            break;
+          case 'turn_end':
+            finalizeTurn(msg.turn_id);
+            break;
+          case 'history':
+            if (msg.data) addHistoryItem(msg.data, true);
+            break;
+        }
+      }
+
+      // Update chart if available
+      if (snap.chart) {
+        state.chart = snap.chart;
+        if (els.chartModal.classList.contains('show')) {
+          updateChartStats();
+          drawChart();
+        }
+      }
+
+      scrollToBottom();
+    }
+
+    function clearTimelineKeepEmpty() {
+      els.timeline.innerHTML = '';
+      if (els.emptyState) {
+        els.timeline.appendChild(els.emptyState);
+      }
+    }
+
+    function openTimeTravel() {
+      els.timeTravel.classList.add('show');
+    }
+
+    function closeTimeTravel() {
+      els.timeTravel.classList.remove('show');
     }
 
     // WebSocket
@@ -1098,6 +1496,16 @@
       try { msg = JSON.parse(ev.data); } catch { return; }
       
       const t = msg.type;
+
+      // Track all events for time travel
+      if (['turn_start', 'chunk', 'tool_start', 'tool_end', 'turn_end', 'history', 'history_sync', 'history_cleared', 'ohlcv', 'theme_update', 'ui_alert'].includes(t)) {
+        addStreamEvent(t, msg);
+      }
+
+      // If not live, don't update UI from new messages
+      if (!state.isLive && !['history_sync', 'ohlcv'].includes(t)) {
+        return;
+      }
 
       switch (t) {
         case 'connected':
@@ -1172,7 +1580,7 @@
       els.timeline.appendChild(els.emptyState);
     }
 
-    function createTurn(turnId, userMessage) {
+    function createTurn(turnId, userMessage, isReplay = false) {
       hideEmptyState();
       
       // User message
@@ -1197,12 +1605,12 @@
       typing.innerHTML = '<span></span><span></span><span></span>';
       
       bubble.appendChild(content);
-      bubble.appendChild(typing);
+      if (!isReplay) bubble.appendChild(typing);
       assistantEl.appendChild(bubble);
       els.timeline.appendChild(assistantEl);
 
       state.turns.set(turnId, { el: assistantEl, content, typing, bubble, text: '', tools: [] });
-      scrollToBottom();
+      if (!isReplay) scrollToBottom();
     }
 
     function appendToTurn(turnId, text) {
@@ -1241,7 +1649,7 @@
       turn.typing.remove();
     }
 
-    function addHistoryItem(item) {
+    function addHistoryItem(item, isReplay = false) {
       hideEmptyState();
       
       const type = item.type || 'note';
@@ -1276,7 +1684,7 @@
       `;
       
       els.timeline.appendChild(el);
-      scrollToBottom();
+      if (!isReplay) scrollToBottom();
     }
 
     function renderHistory() {
@@ -1502,6 +1910,28 @@
         state.ws.send(JSON.stringify({ type: 'history', action: 'clear' }));
       }
       clearTimeline();
+      // Also clear time travel state
+      state.streamEvents = [];
+      state.streamSnaps = [];
+      state.nowIndex = 0;
+      state.isLive = true;
+      els.timeFab.classList.remove('has-history');
+      els.timeSlider.max = 0;
+      els.timeSlider.value = 0;
+      updateTimeReadout();
+      updateLiveBadge();
+    });
+
+    // Time travel controls
+    els.timeFab.addEventListener('click', openTimeTravel);
+    document.getElementById('timeTravelClose').addEventListener('click', closeTimeTravel);
+    document.getElementById('btnPlay').addEventListener('click', togglePlay);
+    document.getElementById('btnPrev').addEventListener('click', () => setTimeIndex(state.nowIndex - 1));
+    document.getElementById('btnNext').addEventListener('click', () => setTimeIndex(state.nowIndex + 1));
+    document.getElementById('btnLive').addEventListener('click', goToLive);
+    els.timeSlider.addEventListener('input', (e) => {
+      state.isLive = false;
+      setTimeIndex(parseInt(e.target.value, 10));
     });
 
     // Handle resize for chart
