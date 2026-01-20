@@ -52,7 +52,6 @@
       -webkit-tap-highlight-color: transparent;
     }
 
-    /* Ambient background */
     body::before {
       content: '';
       position: fixed;
@@ -72,7 +71,6 @@
       z-index: 1;
     }
 
-    /* Header */
     header {
       flex-shrink: 0;
       padding: calc(var(--safe-top) + 12px) 16px 12px;
@@ -84,15 +82,10 @@
       z-index: 100;
     }
 
-    .brand {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-    }
+    .brand { display: flex; align-items: center; gap: 10px; }
 
     .logo {
-      width: 36px;
-      height: 36px;
+      width: 36px; height: 36px;
       border-radius: 10px;
       background: conic-gradient(from 180deg, var(--neon), #00aa55, var(--neon));
       box-shadow: 0 0 20px var(--neon-glow);
@@ -104,66 +97,30 @@
       50% { box-shadow: 0 0 30px var(--neon-glow), 0 0 40px rgba(0,255,136,0.2); }
     }
 
-    .brand-text h1 {
-      font-size: 18px;
-      font-weight: 700;
-      color: var(--neon);
-      text-shadow: 0 0 20px var(--neon-glow);
-      letter-spacing: -0.5px;
-    }
+    .brand-text h1 { font-size: 18px; font-weight: 700; color: var(--neon); text-shadow: 0 0 20px var(--neon-glow); }
+    .brand-text .status { font-size: 11px; color: var(--muted); display: flex; align-items: center; gap: 5px; }
 
-    .brand-text .status {
-      font-size: 11px;
-      color: var(--muted);
-      display: flex;
-      align-items: center;
-      gap: 5px;
-    }
+    .status-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--bad); }
+    .status-dot.connected { background: var(--good); box-shadow: 0 0 8px var(--neon-glow); animation: pulse 2s infinite; }
 
-    .status-dot {
-      width: 6px;
-      height: 6px;
-      border-radius: 50%;
-      background: var(--bad);
-    }
+    @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
 
-    .status-dot.connected {
-      background: var(--good);
-      box-shadow: 0 0 8px var(--neon-glow);
-      animation: pulse 2s infinite;
-    }
-
-    @keyframes pulse {
-      0%, 100% { opacity: 1; }
-      50% { opacity: 0.5; }
-    }
-
-    .header-actions {
-      display: flex;
-      gap: 8px;
-    }
+    .header-actions { display: flex; gap: 8px; }
 
     .icon-btn {
-      width: 40px;
-      height: 40px;
+      width: 40px; height: 40px;
       border-radius: var(--radius-sm);
       border: 1px solid var(--neon-border);
       background: var(--neon-subtle);
       color: var(--neon);
       font-size: 18px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
+      display: flex; align-items: center; justify-content: center;
       cursor: pointer;
       transition: all 0.2s;
     }
 
-    .icon-btn:active {
-      transform: scale(0.95);
-      background: rgba(0, 255, 136, 0.15);
-    }
+    .icon-btn:active { transform: scale(0.95); background: rgba(0, 255, 136, 0.15); }
 
-    /* Main chat/timeline area */
     .timeline-container {
       flex: 1;
       overflow-y: auto;
@@ -173,44 +130,20 @@
       -webkit-overflow-scrolling: touch;
     }
 
-    .timeline {
-      display: flex;
-      flex-direction: column;
-      gap: 12px;
-      padding-top: 8px;
-    }
+    .timeline { display: flex; flex-direction: column; gap: 12px; padding-top: 8px; }
 
-    /* Message bubbles */
-    .message {
-      max-width: 92%;
-      animation: fadeSlideIn 0.3s ease;
-    }
+    .message { max-width: 92%; animation: fadeSlideIn 0.3s ease; }
 
     @keyframes fadeSlideIn {
       from { opacity: 0; transform: translateY(10px); }
       to { opacity: 1; transform: translateY(0); }
     }
 
-    .message.user {
-      align-self: flex-end;
-    }
+    .message.user { align-self: flex-end; }
+    .message.assistant { align-self: flex-start; }
+    .message.history { align-self: stretch; max-width: 100%; }
 
-    .message.assistant {
-      align-self: flex-start;
-    }
-
-    .message.history {
-      align-self: stretch;
-      max-width: 100%;
-    }
-
-    .bubble {
-      padding: 12px 16px;
-      border-radius: var(--radius);
-      font-size: 15px;
-      line-height: 1.5;
-      word-wrap: break-word;
-    }
+    .bubble { padding: 12px 16px; border-radius: var(--radius); font-size: 15px; line-height: 1.5; word-wrap: break-word; }
 
     .message.user .bubble {
       background: linear-gradient(135deg, var(--neon) 0%, #00cc66 100%);
@@ -226,139 +159,78 @@
       backdrop-filter: blur(10px);
     }
 
-    .message.assistant .bubble pre {
-      background: rgba(0, 0, 0, 0.4);
-      border-radius: 8px;
-      padding: 12px;
-      overflow-x: auto;
-      margin: 8px 0;
-      font-size: 13px;
-    }
-
-    .message.assistant .bubble code {
-      font-family: 'SF Mono', Monaco, monospace;
-      font-size: 13px;
-    }
-
+    .message.assistant .bubble pre { background: rgba(0, 0, 0, 0.4); border-radius: 8px; padding: 12px; overflow-x: auto; margin: 8px 0; font-size: 13px; }
+    .message.assistant .bubble code { font-family: 'SF Mono', Monaco, monospace; font-size: 13px; }
     .message.assistant .bubble p { margin: 0.5em 0; }
     .message.assistant .bubble p:first-child { margin-top: 0; }
     .message.assistant .bubble p:last-child { margin-bottom: 0; }
 
-    /* History/Event cards */
     .event-card {
       background: var(--bg-card);
       border: 1px solid var(--neon-border);
       border-radius: var(--radius);
       padding: 14px 16px;
       backdrop-filter: blur(10px);
+      cursor: pointer;
+      transition: all 0.2s;
     }
 
-    .event-card.order {
-      border-left: 3px solid var(--good);
-    }
+    .event-card:hover { border-color: var(--neon-dim); transform: translateX(4px); }
+    .event-card:active { background: rgba(0, 255, 136, 0.1); }
 
-    .event-card.trade {
-      border-left: 3px solid #00ccff;
-    }
+    .event-card.order { border-left: 3px solid var(--good); }
+    .event-card.trade { border-left: 3px solid #00ccff; }
+    .event-card.signal { border-left: 3px solid var(--warn); }
+    .event-card.theme { border-left: 3px solid #ff00ff; }
+    .event-card.note { border-left: 3px solid var(--muted); }
 
-    .event-card.signal {
-      border-left: 3px solid var(--warn);
-    }
-
-    .event-card.theme {
-      border-left: 3px solid #ff00ff;
-    }
-
-    .event-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 8px;
-    }
+    .event-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
 
     .event-type {
-      font-size: 11px;
-      font-weight: 600;
-      text-transform: uppercase;
-      letter-spacing: 0.5px;
+      font-size: 11px; font-weight: 600;
+      text-transform: uppercase; letter-spacing: 0.5px;
       color: var(--neon);
       padding: 3px 8px;
       background: var(--neon-subtle);
       border-radius: 4px;
     }
 
-    .event-time {
-      font-size: 11px;
-      color: var(--muted);
-      font-family: 'SF Mono', monospace;
-    }
+    .event-time { font-size: 11px; color: var(--muted); font-family: 'SF Mono', monospace; }
 
-    .event-content {
-      font-size: 14px;
-      color: var(--text);
-      line-height: 1.5;
-    }
+    .event-content { font-size: 14px; color: var(--text); line-height: 1.5; }
+    .event-content strong { color: var(--neon); }
 
-    .event-content strong {
-      color: var(--neon);
-    }
+    /* Dynamic UI elements */
+    .event-card .dynamic-html { margin-top: 10px; }
+    .event-card table { width: 100%; border-collapse: collapse; font-size: 12px; margin-top: 8px; }
+    .event-card th, .event-card td { padding: 6px 10px; text-align: left; border-bottom: 1px solid var(--neon-border); }
+    .event-card th { color: var(--neon); font-weight: 600; }
 
-    /* Tool status indicators */
     .tool-indicator {
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      padding: 6px 12px;
-      margin: 6px 0;
-      border-radius: 20px;
-      font-size: 12px;
+      display: inline-flex; align-items: center; gap: 6px;
+      padding: 6px 12px; margin: 6px 0;
+      border-radius: 20px; font-size: 12px;
       background: var(--neon-subtle);
       border: 1px solid var(--neon-border);
       color: var(--muted);
     }
 
-    .tool-indicator.running {
-      border-color: var(--neon-dim);
-    }
-
-    .tool-indicator.success {
-      color: var(--good);
-      border-color: rgba(0, 255, 136, 0.4);
-    }
-
-    .tool-indicator.error {
-      color: var(--bad);
-      border-color: rgba(255, 68, 102, 0.4);
-    }
+    .tool-indicator.running { border-color: var(--neon-dim); }
+    .tool-indicator.success { color: var(--good); border-color: rgba(0, 255, 136, 0.4); }
+    .tool-indicator.error { color: var(--bad); border-color: rgba(255, 68, 102, 0.4); }
 
     .tool-spinner {
-      width: 12px;
-      height: 12px;
+      width: 12px; height: 12px;
       border: 2px solid var(--neon-border);
       border-top-color: var(--neon);
       border-radius: 50%;
       animation: spin 0.8s linear infinite;
     }
 
-    @keyframes spin {
-      to { transform: rotate(360deg); }
-    }
+    @keyframes spin { to { transform: rotate(360deg); } }
 
-    /* Typing indicator */
-    .typing-indicator {
-      display: flex;
-      gap: 4px;
-      padding: 12px 16px;
-    }
-
-    .typing-indicator span {
-      width: 8px;
-      height: 8px;
-      background: var(--neon);
-      border-radius: 50%;
-      animation: typing 1.4s infinite;
-    }
-
+    .typing-indicator { display: flex; gap: 4px; padding: 12px 16px; }
+    .typing-indicator span { width: 8px; height: 8px; background: var(--neon); border-radius: 50%; animation: typing 1.4s infinite; }
     .typing-indicator span:nth-child(2) { animation-delay: 0.2s; }
     .typing-indicator span:nth-child(3) { animation-delay: 0.4s; }
 
@@ -367,126 +239,69 @@
       30% { transform: translateY(-8px); opacity: 1; }
     }
 
-    /* Input area */
     .input-area {
-      position: fixed;
-      bottom: 0;
-      left: 0;
-      right: 0;
+      position: fixed; bottom: 0; left: 0; right: 0;
       padding: 12px 12px calc(var(--safe-bottom) + 12px);
       background: linear-gradient(0deg, rgba(0,0,0,0.95) 0%, rgba(0,0,0,0.8) 80%, transparent 100%);
       z-index: 100;
     }
 
-    .input-row {
-      display: flex;
-      gap: 10px;
-      align-items: flex-end;
-    }
-
-    .input-wrap {
-      flex: 1;
-      position: relative;
-    }
+    .input-row { display: flex; gap: 10px; align-items: flex-end; }
+    .input-wrap { flex: 1; position: relative; }
 
     .chat-input {
-      width: 100%;
-      min-height: 48px;
-      max-height: 120px;
+      width: 100%; min-height: 48px; max-height: 120px;
       padding: 14px 16px;
       border-radius: var(--radius);
       border: 1px solid var(--neon-border);
       background: var(--bg-card);
       color: var(--text);
-      font-size: 16px;
-      line-height: 1.4;
-      resize: none;
-      outline: none;
+      font-size: 16px; line-height: 1.4;
+      resize: none; outline: none;
       font-family: inherit;
       transition: border-color 0.2s, box-shadow 0.2s;
     }
 
-    .chat-input:focus {
-      border-color: var(--neon-dim);
-      box-shadow: 0 0 20px rgba(0, 255, 136, 0.1);
-    }
-
-    .chat-input::placeholder {
-      color: var(--muted);
-    }
+    .chat-input:focus { border-color: var(--neon-dim); box-shadow: 0 0 20px rgba(0, 255, 136, 0.1); }
+    .chat-input::placeholder { color: var(--muted); }
 
     .send-btn {
-      width: 48px;
-      height: 48px;
+      width: 48px; height: 48px;
       border-radius: var(--radius);
       border: none;
       background: var(--neon);
       color: #000;
-      font-size: 20px;
-      font-weight: 700;
+      font-size: 20px; font-weight: 700;
       cursor: pointer;
-      display: flex;
-      align-items: center;
-      justify-content: center;
+      display: flex; align-items: center; justify-content: center;
       transition: all 0.2s;
       box-shadow: 0 0 20px var(--neon-glow);
     }
 
-    .send-btn:active {
-      transform: scale(0.95);
-    }
+    .send-btn:active { transform: scale(0.95); }
+    .send-btn:disabled { opacity: 0.5; box-shadow: none; }
 
-    .send-btn:disabled {
-      opacity: 0.5;
-      box-shadow: none;
-    }
-
-    /* Chart overlay */
     .chart-fab {
       position: fixed;
       bottom: calc(var(--safe-bottom) + 80px);
       right: 16px;
-      width: 56px;
-      height: 56px;
+      width: 56px; height: 56px;
       border-radius: 50%;
       border: 2px solid var(--neon);
       background: var(--bg);
       color: var(--neon);
       font-size: 24px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
+      display: flex; align-items: center; justify-content: center;
       cursor: pointer;
       z-index: 99;
       box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5), 0 0 30px var(--neon-glow);
       transition: all 0.3s;
     }
 
-    .chart-fab:active {
-      transform: scale(0.95);
-    }
+    .chart-fab:active { transform: scale(0.95); }
 
-    .chart-fab .badge {
-      position: absolute;
-      top: -4px;
-      right: -4px;
-      min-width: 20px;
-      height: 20px;
-      padding: 0 6px;
-      border-radius: 10px;
-      background: var(--neon);
-      color: #000;
-      font-size: 11px;
-      font-weight: 700;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-
-    /* Chart modal */
     .chart-modal {
-      position: fixed;
-      inset: 0;
+      position: fixed; inset: 0;
       background: rgba(0, 0, 0, 0.95);
       z-index: 1000;
       display: none;
@@ -495,33 +310,19 @@
       transition: opacity 0.3s;
     }
 
-    .chart-modal.show {
-      display: flex;
-      opacity: 1;
-    }
+    .chart-modal.show { display: flex; opacity: 1; }
 
     .chart-header {
       padding: calc(var(--safe-top) + 12px) 16px 12px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
+      display: flex; justify-content: space-between; align-items: center;
       border-bottom: 1px solid var(--neon-border);
     }
 
-    .chart-title {
-      font-size: 16px;
-      font-weight: 600;
-      color: var(--neon);
-    }
-
-    .chart-meta {
-      font-size: 12px;
-      color: var(--muted);
-    }
+    .chart-title { font-size: 16px; font-weight: 600; color: var(--neon); }
+    .chart-meta { font-size: 12px; color: var(--muted); }
 
     .chart-close {
-      width: 40px;
-      height: 40px;
+      width: 40px; height: 40px;
       border-radius: 50%;
       border: 1px solid var(--neon-border);
       background: transparent;
@@ -530,21 +331,9 @@
       cursor: pointer;
     }
 
-    .chart-body {
-      flex: 1;
-      padding: 16px;
-      display: flex;
-      flex-direction: column;
-      gap: 12px;
-    }
+    .chart-body { flex: 1; padding: 16px; display: flex; flex-direction: column; gap: 12px; }
 
-    .chart-controls {
-      display: flex;
-      gap: 8px;
-      overflow-x: auto;
-      padding-bottom: 8px;
-    }
-
+    .chart-controls { display: flex; gap: 8px; overflow-x: auto; padding-bottom: 8px; }
     .chart-controls::-webkit-scrollbar { display: none; }
 
     .tf-btn {
@@ -553,18 +342,13 @@
       border: 1px solid var(--neon-border);
       background: transparent;
       color: var(--text-dim);
-      font-size: 13px;
-      font-weight: 500;
+      font-size: 13px; font-weight: 500;
       cursor: pointer;
       white-space: nowrap;
       transition: all 0.2s;
     }
 
-    .tf-btn.active {
-      background: var(--neon);
-      color: #000;
-      border-color: var(--neon);
-    }
+    .tf-btn.active { background: var(--neon); color: #000; border-color: var(--neon); }
 
     .chart-canvas-wrap {
       flex: 1;
@@ -574,16 +358,9 @@
       background: rgba(0, 20, 10, 0.5);
     }
 
-    .chart-canvas-wrap canvas {
-      width: 100%;
-      height: 100%;
-    }
+    .chart-canvas-wrap canvas { width: 100%; height: 100%; }
 
-    .chart-info {
-      display: grid;
-      grid-template-columns: repeat(4, 1fr);
-      gap: 8px;
-    }
+    .chart-info { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; }
 
     .chart-stat {
       text-align: center;
@@ -593,83 +370,37 @@
       border: 1px solid var(--neon-border);
     }
 
-    .chart-stat-label {
-      font-size: 10px;
-      text-transform: uppercase;
-      color: var(--muted);
-      margin-bottom: 4px;
-    }
-
-    .chart-stat-value {
-      font-size: 14px;
-      font-weight: 600;
-      color: var(--text);
-      font-family: 'SF Mono', monospace;
-    }
-
+    .chart-stat-label { font-size: 10px; text-transform: uppercase; color: var(--muted); margin-bottom: 4px; }
+    .chart-stat-value { font-size: 14px; font-weight: 600; color: var(--text); font-family: 'SF Mono', monospace; }
     .chart-stat-value.up { color: var(--good); }
     .chart-stat-value.down { color: var(--bad); }
 
-    /* Settings modal */
     .modal-overlay {
-      position: fixed;
-      inset: 0;
+      position: fixed; inset: 0;
       background: rgba(0, 0, 0, 0.9);
       z-index: 1000;
       display: none;
-      align-items: flex-end;
-      justify-content: center;
+      align-items: flex-end; justify-content: center;
     }
 
-    .modal-overlay.show {
-      display: flex;
-    }
+    .modal-overlay.show { display: flex; }
 
     .modal-sheet {
-      width: 100%;
-      max-width: 500px;
-      max-height: 85vh;
+      width: 100%; max-width: 500px; max-height: 85vh;
       background: var(--bg);
-      border-top-left-radius: 24px;
-      border-top-right-radius: 24px;
+      border-top-left-radius: 24px; border-top-right-radius: 24px;
       padding: 20px 20px calc(var(--safe-bottom) + 20px);
       overflow-y: auto;
       animation: slideUp 0.3s ease;
     }
 
-    @keyframes slideUp {
-      from { transform: translateY(100%); }
-      to { transform: translateY(0); }
-    }
+    @keyframes slideUp { from { transform: translateY(100%); } to { transform: translateY(0); } }
 
-    .modal-handle {
-      width: 40px;
-      height: 4px;
-      background: var(--neon-border);
-      border-radius: 2px;
-      margin: 0 auto 20px;
-    }
+    .modal-handle { width: 40px; height: 4px; background: var(--neon-border); border-radius: 2px; margin: 0 auto 20px; }
+    .modal-title { font-size: 20px; font-weight: 700; color: var(--neon); margin-bottom: 24px; }
 
-    .modal-title {
-      font-size: 20px;
-      font-weight: 700;
-      color: var(--neon);
-      margin-bottom: 24px;
-    }
-
-    .form-group {
-      margin-bottom: 20px;
-    }
-
-    .form-label {
-      display: block;
-      font-size: 12px;
-      font-weight: 600;
-      text-transform: uppercase;
-      letter-spacing: 0.5px;
-      color: var(--muted);
-      margin-bottom: 8px;
-    }
+    .form-group { margin-bottom: 20px; }
+    .form-label { display: block; font-size: 12px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; color: var(--muted); margin-bottom: 8px; }
 
     .form-input, .form-select {
       width: 100%;
@@ -683,9 +414,7 @@
       font-family: inherit;
     }
 
-    .form-input:focus, .form-select:focus {
-      border-color: var(--neon-dim);
-    }
+    .form-input:focus, .form-select:focus { border-color: var(--neon-dim); }
 
     .form-select {
       appearance: none;
@@ -695,50 +424,18 @@
       padding-right: 40px;
     }
 
-    .form-row {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 12px;
-    }
+    .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
 
-    .btn {
-      width: 100%;
-      padding: 16px;
-      border-radius: var(--radius);
-      border: none;
-      font-size: 16px;
-      font-weight: 600;
-      cursor: pointer;
-      transition: all 0.2s;
-    }
+    .btn { width: 100%; padding: 16px; border-radius: var(--radius); border: none; font-size: 16px; font-weight: 600; cursor: pointer; transition: all 0.2s; }
+    .btn-primary { background: var(--neon); color: #000; }
+    .btn-secondary { background: var(--neon-subtle); color: var(--neon); border: 1px solid var(--neon-border); }
+    .btn-row { display: flex; gap: 12px; margin-top: 24px; }
+    .btn-row .btn { flex: 1; }
 
-    .btn-primary {
-      background: var(--neon);
-      color: #000;
-    }
-
-    .btn-secondary {
-      background: var(--neon-subtle);
-      color: var(--neon);
-      border: 1px solid var(--neon-border);
-    }
-
-    .btn-row {
-      display: flex;
-      gap: 12px;
-      margin-top: 24px;
-    }
-
-    .btn-row .btn {
-      flex: 1;
-    }
-
-    /* Time travel overlay */
     .time-travel {
       position: fixed;
       top: calc(var(--safe-top) + 70px);
-      left: 12px;
-      right: 12px;
+      left: 12px; right: 12px;
       padding: 12px 16px;
       background: rgba(0, 0, 0, 0.9);
       border: 1px solid var(--neon-border);
@@ -751,32 +448,15 @@
       animation: slideDown 0.3s ease;
     }
 
-    .time-travel.show {
-      display: flex;
-    }
+    .time-travel.show { display: flex; }
 
-    @keyframes slideDown {
-      from { opacity: 0; transform: translateY(-20px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
+    @keyframes slideDown { from { opacity: 0; transform: translateY(-20px); } to { opacity: 1; transform: translateY(0); } }
 
-    .time-travel-header {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-    }
-
-    .time-travel-title {
-      font-size: 12px;
-      font-weight: 600;
-      color: var(--neon);
-      text-transform: uppercase;
-      letter-spacing: 0.5px;
-    }
+    .time-travel-header { display: flex; align-items: center; justify-content: space-between; }
+    .time-travel-title { font-size: 12px; font-weight: 600; color: var(--neon); text-transform: uppercase; letter-spacing: 0.5px; }
 
     .time-travel-close {
-      width: 28px;
-      height: 28px;
+      width: 28px; height: 28px;
       border-radius: 50%;
       border: none;
       background: var(--neon-subtle);
@@ -785,152 +465,76 @@
       cursor: pointer;
     }
 
-    .time-travel-controls {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-    }
+    .time-travel-controls { display: flex; align-items: center; gap: 10px; }
 
     .time-btn {
-      width: 36px;
-      height: 36px;
+      width: 36px; height: 36px;
       border-radius: 50%;
       border: 1px solid var(--neon-border);
       background: var(--neon-subtle);
       color: var(--neon);
       font-size: 14px;
       cursor: pointer;
-      display: flex;
-      align-items: center;
-      justify-content: center;
+      display: flex; align-items: center; justify-content: center;
       transition: all 0.2s;
     }
 
-    .time-btn:active {
-      transform: scale(0.95);
-      background: rgba(0, 255, 136, 0.2);
-    }
+    .time-btn:active { transform: scale(0.95); background: rgba(0, 255, 136, 0.2); }
+    .time-btn.play { width: 44px; height: 44px; background: var(--neon); color: #000; border: none; font-size: 16px; }
 
-    .time-btn.play {
-      width: 44px;
-      height: 44px;
-      background: var(--neon);
-      color: #000;
-      border: none;
-      font-size: 16px;
-    }
-
-    .time-slider-wrap {
-      flex: 1;
-      display: flex;
-      flex-direction: column;
-      gap: 4px;
-    }
+    .time-slider-wrap { flex: 1; display: flex; flex-direction: column; gap: 4px; }
 
     .time-slider {
-      width: 100%;
-      height: 6px;
-      -webkit-appearance: none;
-      appearance: none;
+      width: 100%; height: 6px;
+      -webkit-appearance: none; appearance: none;
       background: var(--neon-border);
       border-radius: 3px;
       outline: none;
     }
 
-    .time-slider::-webkit-slider-thumb {
-      -webkit-appearance: none;
-      width: 18px;
-      height: 18px;
-      border-radius: 50%;
-      background: var(--neon);
-      cursor: pointer;
-      box-shadow: 0 0 10px var(--neon-glow);
-    }
+    .time-slider::-webkit-slider-thumb { -webkit-appearance: none; width: 18px; height: 18px; border-radius: 50%; background: var(--neon); cursor: pointer; box-shadow: 0 0 10px var(--neon-glow); }
+    .time-slider::-moz-range-thumb { width: 18px; height: 18px; border-radius: 50%; background: var(--neon); cursor: pointer; border: none; }
 
-    .time-slider::-moz-range-thumb {
-      width: 18px;
-      height: 18px;
-      border-radius: 50%;
-      background: var(--neon);
-      cursor: pointer;
-      border: none;
-    }
-
-    .time-readout {
-      font-size: 11px;
-      color: var(--muted);
-      font-family: 'SF Mono', monospace;
-      text-align: center;
-    }
+    .time-readout { font-size: 11px; color: var(--muted); font-family: 'SF Mono', monospace; text-align: center; }
 
     .live-badge {
-      display: inline-flex;
-      align-items: center;
-      gap: 5px;
-      padding: 4px 10px;
-      border-radius: 12px;
+      display: inline-flex; align-items: center; gap: 5px;
+      padding: 4px 10px; border-radius: 12px;
       background: rgba(0, 255, 136, 0.15);
       border: 1px solid var(--neon-dim);
-      font-size: 11px;
-      font-weight: 600;
+      font-size: 11px; font-weight: 600;
       color: var(--neon);
     }
 
-    .live-badge.paused {
-      background: rgba(255, 204, 0, 0.15);
-      border-color: var(--warn);
-      color: var(--warn);
-    }
+    .live-badge.paused { background: rgba(255, 204, 0, 0.15); border-color: var(--warn); color: var(--warn); }
 
-    .live-badge .dot {
-      width: 6px;
-      height: 6px;
-      border-radius: 50%;
-      background: var(--neon);
-      animation: pulse 1.5s infinite;
-    }
+    .live-badge .dot { width: 6px; height: 6px; border-radius: 50%; background: var(--neon); animation: pulse 1.5s infinite; }
+    .live-badge.paused .dot { background: var(--warn); animation: none; }
 
-    .live-badge.paused .dot {
-      background: var(--warn);
-      animation: none;
-    }
-
-    /* Time travel FAB */
     .time-fab {
       position: fixed;
       bottom: calc(var(--safe-bottom) + 80px);
       left: 16px;
-      width: 48px;
-      height: 48px;
+      width: 48px; height: 48px;
       border-radius: 50%;
       border: 1px solid var(--neon-border);
       background: var(--bg);
       color: var(--neon);
       font-size: 18px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
+      display: flex; align-items: center; justify-content: center;
       cursor: pointer;
       z-index: 99;
       box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
       transition: all 0.3s;
     }
 
-    .time-fab:active {
-      transform: scale(0.95);
-    }
+    .time-fab:active { transform: scale(0.95); }
+    .time-fab.has-history { border-color: var(--neon-dim); box-shadow: 0 0 15px var(--neon-glow); }
 
-    .time-fab.has-history {
-      border-color: var(--neon-dim);
-      box-shadow: 0 0 15px var(--neon-glow);
-    }
-
-    /* Toast notifications */
     .toast-container {
       position: fixed;
       top: calc(var(--safe-top) + 70px);
-      left: 12px;
-      right: 12px;
+      left: 12px; right: 12px;
       z-index: 2000;
       display: flex;
       flex-direction: column;
@@ -944,9 +548,7 @@
       background: var(--bg-card);
       border: 1px solid var(--neon-border);
       backdrop-filter: blur(10px);
-      display: flex;
-      align-items: center;
-      gap: 10px;
+      display: flex; align-items: center; gap: 10px;
       font-size: 14px;
       animation: toastIn 0.3s ease, toastOut 0.3s ease 2.7s forwards;
       pointer-events: auto;
@@ -956,44 +558,19 @@
     .toast.error { border-color: var(--bad); }
     .toast.warning { border-color: var(--warn); }
 
-    .toast-icon {
-      font-size: 18px;
-    }
+    .toast-icon { font-size: 18px; }
 
-    @keyframes toastIn {
-      from { opacity: 0; transform: translateY(-20px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
+    @keyframes toastIn { from { opacity: 0; transform: translateY(-20px); } to { opacity: 1; transform: translateY(0); } }
+    @keyframes toastOut { from { opacity: 1; } to { opacity: 0; transform: translateY(-10px); } }
 
-    @keyframes toastOut {
-      from { opacity: 1; }
-      to { opacity: 0; transform: translateY(-10px); }
-    }
+    .empty-state { text-align: center; padding: 60px 20px; color: var(--muted); }
+    .empty-state-icon { font-size: 48px; margin-bottom: 16px; opacity: 0.5; }
+    .empty-state-text { font-size: 15px; line-height: 1.5; }
 
-    /* Empty state */
-    .empty-state {
-      text-align: center;
-      padding: 60px 20px;
-      color: var(--muted);
-    }
-
-    .empty-state-icon {
-      font-size: 48px;
-      margin-bottom: 16px;
-      opacity: 0.5;
-    }
-
-    .empty-state-text {
-      font-size: 15px;
-      line-height: 1.5;
-    }
-
-    /* Scrollbar */
     ::-webkit-scrollbar { width: 4px; height: 4px; }
     ::-webkit-scrollbar-track { background: transparent; }
     ::-webkit-scrollbar-thumb { background: var(--neon-border); border-radius: 2px; }
 
-    /* Desktop adjustments */
     @media (min-width: 768px) {
       .timeline-container { padding: 0 24px 140px; }
       .input-area { padding: 16px 24px calc(var(--safe-bottom) + 16px); }
@@ -1004,7 +581,6 @@
 </head>
 <body>
   <div class="app">
-    <!-- Header -->
     <header>
       <div class="brand">
         <div class="logo"></div>
@@ -1022,7 +598,6 @@
       </div>
     </header>
 
-    <!-- Main timeline -->
     <div class="timeline-container" id="timelineContainer">
       <div class="timeline" id="timeline">
         <div class="empty-state" id="emptyState">
@@ -1035,16 +610,9 @@
       </div>
     </div>
 
-    <!-- Time Travel FAB -->
     <button class="time-fab" id="timeFab" title="Time Travel">⏱</button>
+    <button class="chart-fab" id="chartFab">📈</button>
 
-    <!-- Chart FAB -->
-    <button class="chart-fab" id="chartFab">
-      📈
-      <span class="badge" id="chartBadge" style="display: none;">!</span>
-    </button>
-
-    <!-- Time Travel Overlay -->
     <div class="time-travel" id="timeTravel">
       <div class="time-travel-header">
         <span class="time-travel-title">⏱ Time Travel</span>
@@ -1068,23 +636,16 @@
       </div>
     </div>
 
-    <!-- Input area -->
     <div class="input-area">
       <div class="input-row">
         <div class="input-wrap">
-          <textarea 
-            class="chat-input" 
-            id="chatInput" 
-            placeholder="Ask anything... buy BTC, check balance, change theme"
-            rows="1"
-          ></textarea>
+          <textarea class="chat-input" id="chatInput" placeholder="Ask anything... buy BTC, check balance, change theme" rows="1"></textarea>
         </div>
         <button class="send-btn" id="btnSend">↑</button>
       </div>
     </div>
   </div>
 
-  <!-- Chart Modal -->
   <div class="chart-modal" id="chartModal">
     <div class="chart-header">
       <div>
@@ -1106,74 +667,26 @@
         <canvas id="chartCanvas"></canvas>
       </div>
       <div class="chart-info">
-        <div class="chart-stat">
-          <div class="chart-stat-label">Price</div>
-          <div class="chart-stat-value" id="statPrice">--</div>
-        </div>
-        <div class="chart-stat">
-          <div class="chart-stat-label">24h</div>
-          <div class="chart-stat-value" id="stat24h">--</div>
-        </div>
-        <div class="chart-stat">
-          <div class="chart-stat-label">High</div>
-          <div class="chart-stat-value" id="statHigh">--</div>
-        </div>
-        <div class="chart-stat">
-          <div class="chart-stat-label">Low</div>
-          <div class="chart-stat-value" id="statLow">--</div>
-        </div>
+        <div class="chart-stat"><div class="chart-stat-label">Price</div><div class="chart-stat-value" id="statPrice">--</div></div>
+        <div class="chart-stat"><div class="chart-stat-label">24h</div><div class="chart-stat-value" id="stat24h">--</div></div>
+        <div class="chart-stat"><div class="chart-stat-label">High</div><div class="chart-stat-value" id="statHigh">--</div></div>
+        <div class="chart-stat"><div class="chart-stat-label">Low</div><div class="chart-stat-value" id="statLow">--</div></div>
       </div>
     </div>
   </div>
 
-  <!-- Settings Modal -->
   <div class="modal-overlay" id="settingsModal">
     <div class="modal-sheet">
       <div class="modal-handle"></div>
       <div class="modal-title">⚙️ Settings</div>
-      
-      <div class="form-group">
-        <label class="form-label">WebSocket Server</label>
-        <input type="text" class="form-input" id="settingsWsUrl" value="ws://127.0.0.1:8090" />
-      </div>
-
-      <div class="form-group">
-        <label class="form-label">Exchange</label>
-        <select class="form-select" id="settingsExchange">
-          <option value="bybit">Bybit</option>
-          <option value="binance">Binance</option>
-          <option value="okx">OKX</option>
-          <option value="kucoin">KuCoin</option>
-          <option value="kraken">Kraken</option>
-        </select>
-      </div>
-
-      <div class="form-group">
-        <label class="form-label">API Key</label>
-        <input type="text" class="form-input" id="settingsApiKey" placeholder="Optional - for trading" autocomplete="off" />
-      </div>
-
-      <div class="form-group">
-        <label class="form-label">API Secret</label>
-        <input type="password" class="form-input" id="settingsApiSecret" placeholder="Optional - for trading" autocomplete="off" />
-      </div>
-
+      <div class="form-group"><label class="form-label">WebSocket Server</label><input type="text" class="form-input" id="settingsWsUrl" value="ws://127.0.0.1:8090" /></div>
+      <div class="form-group"><label class="form-label">Exchange</label><select class="form-select" id="settingsExchange"><option value="bybit">Bybit</option><option value="binance">Binance</option><option value="okx">OKX</option><option value="kucoin">KuCoin</option><option value="kraken">Kraken</option></select></div>
+      <div class="form-group"><label class="form-label">API Key</label><input type="text" class="form-input" id="settingsApiKey" placeholder="Optional" autocomplete="off" /></div>
+      <div class="form-group"><label class="form-label">API Secret</label><input type="password" class="form-input" id="settingsApiSecret" placeholder="Optional" autocomplete="off" /></div>
       <div class="form-row">
-        <div class="form-group">
-          <label class="form-label">Symbol</label>
-          <input type="text" class="form-input" id="settingsSymbol" value="BTC/USDT" />
-        </div>
-        <div class="form-group">
-          <label class="form-label">Timeframe</label>
-          <select class="form-select" id="settingsTimeframe">
-            <option value="1m">1 minute</option>
-            <option value="5m">5 minutes</option>
-            <option value="15m">15 minutes</option>
-            <option value="1h">1 hour</option>
-          </select>
-        </div>
+        <div class="form-group"><label class="form-label">Symbol</label><input type="text" class="form-input" id="settingsSymbol" value="BTC/USDT" /></div>
+        <div class="form-group"><label class="form-label">Timeframe</label><select class="form-select" id="settingsTimeframe"><option value="1m">1m</option><option value="5m">5m</option><option value="15m">15m</option><option value="1h">1h</option></select></div>
       </div>
-
       <div class="btn-row">
         <button class="btn btn-secondary" id="btnSettingsCancel">Cancel</button>
         <button class="btn btn-primary" id="btnSettingsSave">Save & Connect</button>
@@ -1181,60 +694,36 @@
     </div>
   </div>
 
-  <!-- Toast container -->
   <div class="toast-container" id="toastContainer"></div>
 
   <script>
-    // Initialize markdown
     marked.setOptions({
       highlight: (code, lang) => {
-        try {
-          if (lang && hljs.getLanguage(lang)) return hljs.highlight(code, {language: lang}).value;
-          return hljs.highlightAuto(code).value;
-        } catch { return code; }
+        try { if (lang && hljs.getLanguage(lang)) return hljs.highlight(code, {language: lang}).value; return hljs.highlightAuto(code).value; } catch { return code; }
       },
-      breaks: true,
-      gfm: true
+      breaks: true, gfm: true
     });
 
-    // State
     const state = {
-      ws: null,
-      connected: false,
-      settings: {
-        wsUrl: 'ws://127.0.0.1:8090',
-        exchange: 'bybit',
-        apiKey: '',
-        apiSecret: '',
-        symbol: 'BTC/USDT',
-        timeframe: '1m'
-      },
+      ws: null, connected: false,
+      settings: { wsUrl: 'ws://127.0.0.1:8090', exchange: 'bybit', apiKey: '', apiSecret: '', symbol: 'BTC/USDT', timeframe: '1m' },
       chart: { ohlcv: [], symbol: 'BTC/USDT', timeframe: '1m' },
       turns: new Map(),
       historyItems: [],
-      // Time travel state
-      streamEvents: [],
-      streamSnaps: [],
-      nowIndex: 0,
-      playing: false,
-      playTimer: null,
-      isLive: true
+      streamEvents: [], streamSnaps: [], nowIndex: 0, playing: false, playTimer: null, isLive: true
     };
 
-    // Elements
     const els = {
       timeline: document.getElementById('timeline'),
       timelineContainer: document.getElementById('timelineContainer'),
       emptyState: document.getElementById('emptyState'),
       chatInput: document.getElementById('chatInput'),
-      btnSend: document.getElementById('btnSend'),
       statusDot: document.getElementById('statusDot'),
       statusText: document.getElementById('statusText'),
       chartModal: document.getElementById('chartModal'),
       chartCanvas: document.getElementById('chartCanvas'),
       settingsModal: document.getElementById('settingsModal'),
       toastContainer: document.getElementById('toastContainer'),
-      // Time travel elements
       timeTravel: document.getElementById('timeTravel'),
       timeFab: document.getElementById('timeFab'),
       timeSlider: document.getElementById('timeSlider'),
@@ -1243,13 +732,8 @@
       liveText: document.getElementById('liveText')
     };
 
-    // Load settings
     function loadSettings() {
-      try {
-        const saved = localStorage.getItem('hashtradeSettings');
-        if (saved) Object.assign(state.settings, JSON.parse(saved));
-      } catch (e) {}
-      
+      try { const s = localStorage.getItem('hashtradeSettings'); if (s) Object.assign(state.settings, JSON.parse(s)); } catch {}
       document.getElementById('settingsWsUrl').value = state.settings.wsUrl;
       document.getElementById('settingsExchange').value = state.settings.exchange;
       document.getElementById('settingsApiKey').value = state.settings.apiKey;
@@ -1267,16 +751,13 @@
       state.settings.apiSecret = document.getElementById('settingsApiSecret').value;
       state.settings.symbol = document.getElementById('settingsSymbol').value;
       state.settings.timeframe = document.getElementById('settingsTimeframe').value;
-      
       localStorage.setItem('hashtradeSettings', JSON.stringify(state.settings));
       state.chart.symbol = state.settings.symbol;
       state.chart.timeframe = state.settings.timeframe;
-      
       closeSettings();
       connect();
     }
 
-    // Toast notifications
     function showToast(message, type = 'info') {
       const icons = { success: '✓', error: '✗', warning: '⚠', info: 'ℹ' };
       const toast = document.createElement('div');
@@ -1286,18 +767,12 @@
       setTimeout(() => toast.remove(), 3000);
     }
 
-    // ========== TIME TRAVEL ==========
-    
     function isoNow() { return new Date().toISOString(); }
 
     function addStreamEvent(type, msg) {
       state.streamEvents.push({ ts: isoNow(), type, msg });
       buildStreamSnaps();
-      
-      // Update FAB to show history exists
       els.timeFab.classList.add('has-history');
-      
-      // If we're live, follow along
       if (state.isLive) {
         state.nowIndex = state.streamEvents.length - 1;
         els.timeSlider.value = state.nowIndex;
@@ -1307,25 +782,15 @@
 
     function buildStreamSnaps() {
       const snaps = [];
-      let chart = null;
-      let historyUpToNow = [];
-      
+      let chart = null, historyUpToNow = [];
       for (let i = 0; i < state.streamEvents.length; i++) {
         const e = state.streamEvents[i];
         if (e.type === 'ohlcv') chart = e.msg.data;
         if (e.type === 'history') historyUpToNow = [...historyUpToNow, e.msg.data];
         if (e.type === 'history_sync') historyUpToNow = Array.isArray(e.msg.data) ? [...e.msg.data] : [];
         if (e.type === 'history_cleared') historyUpToNow = [];
-        
-        snaps.push({
-          i,
-          ts: e.ts,
-          chart,
-          history: [...historyUpToNow],
-          events: state.streamEvents.slice(0, i + 1)
-        });
+        snaps.push({ i, ts: e.ts, chart, history: [...historyUpToNow], events: state.streamEvents.slice(0, i + 1) });
       }
-      
       state.streamSnaps = snaps;
       els.timeSlider.max = Math.max(0, snaps.length - 1);
     }
@@ -1333,7 +798,6 @@
     function setTimeIndex(i) {
       state.nowIndex = Math.max(0, Math.min(i, state.streamSnaps.length - 1));
       state.isLive = state.nowIndex >= state.streamSnaps.length - 1;
-      
       els.timeSlider.value = state.nowIndex;
       updateTimeReadout();
       updateLiveBadge();
@@ -1342,273 +806,143 @@
 
     function updateTimeReadout() {
       const snap = state.streamSnaps[state.nowIndex];
-      if (!snap) {
-        els.timeReadout.textContent = 'No events yet';
-        return;
-      }
-      
+      if (!snap) { els.timeReadout.textContent = 'No events yet'; return; }
       const total = state.streamSnaps.length;
       const timeStr = snap.ts ? snap.ts.split('T')[1]?.split('.')[0] || '' : '';
       els.timeReadout.textContent = `${state.nowIndex + 1} / ${total} • ${timeStr}`;
     }
 
     function updateLiveBadge() {
-      if (state.isLive) {
-        els.liveBadge.classList.remove('paused');
-        els.liveText.textContent = 'LIVE';
-      } else {
-        els.liveBadge.classList.add('paused');
-        els.liveText.textContent = 'PAUSED';
-      }
+      if (state.isLive) { els.liveBadge.classList.remove('paused'); els.liveText.textContent = 'LIVE'; }
+      else { els.liveBadge.classList.add('paused'); els.liveText.textContent = 'PAUSED'; }
     }
 
-    function goToLive() {
-      state.isLive = true;
-      setTimeIndex(state.streamSnaps.length - 1);
-    }
+    function goToLive() { state.isLive = true; setTimeIndex(state.streamSnaps.length - 1); }
 
     function togglePlay() {
       state.playing = !state.playing;
       const btn = document.getElementById('btnPlay');
-      
       if (state.playing) {
         btn.textContent = '⏸';
         state.playTimer = setInterval(() => {
-          if (state.nowIndex >= state.streamSnaps.length - 1) {
-            state.playing = false;
-            btn.textContent = '▶';
-            clearInterval(state.playTimer);
-            state.isLive = true;
-            updateLiveBadge();
-            return;
-          }
+          if (state.nowIndex >= state.streamSnaps.length - 1) { state.playing = false; btn.textContent = '▶'; clearInterval(state.playTimer); state.isLive = true; updateLiveBadge(); return; }
           setTimeIndex(state.nowIndex + 1);
         }, 300);
-      } else {
-        btn.textContent = '▶';
-        clearInterval(state.playTimer);
-      }
+      } else { btn.textContent = '▶'; clearInterval(state.playTimer); }
     }
 
     function renderFromSnapshot() {
       const snap = state.streamSnaps[state.nowIndex];
       if (!snap) return;
-
-      // Clear and rebuild timeline from snapshot
       clearTimelineKeepEmpty();
       state.turns.clear();
-
-      // Replay events up to this point
       for (const e of snap.events) {
         const msg = e.msg || {};
-        
         switch (e.type) {
-          case 'turn_start':
-            createTurn(msg.turn_id, msg.data || '', true);
-            break;
-          case 'chunk':
-            appendToTurn(msg.turn_id, msg.data || '');
-            break;
-          case 'tool_start':
-            addToolIndicator(msg.turn_id, msg.data || 'tool', 'running');
-            break;
-          case 'tool_end':
-            updateToolIndicator(msg.turn_id, !!msg.success);
-            break;
-          case 'turn_end':
-            finalizeTurn(msg.turn_id);
-            break;
-          case 'history':
-            if (msg.data) addHistoryItem(msg.data, true);
-            break;
+          case 'turn_start': createTurn(msg.turn_id, msg.data || '', true); break;
+          case 'chunk': appendToTurn(msg.turn_id, msg.data || ''); break;
+          case 'tool_start': addToolIndicator(msg.turn_id, msg.data || 'tool', 'running'); break;
+          case 'tool_end': updateToolIndicator(msg.turn_id, !!msg.success); break;
+          case 'turn_end': finalizeTurn(msg.turn_id); break;
+          case 'history': if (msg.data) addHistoryItem(msg.data, true); break;
+          case 'ui_render': renderDynamicUI(msg, true); break;
         }
       }
-
-      // Update chart if available
-      if (snap.chart) {
-        state.chart = snap.chart;
-        if (els.chartModal.classList.contains('show')) {
-          updateChartStats();
-          drawChart();
-        }
-      }
-
+      if (snap.chart) { state.chart = snap.chart; if (els.chartModal.classList.contains('show')) { updateChartStats(); drawChart(); } }
       scrollToBottom();
     }
 
-    function clearTimelineKeepEmpty() {
-      els.timeline.innerHTML = '';
-      if (els.emptyState) {
-        els.timeline.appendChild(els.emptyState);
-      }
-    }
+    function clearTimelineKeepEmpty() { els.timeline.innerHTML = ''; if (els.emptyState) els.timeline.appendChild(els.emptyState); }
+    function openTimeTravel() { els.timeTravel.classList.add('show'); }
+    function closeTimeTravel() { els.timeTravel.classList.remove('show'); }
 
-    function openTimeTravel() {
-      els.timeTravel.classList.add('show');
-    }
-
-    function closeTimeTravel() {
-      els.timeTravel.classList.remove('show');
-    }
-
-    // WebSocket
     function connect() {
-      if (state.ws) {
-        state.ws.close();
-      }
-
+      if (state.ws) state.ws.close();
       state.ws = new WebSocket(state.settings.wsUrl);
       els.statusText.textContent = 'Connecting...';
-
       state.ws.onopen = () => {
         state.connected = true;
         els.statusDot.classList.add('connected');
         els.statusText.textContent = 'Connected';
         showToast('Connected to server', 'success');
-        
-        // Send credentials
-        state.ws.send(JSON.stringify({
-          type: 'credentials',
-          exchange: state.settings.exchange,
-          apiKey: state.settings.apiKey,
-          apiSecret: state.settings.apiSecret
-        }));
-        
-        // Request initial chart
+        state.ws.send(JSON.stringify({ type: 'credentials', exchange: state.settings.exchange, apiKey: state.settings.apiKey, apiSecret: state.settings.apiSecret }));
         requestChart();
       };
-
-      state.ws.onclose = () => {
-        state.connected = false;
-        els.statusDot.classList.remove('connected');
-        els.statusText.textContent = 'Disconnected';
-      };
-
-      state.ws.onerror = () => {
-        showToast('Connection error', 'error');
-      };
-
+      state.ws.onclose = () => { state.connected = false; els.statusDot.classList.remove('connected'); els.statusText.textContent = 'Disconnected'; };
+      state.ws.onerror = () => showToast('Connection error', 'error');
       state.ws.onmessage = handleMessage;
     }
 
     function handleMessage(ev) {
-      let msg;
-      try { msg = JSON.parse(ev.data); } catch { return; }
-      
+      let msg; try { msg = JSON.parse(ev.data); } catch { return; }
       const t = msg.type;
 
       // Track all events for time travel
-      if (['turn_start', 'chunk', 'tool_start', 'tool_end', 'turn_end', 'history', 'history_sync', 'history_cleared', 'ohlcv', 'theme_update', 'ui_alert'].includes(t)) {
+      if (['turn_start', 'chunk', 'tool_start', 'tool_end', 'turn_end', 'history', 'history_sync', 'history_cleared', 'ohlcv', 'theme_update', 'ui_alert', 'ui_render'].includes(t)) {
         addStreamEvent(t, msg);
       }
 
-      // If not live, don't update UI from new messages
-      if (!state.isLive && !['history_sync', 'ohlcv'].includes(t)) {
-        return;
-      }
+      if (!state.isLive && !['history_sync', 'ohlcv'].includes(t)) return;
 
       switch (t) {
-        case 'connected':
-          break;
-
-        case 'turn_start':
-          createTurn(msg.turn_id, msg.data);
-          break;
-
-        case 'chunk':
-          appendToTurn(msg.turn_id, msg.data);
-          break;
-
-        case 'tool_start':
-          addToolIndicator(msg.turn_id, msg.data, 'running');
-          break;
-
-        case 'tool_end':
-          updateToolIndicator(msg.turn_id, msg.success);
-          break;
-
-        case 'turn_end':
-          finalizeTurn(msg.turn_id);
-          break;
-
-        case 'history_sync':
-          state.historyItems = Array.isArray(msg.data) ? msg.data : [];
-          renderHistory();
-          break;
-
-        case 'history':
-          if (msg.data) {
-            state.historyItems.push(msg.data);
-            addHistoryItem(msg.data);
-          }
-          break;
-
-        case 'history_cleared':
-          state.historyItems = [];
-          clearTimeline();
-          break;
-
-        case 'ohlcv':
-          if (msg.data) {
-            state.chart = msg.data;
-            updateChartStats();
-            if (els.chartModal.classList.contains('show')) {
-              drawChart();
-            }
-          }
-          break;
-
-        case 'theme_update':
-          applyTheme(msg.data);
-          break;
-
-        case 'ui_alert':
-          showToast(msg.content, msg.alert_type || 'info');
-          break;
+        case 'connected': break;
+        case 'turn_start': createTurn(msg.turn_id, msg.data); break;
+        case 'chunk': appendToTurn(msg.turn_id, msg.data); break;
+        case 'tool_start': addToolIndicator(msg.turn_id, msg.data, 'running'); break;
+        case 'tool_end': updateToolIndicator(msg.turn_id, msg.success); break;
+        case 'turn_end': finalizeTurn(msg.turn_id); break;
+        case 'history_sync': state.historyItems = Array.isArray(msg.data) ? msg.data : []; renderHistory(); break;
+        case 'history': if (msg.data) { state.historyItems.push(msg.data); addHistoryItem(msg.data); } break;
+        case 'history_cleared': state.historyItems = []; clearTimeline(); break;
+        case 'ohlcv': if (msg.data) { state.chart = msg.data; updateChartStats(); if (els.chartModal.classList.contains('show')) drawChart(); } break;
+        case 'theme_update': applyTheme(msg.data); break;
+        case 'ui_alert': showToast(msg.content, msg.alert_type || 'info'); break;
+        case 'ui_render': renderDynamicUI(msg); break;
       }
     }
 
-    // Timeline management
-    function hideEmptyState() {
-      if (els.emptyState) els.emptyState.style.display = 'none';
+    function renderDynamicUI(msg, isReplay = false) {
+      hideEmptyState();
+      const el = document.createElement('div');
+      el.className = 'message history';
+      const renderType = msg.render_type || 'widget';
+      const title = msg.title || renderType;
+      const html = msg.html || '';
+      const ts = msg.timestamp ? new Date(msg.timestamp * 1000).toLocaleTimeString() : '';
+      el.innerHTML = `
+        <div class="event-card" style="border-left: 3px solid var(--neon);">
+          <div class="event-header"><span class="event-type">${renderType}</span><span class="event-time">${ts}</span></div>
+          <div class="event-content"><strong>${title}</strong></div>
+          <div class="dynamic-html">${html}</div>
+        </div>
+      `;
+      els.timeline.appendChild(el);
+      if (!isReplay) scrollToBottom();
     }
 
-    function clearTimeline() {
-      els.timeline.innerHTML = '';
-      state.turns.clear();
-      els.emptyState.style.display = 'block';
-      els.timeline.appendChild(els.emptyState);
-    }
+    function hideEmptyState() { if (els.emptyState) els.emptyState.style.display = 'none'; }
+    function clearTimeline() { els.timeline.innerHTML = ''; state.turns.clear(); els.emptyState.style.display = 'block'; els.timeline.appendChild(els.emptyState); }
 
     function createTurn(turnId, userMessage, isReplay = false) {
       hideEmptyState();
-      
-      // User message
       const userEl = document.createElement('div');
       userEl.className = 'message user';
       userEl.innerHTML = `<div class="bubble">${escapeHtml(userMessage)}</div>`;
       els.timeline.appendChild(userEl);
-
-      // Assistant message container
       const assistantEl = document.createElement('div');
       assistantEl.className = 'message assistant';
       assistantEl.dataset.turnId = turnId;
-      
       const bubble = document.createElement('div');
       bubble.className = 'bubble';
-      
       const content = document.createElement('div');
       content.className = 'content';
-      
       const typing = document.createElement('div');
       typing.className = 'typing-indicator';
       typing.innerHTML = '<span></span><span></span><span></span>';
-      
       bubble.appendChild(content);
       if (!isReplay) bubble.appendChild(typing);
       assistantEl.appendChild(bubble);
       els.timeline.appendChild(assistantEl);
-
       state.turns.set(turnId, { el: assistantEl, content, typing, bubble, text: '', tools: [] });
       if (!isReplay) scrollToBottom();
     }
@@ -1616,7 +950,6 @@
     function appendToTurn(turnId, text) {
       const turn = state.turns.get(turnId);
       if (!turn) return;
-      
       turn.text += (text || '');
       turn.content.innerHTML = marked.parse(turn.text);
       turn.content.querySelectorAll('pre code').forEach(block => hljs.highlightElement(block));
@@ -1626,7 +959,6 @@
     function addToolIndicator(turnId, toolName, status) {
       const turn = state.turns.get(turnId);
       if (!turn) return;
-
       const indicator = document.createElement('div');
       indicator.className = `tool-indicator ${status}`;
       indicator.innerHTML = `<div class="tool-spinner"></div><span>${toolName}</span>`;
@@ -1637,7 +969,6 @@
     function updateToolIndicator(turnId, success) {
       const turn = state.turns.get(turnId);
       if (!turn || !turn.tools.length) return;
-      
       const last = turn.tools[turn.tools.length - 1];
       last.className = `tool-indicator ${success ? 'success' : 'error'}`;
       last.innerHTML = `<span>${success ? '✓' : '✗'}</span>${last.querySelector('span:last-child').textContent}`;
@@ -1646,84 +977,82 @@
     function finalizeTurn(turnId) {
       const turn = state.turns.get(turnId);
       if (!turn) return;
-      turn.typing.remove();
+      if (turn.typing && turn.typing.parentNode) turn.typing.remove();
     }
 
     function addHistoryItem(item, isReplay = false) {
       hideEmptyState();
-      
       const type = item.type || 'note';
       const data = item.data || {};
       const ts = item.ts ? new Date(item.ts * 1000).toLocaleTimeString() : '';
       
-      // Skip UI/tool events
+      // Skip meta events
       if (['tool_start', 'tool_end', 'ui', 'balance', 'raw'].includes(type)) return;
+      // Skip ui_ prefixed types (those are rendered by renderDynamicUI)
+      if (type.startsWith('ui_')) return;
 
       const el = document.createElement('div');
       el.className = 'message history';
       
-      let content = '';
-      if (typeof data === 'string') {
-        content = data;
-      } else if (data.message) {
-        content = data.message;
-      } else if (data.symbol) {
-        content = `<strong>${(data.side || type).toUpperCase()}</strong> ${data.amount || ''} ${data.symbol} ${data.price ? '@ ' + data.price : ''}`;
-      } else {
-        content = JSON.stringify(data);
-      }
+      let content = '', symbol = '', exchange = '';
+      if (typeof data === 'string') { content = data; }
+      else if (data.html) { content = data.html; }
+      else if (data.message) { content = data.message; }
+      else if (data.symbol) {
+        symbol = data.symbol;
+        exchange = data.exchange || state.settings.exchange;
+        content = `<strong>${(data.side || type).toUpperCase()}</strong> ${data.amount || ''} ${data.symbol} ${data.price ? '@ $' + data.price : ''}`;
+      } else { content = JSON.stringify(data); }
 
       el.innerHTML = `
-        <div class="event-card ${type}">
-          <div class="event-header">
-            <span class="event-type">${type}</span>
-            <span class="event-time">${ts}</span>
-          </div>
+        <div class="event-card ${type}" data-symbol="${symbol}" data-exchange="${exchange}">
+          <div class="event-header"><span class="event-type">${type}</span><span class="event-time">${ts}</span></div>
           <div class="event-content">${content}</div>
         </div>
       `;
+
+      // Make clickable if has symbol
+      if (symbol) {
+        const card = el.querySelector('.event-card');
+        card.onclick = () => {
+          state.settings.symbol = symbol;
+          state.chart.symbol = symbol;
+          if (exchange) state.settings.exchange = exchange;
+          document.getElementById('settingsSymbol').value = symbol;
+          document.getElementById('chartSymbol').textContent = symbol;
+          localStorage.setItem('hashtradeSettings', JSON.stringify(state.settings));
+          openChart();
+          requestChart();
+        };
+      }
       
       els.timeline.appendChild(el);
       if (!isReplay) scrollToBottom();
     }
 
     function renderHistory() {
-      // Keep existing turns, just add history items
       const SKIP = new Set(['tool_start', 'tool_end', 'ui', 'balance', 'raw']);
-      for (const item of state.historyItems.slice(-50)) {
-        if (!SKIP.has(item.type)) {
-          addHistoryItem(item);
+      for (const item of state.historyItems.slice(-100)) {
+        if (!SKIP.has(item.type) && !item.type?.startsWith('ui_')) {
+          addHistoryItem(item, true);
         }
       }
+      scrollToBottom();
     }
 
-    function scrollToBottom() {
-      requestAnimationFrame(() => {
-        els.timelineContainer.scrollTop = els.timelineContainer.scrollHeight;
-      });
-    }
+    function scrollToBottom() { requestAnimationFrame(() => { els.timelineContainer.scrollTop = els.timelineContainer.scrollHeight; }); }
 
-    // Send message
     function send() {
       const text = els.chatInput.value.trim();
       if (!text || !state.connected) return;
-      
       els.chatInput.value = '';
       els.chatInput.style.height = 'auto';
       state.ws.send(text);
     }
 
-    // Chart
     function requestChart() {
       if (!state.ws || state.ws.readyState !== 1) return;
-      state.ws.send(JSON.stringify({
-        type: 'ui',
-        action: 'fetch_ohlcv',
-        exchange: state.settings.exchange,
-        symbol: state.settings.symbol,
-        timeframe: state.settings.timeframe,
-        limit: 200
-      }));
+      state.ws.send(JSON.stringify({ type: 'ui', action: 'fetch_ohlcv', exchange: state.settings.exchange, symbol: state.settings.symbol, timeframe: state.settings.timeframe, limit: 200 }));
     }
 
     function openChart() {
@@ -1733,89 +1062,62 @@
       setTimeout(drawChart, 100);
     }
 
-    function closeChart() {
-      els.chartModal.classList.remove('show');
-    }
+    function closeChart() { els.chartModal.classList.remove('show'); }
 
     function updateChartStats() {
       const ohlcv = state.chart.ohlcv || [];
       if (!ohlcv.length) return;
-
-      const last = ohlcv[ohlcv.length - 1];
-      const first = ohlcv[0];
-      const price = last[4];
-      const open = first[1];
+      const last = ohlcv[ohlcv.length - 1], first = ohlcv[0];
+      const price = last[4], open = first[1];
       const change = ((price - open) / open * 100).toFixed(2);
-      const high = Math.max(...ohlcv.map(c => c[2]));
-      const low = Math.min(...ohlcv.map(c => c[3]));
-
+      const high = Math.max(...ohlcv.map(c => c[2])), low = Math.min(...ohlcv.map(c => c[3]));
       document.getElementById('statPrice').textContent = '$' + price.toLocaleString();
-      
       const changeEl = document.getElementById('stat24h');
       changeEl.textContent = (change >= 0 ? '+' : '') + change + '%';
       changeEl.className = 'chart-stat-value ' + (change >= 0 ? 'up' : 'down');
-      
       document.getElementById('statHigh').textContent = '$' + high.toLocaleString();
       document.getElementById('statLow').textContent = '$' + low.toLocaleString();
-      
-      document.getElementById('chartMeta').textContent = `${state.chart.timeframe} • ${ohlcv.length} candles`;
+      document.getElementById('chartMeta').textContent = `${state.chart.timeframe || state.settings.timeframe} • ${ohlcv.length} candles`;
     }
 
     function drawChart() {
       const canvas = els.chartCanvas;
       const wrap = canvas.parentElement;
       const dpr = window.devicePixelRatio || 1;
-      const w = wrap.clientWidth;
-      const h = wrap.clientHeight;
-      
-      canvas.width = w * dpr;
-      canvas.height = h * dpr;
-      canvas.style.width = w + 'px';
-      canvas.style.height = h + 'px';
-      
+      const w = wrap.clientWidth, h = wrap.clientHeight;
+      canvas.width = w * dpr; canvas.height = h * dpr;
+      canvas.style.width = w + 'px'; canvas.style.height = h + 'px';
       const ctx = canvas.getContext('2d');
       ctx.scale(dpr, dpr);
       ctx.clearRect(0, 0, w, h);
 
       const ohlcv = state.chart.ohlcv || [];
-      if (!ohlcv.length) {
-        ctx.fillStyle = 'rgba(0, 255, 136, 0.3)';
-        ctx.font = '14px system-ui';
-        ctx.fillText('No data', w/2 - 30, h/2);
-        return;
-      }
+      if (!ohlcv.length) { ctx.fillStyle = 'rgba(0, 255, 136, 0.3)'; ctx.font = '14px system-ui'; ctx.fillText('No data', w/2 - 30, h/2); return; }
 
       // Grid
       ctx.strokeStyle = 'rgba(0, 255, 136, 0.1)';
       ctx.lineWidth = 1;
-      for (let i = 0; i <= 5; i++) {
-        const y = (h / 5) * i;
-        ctx.beginPath();
-        ctx.moveTo(0, y);
-        ctx.lineTo(w, y);
-        ctx.stroke();
-      }
+      for (let i = 0; i <= 5; i++) { const y = (h / 5) * i; ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(w, y); ctx.stroke(); }
 
       const closes = ohlcv.map(c => c[4]);
-      const minY = Math.min(...closes);
-      const maxY = Math.max(...closes);
+      const timestamps = ohlcv.map(c => c[0]);
+      const minY = Math.min(...closes), maxY = Math.max(...closes);
       const pad = (maxY - minY) * 0.1 || 1;
       const lo = minY - pad, hi = maxY + pad;
+      const x0 = timestamps[0], x1 = timestamps[timestamps.length - 1];
 
-      const xScale = (i) => (i / (ohlcv.length - 1)) * (w - 20) + 10;
+      const xScale = (t) => ((t - x0) / (x1 - x0)) * (w - 20) + 10;
+      const xScaleIdx = (i) => (i / (ohlcv.length - 1)) * (w - 20) + 10;
       const yScale = (v) => h - ((v - lo) / (hi - lo) * (h - 20) + 10);
 
       // Gradient fill
       const gradient = ctx.createLinearGradient(0, 0, 0, h);
       gradient.addColorStop(0, 'rgba(0, 255, 136, 0.25)');
       gradient.addColorStop(1, 'rgba(0, 255, 136, 0)');
-
       ctx.beginPath();
-      ctx.moveTo(xScale(0), h);
-      for (let i = 0; i < ohlcv.length; i++) {
-        ctx.lineTo(xScale(i), yScale(closes[i]));
-      }
-      ctx.lineTo(xScale(ohlcv.length - 1), h);
+      ctx.moveTo(xScaleIdx(0), h);
+      for (let i = 0; i < ohlcv.length; i++) ctx.lineTo(xScaleIdx(i), yScale(closes[i]));
+      ctx.lineTo(xScaleIdx(ohlcv.length - 1), h);
       ctx.closePath();
       ctx.fillStyle = gradient;
       ctx.fill();
@@ -1826,14 +1128,34 @@
       ctx.shadowColor = 'rgba(0, 255, 136, 0.5)';
       ctx.shadowBlur = 8;
       ctx.beginPath();
-      for (let i = 0; i < ohlcv.length; i++) {
-        const x = xScale(i);
-        const y = yScale(closes[i]);
-        if (i === 0) ctx.moveTo(x, y);
-        else ctx.lineTo(x, y);
-      }
+      for (let i = 0; i < ohlcv.length; i++) { const x = xScaleIdx(i), y = yScale(closes[i]); if (i === 0) ctx.moveTo(x, y); else ctx.lineTo(x, y); }
       ctx.stroke();
       ctx.shadowBlur = 0;
+
+      // Draw order dots from history
+      const orders = state.historyItems.filter(r => ['order', 'trade', 'buy', 'sell'].includes(r.type) && r.data?.symbol === state.chart.symbol);
+      for (const order of orders) {
+        const data = order.data || {};
+        const orderTs = (order.ts || 0) * 1000;
+        const orderPrice = parseFloat(data.price) || 0;
+        const side = (data.side || '').toLowerCase();
+        if (!orderPrice || orderTs < x0 || orderTs > x1) continue;
+        const dotX = xScale(orderTs);
+        const dotY = yScale(orderPrice);
+        ctx.beginPath();
+        ctx.arc(dotX, dotY, 6, 0, Math.PI * 2);
+        if (side === 'buy') { ctx.fillStyle = '#00ccff'; ctx.shadowColor = 'rgba(0, 204, 255, 0.8)'; }
+        else if (side === 'sell' || side === 'short') { ctx.fillStyle = '#ff3366'; ctx.shadowColor = 'rgba(255, 51, 102, 0.8)'; }
+        else { ctx.fillStyle = '#ffcc00'; ctx.shadowColor = 'rgba(255, 204, 0, 0.8)'; }
+        ctx.shadowBlur = 10;
+        ctx.fill();
+        ctx.shadowBlur = 0;
+        ctx.strokeStyle = ctx.fillStyle;
+        ctx.lineWidth = 2;
+        ctx.beginPath();
+        ctx.arc(dotX, dotY, 10, 0, Math.PI * 2);
+        ctx.stroke();
+      }
 
       // Price label
       ctx.fillStyle = '#00ff88';
@@ -1841,60 +1163,27 @@
       ctx.fillText('$' + closes[closes.length - 1].toLocaleString(), 12, 24);
     }
 
-    // Theme
     function applyTheme(theme) {
       if (!theme) return;
       const root = document.documentElement;
-      const map = {
-        'neon': '--neon', 'neon_dim': '--neon-dim', 'neon_glow': '--neon-glow',
-        'neon_subtle': '--neon-subtle', 'neon_border': '--neon-border',
-        'bg': '--bg', 'text': '--text', 'text_dim': '--text-dim',
-        'muted': '--muted', 'good': '--good', 'bad': '--bad', 'warn': '--warn'
-      };
-      for (const [key, cssVar] of Object.entries(map)) {
-        if (theme[key]) root.style.setProperty(cssVar, theme[key]);
-      }
+      const map = { 'neon': '--neon', 'neon_dim': '--neon-dim', 'neon_glow': '--neon-glow', 'neon_subtle': '--neon-subtle', 'neon_border': '--neon-border', 'bg': '--bg', 'text': '--text', 'text_dim': '--text-dim', 'muted': '--muted', 'good': '--good', 'bad': '--bad', 'warn': '--warn' };
+      for (const [key, cssVar] of Object.entries(map)) if (theme[key]) root.style.setProperty(cssVar, theme[key]);
       localStorage.setItem('hashtradeTheme', JSON.stringify(theme));
     }
 
-    // Utils
-    function escapeHtml(s) {
-      return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
-    }
+    function escapeHtml(s) { return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+    function openSettings() { els.settingsModal.classList.add('show'); }
+    function closeSettings() { els.settingsModal.classList.remove('show'); }
 
-    function openSettings() {
-      els.settingsModal.classList.add('show');
-    }
-
-    function closeSettings() {
-      els.settingsModal.classList.remove('show');
-    }
-
-    // Auto-resize textarea
-    els.chatInput.addEventListener('input', function() {
-      this.style.height = 'auto';
-      this.style.height = Math.min(this.scrollHeight, 120) + 'px';
-    });
-
-    // Event listeners
-    els.btnSend.addEventListener('click', send);
-    els.chatInput.addEventListener('keydown', e => {
-      if (e.key === 'Enter' && !e.shiftKey) {
-        e.preventDefault();
-        send();
-      }
-    });
-
+    els.chatInput.addEventListener('input', function() { this.style.height = 'auto'; this.style.height = Math.min(this.scrollHeight, 120) + 'px'; });
+    document.getElementById('btnSend').addEventListener('click', send);
+    els.chatInput.addEventListener('keydown', e => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); send(); } });
     document.getElementById('btnSettings').addEventListener('click', openSettings);
     document.getElementById('btnSettingsCancel').addEventListener('click', closeSettings);
     document.getElementById('btnSettingsSave').addEventListener('click', saveSettings);
-    els.settingsModal.addEventListener('click', e => {
-      if (e.target === els.settingsModal) closeSettings();
-    });
-
+    els.settingsModal.addEventListener('click', e => { if (e.target === els.settingsModal) closeSettings(); });
     document.getElementById('chartFab').addEventListener('click', openChart);
     document.getElementById('chartClose').addEventListener('click', closeChart);
-
     document.getElementById('chartControls').addEventListener('click', e => {
       if (e.target.classList.contains('tf-btn')) {
         document.querySelectorAll('.tf-btn').forEach(b => b.classList.remove('active'));
@@ -1904,59 +1193,28 @@
         requestChart();
       }
     });
-
     document.getElementById('btnClear').addEventListener('click', () => {
-      if (state.ws && state.ws.readyState === 1) {
-        state.ws.send(JSON.stringify({ type: 'history', action: 'clear' }));
-      }
+      if (state.ws && state.ws.readyState === 1) state.ws.send(JSON.stringify({ type: 'history', action: 'clear' }));
       clearTimeline();
-      // Also clear time travel state
-      state.streamEvents = [];
-      state.streamSnaps = [];
-      state.nowIndex = 0;
-      state.isLive = true;
+      state.streamEvents = []; state.streamSnaps = []; state.nowIndex = 0; state.isLive = true;
+      state.historyItems = [];
       els.timeFab.classList.remove('has-history');
-      els.timeSlider.max = 0;
-      els.timeSlider.value = 0;
-      updateTimeReadout();
-      updateLiveBadge();
+      els.timeSlider.max = 0; els.timeSlider.value = 0;
+      updateTimeReadout(); updateLiveBadge();
     });
-
-    // Time travel controls
     els.timeFab.addEventListener('click', openTimeTravel);
     document.getElementById('timeTravelClose').addEventListener('click', closeTimeTravel);
     document.getElementById('btnPlay').addEventListener('click', togglePlay);
     document.getElementById('btnPrev').addEventListener('click', () => setTimeIndex(state.nowIndex - 1));
     document.getElementById('btnNext').addEventListener('click', () => setTimeIndex(state.nowIndex + 1));
     document.getElementById('btnLive').addEventListener('click', goToLive);
-    els.timeSlider.addEventListener('input', (e) => {
-      state.isLive = false;
-      setTimeIndex(parseInt(e.target.value, 10));
-    });
+    els.timeSlider.addEventListener('input', e => { state.isLive = false; setTimeIndex(parseInt(e.target.value, 10)); });
+    window.addEventListener('resize', () => { if (els.chartModal.classList.contains('show')) drawChart(); });
 
-    // Handle resize for chart
-    window.addEventListener('resize', () => {
-      if (els.chartModal.classList.contains('show')) {
-        drawChart();
-      }
-    });
-
-    // Init
     loadSettings();
-    
-    // Load saved theme
-    try {
-      const savedTheme = localStorage.getItem('hashtradeTheme');
-      if (savedTheme) applyTheme(JSON.parse(savedTheme));
-    } catch (e) {}
-
-    // Auto-connect
+    try { const savedTheme = localStorage.getItem('hashtradeTheme'); if (savedTheme) applyTheme(JSON.parse(savedTheme)); } catch {}
     connect();
-
-    // Register service worker
-    if ('serviceWorker' in navigator) {
-      navigator.serviceWorker.register('sw.js').catch(() => {});
-    }
+    if ('serviceWorker' in navigator) navigator.serviceWorker.register('sw.js').catch(() => {});
   </script>
 </body>
 </html>
