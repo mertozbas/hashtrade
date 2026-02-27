@@ -856,9 +856,9 @@ async def handle_client(websocket):
     """Handle a WebSocket client connection."""
     loop = asyncio.get_running_loop()
 
-    # Change to project root
-    proj_root = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
-    os.chdir(proj_root)
+    # NOTE: os.chdir() was removed here — it is process-global and causes
+    # races when multiple clients connect concurrently.  Data paths in
+    # history.py are now resolved relative to __file__ instead.
 
     # Client config (can be updated via 'config' message)
     client_config = {
