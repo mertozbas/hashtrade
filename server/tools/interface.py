@@ -11,6 +11,10 @@ The tool broadcasts messages via WebSocket to the frontend
 AND adds entries to history so they appear in the History of Actions panel.
 """
 
+try:
+    import fcntl
+except ImportError:
+    fcntl = None  # Windows fallback
 import json
 import time
 from typing import Any, Dict, List, Optional, Union
@@ -165,8 +169,16 @@ def _add_to_history(
         "turn_id": widget_id,
         "data": data,
     }
+    line = json.dumps(rec, ensure_ascii=False) + "\n"
     with HISTORY_FILE.open("a", encoding="utf-8") as f:
-        f.write(json.dumps(rec, ensure_ascii=False) + "\n")
+        if fcntl:
+            fcntl.flock(f, fcntl.LOCK_EX)
+        try:
+            f.write(line)
+            f.flush()
+        finally:
+            if fcntl:
+                fcntl.flock(f, fcntl.LOCK_UN)
     return rec
 
 

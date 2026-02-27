@@ -13,6 +13,10 @@ Event schema (suggested):
   {"ts": 173..., "type": "tool_start|tool_end|balance|order|ui|note|error", "turn_id":"...", "data": {...}}
 """
 
+try:
+    import fcntl
+except ImportError:
+    fcntl = None  # Windows fallback
 import json
 import os
 import time
@@ -21,7 +25,11 @@ from typing import Any, Dict, Optional
 
 from strands import tool
 
-DATA_DIR = Path(os.getenv("DASH_DATA_DIR", "./data")).resolve()
+# Resolve data directory relative to this file so it works regardless of the
+# process working directory (e.g. when multiple WebSocket clients connect and
+# the server is started from an arbitrary path).
+_PKG_ROOT = Path(__file__).resolve().parent.parent.parent
+DATA_DIR = Path(os.getenv("DASH_DATA_DIR", str(_PKG_ROOT / "data"))).resolve()
 HISTORY_FILE = DATA_DIR / "history.jsonl"
 
 
@@ -83,8 +91,16 @@ def history(
             "turn_id": turn_id,
             "data": data or {},
         }
+        line = json.dumps(rec, ensure_ascii=False) + "\n"
         with HISTORY_FILE.open("a", encoding="utf-8") as f:
-            f.write(json.dumps(rec, ensure_ascii=False) + "\n")
+            if fcntl:
+                fcntl.flock(f, fcntl.LOCK_EX)
+            try:
+                f.write(line)
+                f.flush()
+            finally:
+                if fcntl:
+                    fcntl.flock(f, fcntl.LOCK_UN)
         return {
             "status": "success",
             "content": [{"text": json.dumps(rec, ensure_ascii=False)}],
